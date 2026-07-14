@@ -1,0 +1,22 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4A6B32"/>
+      <stop offset="1" stop-color="#2C3F1E"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#bg)"/>
+  <!-- wheat stalk -->
+  <line x1="128" y1="210" x2="128" y2="70" stroke="#FBF8F0" stroke-width="7" stroke-linecap="round"/>
+  <g fill="#FBF8F0">
+    <ellipse cx="112" cy="90" rx="9" ry="16" transform="rotate(-35 112 90)"/>
+    <ellipse cx="144" cy="90" rx="9" ry="16" transform="rotate(35 144 90)"/>
+    <ellipse cx="108" cy="118" rx="9" ry="16" transform="rotate(-35 108 118)"/>
+    <ellipse cx="148" cy="118" rx="9" ry="16" transform="rotate(35 148 118)"/>
+    <ellipse cx="106" cy="146" rx="9" ry="16" transform="rotate(-35 106 146)"/>
+    <ellipse cx="150" cy="146" rx="9" ry="16" transform="rotate(35 150 146)"/>
+  </g>
+  <path d="M128 70 L128 55" stroke="#FBF8F0" stroke-width="7" stroke-linecap="round"/>
+  <!-- AI spark accent -->
+  <path d="M178 150 L186 166 L202 174 L186 182 L178 198 L170 182 L154 174 L170 166 Z" fill="#D4A017"/>
+</svg>

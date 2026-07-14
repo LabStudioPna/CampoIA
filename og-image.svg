@@ -1,0 +1,38 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgOg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3B5628"/>
+      <stop offset="1" stop-color="#1E2B14"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="85%" cy="15%" r="60%">
+      <stop offset="0" stop-color="#D4A017" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#D4A017" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bgOg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <g transform="translate(90,90)">
+    <rect width="150" height="150" rx="34" fill="#1E2B14" stroke="#4A6B32" stroke-width="2"/>
+    <line x1="75" y1="124" x2="75" y2="40" stroke="#FBF8F0" stroke-width="5" stroke-linecap="round"/>
+    <g fill="#FBF8F0">
+      <ellipse cx="63" cy="54" rx="5.5" ry="10" transform="rotate(-35 63 54)"/>
+      <ellipse cx="87" cy="54" rx="5.5" ry="10" transform="rotate(35 87 54)"/>
+      <ellipse cx="60" cy="72" rx="5.5" ry="10" transform="rotate(-35 60 72)"/>
+      <ellipse cx="90" cy="72" rx="5.5" ry="10" transform="rotate(35 90 72)"/>
+      <ellipse cx="58" cy="90" rx="5.5" ry="10" transform="rotate(-35 58 90)"/>
+      <ellipse cx="92" cy="90" rx="5.5" ry="10" transform="rotate(35 92 90)"/>
+    </g>
+    <path d="M104 46 L109 56 L119 61 L109 66 L104 76 L99 66 L89 61 L99 56 Z" fill="#D4A017"/>
+  </g>
+
+  <text x="90" y="300" font-family="'Poppins','Segoe UI',sans-serif" font-size="66" font-weight="700" fill="#FBF8F0">Campo<tspan fill="#D4A017">IA</tspan></text>
+  <text x="90" y="352" font-family="'Segoe UI',sans-serif" font-size="30" font-weight="400" fill="#D9E3C8">Tu gestor de campo experto en IA</text>
+
+  <line x1="90" y1="400" x2="1110" y2="400" stroke="#4A6B32" stroke-width="1.5"/>
+
+  <text x="90" y="450" font-family="'Segoe UI',sans-serif" font-size="26" fill="#EDE6DA">Liquida granos, calcula retenciones y analiza</text>
+  <text x="90" y="488" font-family="'Segoe UI',sans-serif" font-size="26" fill="#EDE6DA">contratos de arrendamiento rural.</text>
+
+  <text x="90" y="580" font-family="'Segoe UI',sans-serif" font-size="22" fill="#9FB088">labstudiopna.github.io/CampoIA</text>
+</svg>
