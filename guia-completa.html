@@ -104,10 +104,16 @@
     <li>Andá a la pestaña <b>Liquidación</b>.</li>
     <li>Elegí el cultivo, cargá toneladas vendidas, precio por tonelada y gastos de comercialización.</li>
     <li>CampoIA aplica la retención vigente y te muestra bruto, retención, gastos y neto estimado.</li>
-    <li>Usá la calculadora de humedad para descontar la merma técnica sobre el peso bruto de tu entrega.</li>
+    <li>Usá la calculadora de humedad y merma para descontar el peso por exceso de humedad y la merma técnica adicional sobre el peso bruto de tu entrega.</li>
   </ol>
   <h3>💵 Cotización del dólar y precios de mercado</h3>
   <p>En la misma pestaña Liquidación tenés la cotización del dólar oficial, blue y mayorista actualizada en vivo, con un conversor rápido — porque granos y hacienda se referencian en dólares. También hay accesos directos a Mercado de Liniers, Rosgan y Matba Rofex: no existe una API pública gratuita para traer esos precios en vivo dentro de la página, así que te llevamos directo a la fuente oficial de cada uno en vez de simular un dato.</p>
+  <h3>📊 Descuento por humedad y merma técnica</h3>
+  <p>Cargá el peso bruto de la entrega, la humedad medida y la humedad base del cultivo — CampoIA calcula el descuento por humedad automáticamente. Sumá además un porcentaje de merma técnica (manipuleo, secado, zarandeo) para llegar al peso neto real que te va a liquidar el acopio.</p>
+  <h3>💱 Cotizaciones de granos</h3>
+  <p>Valores de pizarra orientativos (USD/tonelada, referencia Rosario) de soja, maíz, trigo, girasol y sorgo, con su equivalente en pesos al dólar oficial del día. Son valores de referencia para no vender a ciegas — confirmá siempre el precio exacto con tu corredor o acopio antes de cerrar una operación.</p>
+  <h3>🗺️ Valuación fiscal rural (Entre Ríos)</h3>
+  <p>Elegí el departamento, cargá las hectáreas y la valuación fiscal por hectárea para estimar el impuesto inmobiliario rural anual, con la alícuota de referencia de cada departamento. Es una estimación orientativa — la Dirección de Catastro y ATER pueden aplicar adicionales, mínimos o bonificaciones no contemplados acá, así que confirmá siempre el valor exacto en tu boleta o en ater.gob.ar.</p>
   <h3>📄 Cómo analizar un contrato de arrendamiento rural</h3>
   <ol>
     <li>Andá a la pestaña <b>Contratos</b> o adjuntá el PDF directo desde el <b>Chat</b> con el ícono 📎.</li>
@@ -251,7 +257,7 @@
   <table class="tbl">
     <tr><th>Panel</th><th>Qué hace</th></tr>
     <tr><td>💬 Chat</td><td>Consultas libres sobre retenciones, arrendamientos rurales, SENASA. Adjuntá documentos para análisis en el momento.</td></tr>
-    <tr><td>🌾 Liquidación</td><td>Bruto, retención, gastos y neto por venta de granos. Descuento por humedad. Cotización del dólar y links a mercados.</td></tr>
+    <tr><td>🌾 Liquidación</td><td>Bruto, retención, gastos y neto por venta de granos. Descuento por humedad y merma técnica. Cotización del dólar y de granos, valuación fiscal rural y links a mercados.</td></tr>
     <tr><td>📄 Contratos</td><td>Analiza contratos de arrendamiento rural: plazo, forma de pago, superficie, mejoras y alertas.</td></tr>
     <tr><td>📅 Vencimientos</td><td>Guías SENASA, DTe y trazabilidad con semáforo por documento/lote.</td></tr>
     <tr><td>🐄 Animales</td><td>Ficha por caravana: sanidad, reproducción, genealogía, margen y QR.</td></tr>
@@ -272,7 +278,8 @@
     <tr><td><b>Caravana</b></td><td>Identificador numerado que se coloca en la oreja del animal — la "matrícula" con la que se lo reconoce siempre.</td></tr>
     <tr><td><b>DTe</b></td><td>Documento de Tránsito Electrónico — habilita el movimiento de hacienda entre establecimientos ante SENASA.</td></tr>
     <tr><td><b>Retención</b></td><td>Porcentaje que se descuenta del precio bruto de venta de granos, fijado por el gobierno nacional.</td></tr>
-    <tr><td><b>Merma / descuento por humedad</b></td><td>Diferencia de peso que se descuenta cuando el grano entra con más humedad que la base admitida.</td></tr>
+    <tr><td><b>Merma / descuento por humedad</b></td><td>Diferencia de peso que se descuenta cuando el grano entra con más humedad que la base admitida, más la merma técnica adicional por manipuleo y secado.</td></tr>
+    <tr><td><b>Valuación fiscal</b></td><td>Valor que le asigna Catastro a un inmueble rural, base sobre la que se calcula el impuesto inmobiliario.</td></tr>
     <tr><td><b>Salto de toro</b></td><td>Servicio natural — el toro cubre a la vaca directamente, a diferencia de la inseminación artificial (IA).</td></tr>
     <tr><td><b>NDVI</b></td><td>Índice de vegetación (por imagen satelital o de dron) usado para medir el vigor de un cultivo.</td></tr>
   </table>
