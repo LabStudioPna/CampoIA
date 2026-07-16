@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampoIA — Guía Completa | Gestor de Campo Inteligente</title>
+<meta name="description" content="Guía completa de CampoIA. Cómo liquidar granos, gestionar hacienda por caravana, maquinaria y drones, y conectar tu propio Google Sheets.">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#3B5628">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CampoIA">
+<meta property="og:title" content="CampoIA — Guía Completa">
+<meta property="og:image" content="og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .guide-wrap{max-width:880px;margin:0 auto;padding:50px 24px 90px;}
+  .toc{background:var(--bg-alt);border:1px solid var(--border);border-radius:16px;padding:22px 26px;margin:28px 0 44px;}
+  .toc a{display:block;padding:5px 0;font-size:14.5px;color:var(--brand-light);}
+  .guide-wrap h2{margin-top:52px;padding-top:12px;border-top:1px solid var(--border);font-size:26px;}
+  .guide-wrap h2:first-of-type{border-top:none;margin-top:20px;}
+  .guide-wrap h3{font-size:18px;margin-top:30px;}
+  .guide-wrap p{color:var(--text);font-size:15px;}
+  .guide-wrap ol,.guide-wrap ul{font-size:15px;padding-left:22px;}
+  .callout{background:var(--bg-alt);border-left:4px solid var(--accent);border-radius:8px;padding:14px 18px;font-size:14px;margin:18px 0;}
+  table.tbl{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px;}
+  table.tbl th,table.tbl td{border:1px solid var(--border);padding:10px 12px;text-align:left;}
+  table.tbl th{background:var(--bg-alt);}
+  .faq2 summary{cursor:pointer;font-weight:600;padding:12px 0;border-bottom:1px solid var(--border);}
+  .faq2 p{padding:10px 0 4px;color:var(--text-muted);}
+  .step-shot{border:1px solid var(--border);border-radius:14px;overflow:hidden;margin:18px 0 26px;background:var(--bg-alt);}
+  .step-shot .cap{font-size:12.5px;color:var(--text-muted);padding:10px 16px;border-top:1px solid var(--border);background:var(--card);}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <nav class="nav">
+    <a href="index.html" class="brand"><img src="favicon-192.png" alt="CampoIA" style="width:34px;height:34px;border-radius:9px;"> Campo<span class="ia">IA</span></a>
+    <div class="navlinks">
+      <a href="index.html#features">Características</a>
+      <a href="index.html#pricing">Precios</a>
+      <a href="guia-completa.html">📚 Guía Completa</a>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <a href="agente-campo.html" class="btn btn-primary">Ir al Agente →</a>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú">☰</button>
+    </div>
+  </nav>
+</header>
+
+<div class="guide-wrap">
+  <span class="eyebrow">Documentación</span>
+  <h1>📚 Guía Completa de CampoIA</h1>
+  <p class="muted">Todo lo que necesitás saber para liquidar granos, llevar tu hacienda por caravana y gestionar maquinaria con IA — sin instalar nada.</p>
+
+  <div class="toc">
+    <b>Tabla de contenidos</b>
+    <a href="#que-es">¿Qué es CampoIA?</a>
+    <a href="#empezar">Cómo empezar</a>
+    <a href="#granos">Liquidación de granos y contratos</a>
+    <a href="#animales">Animales por caravana</a>
+    <a href="#maquinaria">Maquinaria, repuestos y drones</a>
+    <a href="#sheets">Conectar tu Google Sheets (backup y sync)</a>
+    <a href="#paneles">Características por panel</a>
+    <a href="#faq">Preguntas frecuentes</a>
+    <a href="#glosario">Glosario de términos</a>
+    <a href="#tips">Tips profesionales</a>
+  </div>
+
+  <h2 id="que-es">💡 ¿Qué es CampoIA?</h2>
+  <p>CampoIA es un <b>gestor de campo con IA</b>, pensado para productores agropecuarios, corredores de granos y establecimientos ganaderos en Argentina.</p>
+  <p>Usa Claude (de Anthropic) para liquidar granos, analizar contratos de arrendamiento rural, llevar la ficha sanitaria y reproductiva de cada animal por su caravana, y gestionar la maquinaria — incluido el dron — con alerta de repuestos. Corre 100% en tu navegador: no hay servidor de LABStudio en el medio.</p>
+  <div class="grid cols-4" style="margin-top:24px;">
+    <div class="card"><span class="icon">🌾</span><h3>Liquidación de granos</h3><p>Bruto, retención, gastos y neto, cultivo por cultivo.</p></div>
+    <div class="card"><span class="icon">🐄</span><h3>Animales por caravana</h3><p>Sanidad, reproducción y genealogía, con QR de ficha.</p></div>
+    <div class="card"><span class="icon">🚜</span><h3>Maquinaria</h3><p>Horas de uso, mantenimiento y alerta de repuestos.</p></div>
+    <div class="card"><span class="icon">🔄</span><h3>Google Sheets</h3><p>Backup y sincronización en tu propia hoja de cálculo.</p></div>
+  </div>
+
+  <h2 id="empezar">🚀 Cómo Empezar (3 Pasos Simples)</h2>
+  <ol>
+    <li><b>Configurá tu API Key.</b> Entrá a <code>console.anthropic.com</code>, hacé click en "API Keys", copiá tu clave (empieza con <code>sk-ant-</code>) y pegala en el panel izquierdo de CampoIA.</li>
+    <li><b>Elegí tu tarea.</b> Liquidar una venta de granos, cargar un animal por caravana, sumar un equipo de maquinaria, o preguntarle al chat sobre un caso puntual.</li>
+    <li><b>(Opcional) Conectá tu Google Sheets.</b> Para tener backup y ver los mismos datos desde el celular y la computadora — lo explicamos en detalle más abajo.</li>
+  </ol>
+  <div class="callout">⚠️ <b>Importante:</b> tu API key nunca pasa por servidores de LABStudio — viaja directo de tu navegador a Anthropic. Cada consulta cuesta aproximadamente USD 0.01–0.02.</div>
+
+  <h2 id="granos">🌾 Liquidación de granos y contratos</h2>
+  <h3>Cómo liquidar una venta</h3>
+  <ol>
+    <li>Andá a la pestaña <b>Liquidación</b>.</li>
+    <li>Elegí el cultivo, cargá toneladas vendidas, precio por tonelada y gastos de comercialización.</li>
+    <li>CampoIA aplica la retención vigente y te muestra bruto, retención, gastos y neto estimado.</li>
+    <li>Usá la calculadora de humedad para descontar la merma técnica sobre el peso bruto de tu entrega.</li>
+  </ol>
+  <h3>💵 Cotización del dólar y precios de mercado</h3>
+  <p>En la misma pestaña Liquidación tenés la cotización del dólar oficial, blue y mayorista actualizada en vivo, con un conversor rápido — porque granos y hacienda se referencian en dólares. También hay accesos directos a Mercado de Liniers, Rosgan y Matba Rofex: no existe una API pública gratuita para traer esos precios en vivo dentro de la página, así que te llevamos directo a la fuente oficial de cada uno en vez de simular un dato.</p>
+  <h3>📄 Cómo analizar un contrato de arrendamiento rural</h3>
+  <ol>
+    <li>Andá a la pestaña <b>Contratos</b> o adjuntá el PDF directo desde el <b>Chat</b> con el ícono 📎.</li>
+    <li>Subí el contrato de arrendamiento rural o aparcería.</li>
+    <li>La IA extrae partes, plazo, forma de pago (quintales fijos o variables), superficie y mejoras, y marca cláusulas para revisar.</li>
+  </ol>
+
+  <h2 id="animales">🐄 Animales por caravana</h2>
+  <p>Cada animal — bovino, ovino, equino, porcino o aviar — tiene su propia ficha identificada por el número de caravana.</p>
+  <h3>Cómo cargar un animal</h3>
+  <ol>
+    <li>Andá a la pestaña <b>Animales</b> y completá caravana, especie, raza, sexo, categoría y estado.</li>
+    <li>Si lo sabés, cargá madre, padre/genética y método de concepción (natural o inseminación artificial) — queda como parte de la genealogía del animal.</li>
+  </ol>
+  <h3>Sanidad</h3>
+  <ol>
+    <li>Entrá a la ficha del animal ("Ver ficha") y andá a la sub-pestaña <b>Sanidad</b>.</li>
+    <li>Tocá <b>"Cargar calendario sanitario recomendado"</b> para precargar las vacunas típicas de esa especie (aftosa, clostridiales, etc.) — después ajustá la fecha real de aplicación de cada una.</li>
+    <li>Cada vacuna calcula sola su próximo refuerzo con semáforo: rojo (vencido o esta semana), naranja (próximos días), verde (sin urgencia).</li>
+    <li>Registrá enfermedades y tratamientos con su costo, si querés llevar ese número.</li>
+  </ol>
+  <div class="callout">⚠️ El calendario sanitario precargado es una referencia general — confirmá siempre el esquema de vacunación con tu veterinario, varía por zona y por SENASA.</div>
+  <h3>Reproducción</h3>
+  <ol>
+    <li>En la sub-pestaña <b>Reproducción</b> cargá servicios/inseminación (fecha, tipo, toro o padrillo) y partos (vivos, muertos, observaciones).</li>
+    <li>Arriba de las tablas ves el resumen: partos totales, crías vivas y muertas.</li>
+  </ol>
+  <h3>💰 Margen por animal</h3>
+  <p>La sub-pestaña <b>Margen</b> suma el costo cargado en vacunas y tratamientos, y si el animal está vendido, calculá el margen contra el precio de venta. No incluye alimentación, mano de obra ni amortización de campo — es una referencia rápida, no un costeo completo.</p>
+  <h3>📱 QR: generar y leer</h3>
+  <ol>
+    <li>En la sub-pestaña <b>QR</b> tocá <b>"Generar QR de esta ficha"</b> — el código lleva la ficha completa codificada en el link, así que abre igual en cualquier celular sin necesitar servidor.</li>
+    <li>Para leer un QR desde la app, tocá <b>"📷 Escanear QR"</b> en el listado de animales — usa la cámara del celular y abre la ficha en el acto.</li>
+    <li>También podés escanearlo con la cámara normal del teléfono (fuera de la app): abre el link directo en el navegador.</li>
+  </ol>
+
+  <h2 id="maquinaria">🚜 Maquinaria, repuestos y drones</h2>
+  <p>El dron se carga como un equipo más — junto al tractor, la cosechadora o la pulverizadora.</p>
+  <ol>
+    <li>Andá a la pestaña <b>Maquinaria</b>, cargá nombre, tipo, marca/modelo, horas de uso y estado.</li>
+    <li>En <b>Mantenimiento</b> registrá cada service con horas y costo — así vas armando el historial.</li>
+    <li>En <b>Repuestos</b> cargá cada pieza con el intervalo recomendado en horas — el semáforo te avisa cuándo se acerca el cambio, y "Marcar cambiado" reinicia el contador.</li>
+    <li>Si el equipo es tipo <b>Dron</b>, aparece la sub-pestaña <b>Vuelos</b>: cargá manualmente hectáreas/producto/costo, o subí el PDF que ya te exporta tu plataforma de vuelo (Auravant, Vistaguay, AvanSys u otra) — la IA lee ese reporte y te saca en limpio hectáreas, tipo de vuelo y alertas, sin reprocesar imágenes.</li>
+  </ol>
+  <div class="callout">CampoIA no procesa imágenes de dron (NDVI, conteo de hacienda) — eso lo siguen haciendo las plataformas especializadas. Lo que hace CampoIA es consolidar ese reporte con el resto de tu operación: costo, mantenimiento y plata.</div>
+
+  <h2 id="sheets">🔄 Conectar tu Google Sheets (backup y sincronización)</h2>
+  <p>Por defecto, todo lo que cargás en CampoIA vive solo en el navegador donde lo cargaste (<code>localStorage</code>). Si cambiás de celular o se te borra el caché, se pierde. Conectando tu propio Google Sheets, cada alta se guarda también en una hoja de cálculo de <b>tu</b> Google Drive — CampoIA nunca la ve ni la guarda en un servidor propio.</p>
+
+  <h3>Paso 1 — Abrí la conexión</h3>
+  <div class="step-shot">
+    <svg viewBox="0 0 760 190" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto;">
+      <rect width="760" height="190" fill="#F6F3EA"/>
+      <rect x="24" y="24" width="230" height="142" rx="14" fill="#FFFFFF" stroke="#DCD5C3" stroke-width="1.5"/>
+      <text x="44" y="56" font-family="Inter,sans-serif" font-size="13" fill="#7A7566">🔄 Respaldo y sincronización</text>
+      <text x="44" y="76" font-family="Inter,sans-serif" font-size="10.5" fill="#9B9585">Conectá tu Google Sheets para</text>
+      <text x="44" y="90" font-family="Inter,sans-serif" font-size="10.5" fill="#9B9585">tener backup automático.</text>
+      <rect x="44" y="104" width="190" height="34" rx="8" fill="#FFFFFF" stroke="#3B5628" stroke-width="2"/>
+      <text x="139" y="126" font-family="Inter,sans-serif" font-size="12.5" font-weight="700" fill="#2B2B22" text-anchor="middle">Conectar con Google</text>
+      <circle cx="300" cy="95" r="20" fill="#3B5628"/>
+      <text x="300" y="101" font-family="Poppins,sans-serif" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+      <path d="M330 95 H430" stroke="#3B5628" stroke-width="2.5" marker-end="url(#arrow1)"/>
+      <defs><marker id="arrow1" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3B5628"/></marker></defs>
+      <text x="450" y="70" font-family="Inter,sans-serif" font-size="13" fill="#2B2B22" font-weight="600">Es el botón que está</text>
+      <text x="450" y="90" font-family="Inter,sans-serif" font-size="13" fill="#2B2B22" font-weight="600">abajo de tu API key,</text>
+      <text x="450" y="110" font-family="Inter,sans-serif" font-size="13" fill="#2B2B22" font-weight="600">en el panel izquierdo</text>
+      <text x="450" y="130" font-family="Inter,sans-serif" font-size="13" fill="#2B2B22" font-weight="600">de cualquier pestaña.</text>
+    </svg>
+    <div class="cap">Panel izquierdo de CampoIA — sección "Respaldo y sincronización", debajo del selector de modelo.</div>
+  </div>
+
+  <h3>Paso 2 — Elegí tu cuenta y aceptá los permisos</h3>
+  <div class="step-shot">
+    <svg viewBox="0 0 760 210" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto;">
+      <rect width="760" height="210" fill="#F6F3EA"/>
+      <rect x="230" y="20" width="300" height="170" rx="12" fill="#FFFFFF" stroke="#DCD5C3" stroke-width="1.5"/>
+      <circle cx="380" cy="52" r="14" fill="#4285F4"/>
+      <text x="380" y="57" font-family="Inter,sans-serif" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">G</text>
+      <text x="380" y="82" font-family="Inter,sans-serif" font-size="12.5" fill="#2B2B22" text-anchor="middle" font-weight="600">Elegí una cuenta</text>
+      <rect x="252" y="94" width="256" height="30" rx="6" fill="#F6F3EA"/>
+      <text x="264" y="113" font-family="Inter,sans-serif" font-size="11" fill="#2B2B22">tu-email@gmail.com</text>
+      <text x="252" y="140" font-family="Inter,sans-serif" font-size="10" fill="#7A7566">CampoIA quiere acceso a:</text>
+      <text x="252" y="156" font-family="Inter,sans-serif" font-size="10" fill="#7A7566">• Ver y administrar tus hojas de cálculo</text>
+      <rect x="410" y="164" width="98" height="26" rx="6" fill="#3B5628"/>
+      <text x="459" y="181" font-family="Inter,sans-serif" font-size="11" fill="#fff" text-anchor="middle" font-weight="600">Permitir</text>
+      <circle cx="60" cy="105" r="20" fill="#3B5628"/>
+      <text x="60" y="111" font-family="Poppins,sans-serif" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+      <path d="M90 105 H210" stroke="#3B5628" stroke-width="2.5" marker-end="url(#arrow2)"/>
+      <defs><marker id="arrow2" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3B5628"/></marker></defs>
+      <text x="580" y="90" font-family="Inter,sans-serif" font-size="13" fill="#2B2B22" font-weight="600">Es la ventana</text>
+      <text x="580" y="110" font-family="Inter,sans-serif" font-size="13" fill="#2B2B22" font-weight="600">normal de Google,</text>
+      <text x="580" y="130" font-family="Inter,sans-serif" font-size="13" fill="#2B2B22" font-weight="600">no de CampoIA. Pide</text>
+      <text x="580" y="150" font-family="Inter,sans-serif" font-size="13" fill="#2B2B22" font-weight="600">permiso solo para</text>
+      <text x="580" y="170" font-family="Inter,sans-serif" font-size="13" fill="#2B2B22" font-weight="600">crear y editar hojas.</text>
+    </svg>
+    <div class="cap">Se abre una ventana de Google (no de CampoIA). Elegí tu cuenta y tocá "Permitir" — solo se pide acceso a hojas de cálculo, nada más.</div>
+  </div>
+
+  <h3>Paso 3 — Tu hoja se crea sola</h3>
+  <div class="step-shot">
+    <svg viewBox="0 0 760 210" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto;">
+      <rect width="760" height="210" fill="#F6F3EA"/>
+      <rect x="24" y="20" width="712" height="150" rx="12" fill="#FFFFFF" stroke="#DCD5C3" stroke-width="1.5"/>
+      <rect x="24" y="20" width="712" height="34" rx="12" fill="#3B5628"/>
+      <text x="42" y="42" font-family="Inter,sans-serif" font-size="13" fill="#fff" font-weight="700">📊 CampoIA - Mis Datos</text>
+      <rect x="44" y="66" width="672" height="26" fill="#F6F3EA"/>
+      <text x="52" y="83" font-family="Inter,sans-serif" font-size="10.5" fill="#7A7566">Fecha alta</text>
+      <text x="160" y="83" font-family="Inter,sans-serif" font-size="10.5" fill="#7A7566">Caravana</text>
+      <text x="260" y="83" font-family="Inter,sans-serif" font-size="10.5" fill="#7A7566">Especie</text>
+      <text x="360" y="83" font-family="Inter,sans-serif" font-size="10.5" fill="#7A7566">Raza</text>
+      <text x="460" y="83" font-family="Inter,sans-serif" font-size="10.5" fill="#7A7566">Sexo</text>
+      <text x="52" y="106" font-family="Inter,sans-serif" font-size="10.5" fill="#2B2B22">16/07/2026</text>
+      <text x="160" y="106" font-family="Inter,sans-serif" font-size="10.5" fill="#2B2B22">1234</text>
+      <text x="260" y="106" font-family="Inter,sans-serif" font-size="10.5" fill="#2B2B22">Bovino</text>
+      <text x="360" y="106" font-family="Inter,sans-serif" font-size="10.5" fill="#2B2B22">Angus</text>
+      <text x="460" y="106" font-family="Inter,sans-serif" font-size="10.5" fill="#2B2B22">Hembra</text>
+      <g font-family="Inter,sans-serif" font-size="10">
+        <rect x="44" y="126" width="88" height="22" rx="4" fill="#3B5628"/><text x="88" y="141" fill="#fff" text-anchor="middle">Animales</text>
+        <rect x="136" y="126" width="120" height="22" rx="4" fill="#F6F3EA" stroke="#DCD5C3"/><text x="196" y="141" fill="#7A7566" text-anchor="middle">Sanidad_Vacunas</text>
+        <rect x="260" y="126" width="100" height="22" rx="4" fill="#F6F3EA" stroke="#DCD5C3"/><text x="310" y="141" fill="#7A7566" text-anchor="middle">Maquinaria</text>
+        <rect x="364" y="126" width="90" height="22" rx="4" fill="#F6F3EA" stroke="#DCD5C3"/><text x="409" y="141" fill="#7A7566" text-anchor="middle">Vuelos</text>
+        <rect x="458" y="126" width="16" height="22" rx="4" fill="#F6F3EA" stroke="#DCD5C3"/><text x="466" y="141" fill="#7A7566" text-anchor="middle">…</text>
+      </g>
+      <circle cx="700" cy="105" r="20" fill="#3B5628"/>
+      <text x="700" y="111" font-family="Poppins,sans-serif" font-size="18" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+      <text x="24" y="200" font-family="Inter,sans-serif" font-size="12.5" fill="#2B2B22" font-weight="600">Queda en tu Google Drive, con una pestaña por tipo de dato — Animales, Sanidad, Reproducción, Maquinaria, Vuelos, etc.</text>
+    </svg>
+    <div class="cap">Se crea "CampoIA - Mis Datos" en tu Drive, con una pestaña por categoría. Desde ahí también podés abrirla, filtrarla o compartirla con tu contador o veterinario.</div>
+  </div>
+
+  <h3>Después de conectar</h3>
+  <ul>
+    <li>Vas a ver un cartel verde <b>"✅ Conectado"</b> en el panel izquierdo, con un link <b>"Abrir hoja ↗"</b> para ir directo a la planilla.</li>
+    <li>De ahí en más, cada animal, vacuna, parto, equipo, mantenimiento, repuesto o vuelo que cargues se agrega solo como una fila nueva — no hace falta hacer nada más.</li>
+    <li>Si algo falla (por ejemplo, sin conexión a internet), el dato igual queda guardado en el navegador — el registro en la hoja simplemente se reintenta la próxima vez, sin interrumpirte ni mostrar error.</li>
+    <li>Para desconectar, tocá <b>"Desconectar"</b> junto al cartel verde — la hoja no se borra, solo dejás de sincronizar.</li>
+  </ul>
+  <div class="callout">💡 Si la primera vez se te complicó: asegurate de no tener el bloqueo de ventanas emergentes (popups) activado para labstudiopna.github.io, y de completar el permiso en la ventana de Google (Paso 2) sin cerrarla antes de tiempo. Si el botón queda girando mucho tiempo, recargá la página e intentá de nuevo — no rompe nada, podés reintentar las veces que quieras.</div>
+
+  <h2 id="paneles">📋 Características por Panel</h2>
+  <table class="tbl">
+    <tr><th>Panel</th><th>Qué hace</th></tr>
+    <tr><td>💬 Chat</td><td>Consultas libres sobre retenciones, arrendamientos rurales, SENASA. Adjuntá documentos para análisis en el momento.</td></tr>
+    <tr><td>🌾 Liquidación</td><td>Bruto, retención, gastos y neto por venta de granos. Descuento por humedad. Cotización del dólar y links a mercados.</td></tr>
+    <tr><td>📄 Contratos</td><td>Analiza contratos de arrendamiento rural: plazo, forma de pago, superficie, mejoras y alertas.</td></tr>
+    <tr><td>📅 Vencimientos</td><td>Guías SENASA, DTe y trazabilidad con semáforo por documento/lote.</td></tr>
+    <tr><td>🐄 Animales</td><td>Ficha por caravana: sanidad, reproducción, genealogía, margen y QR.</td></tr>
+    <tr><td>🚜 Maquinaria</td><td>Inventario con horas de uso, mantenimiento, repuestos y vuelos de dron.</td></tr>
+  </table>
+
+  <h2 id="faq">❓ Preguntas Frecuentes</h2>
+  <details class="faq2"><summary>¿Cuánto cuesta usar CampoIA?</summary><p>El uso propio es gratis — solo pagás tu API key de Anthropic (~USD 0.01–0.02 por consulta). El plan Campo (granos + ganado en un solo plan) cuesta USD 70/mes, para establecimientos con varios usuarios.</p></details>
+  <details class="faq2"><summary>¿Se guardan mis datos? ¿Son privados?</summary><p>Sí, son privados. Por defecto viven solo en tu navegador (localStorage). Si conectás tu Google Sheets, se guardan también en tu propio Drive — CampoIA no tiene backend propio ni ve esos datos.</p></details>
+  <details class="faq2"><summary>¿Qué pasa si no conecto Google Sheets?</summary><p>La app funciona igual — la diferencia es que los datos quedan solo en ese navegador/dispositivo. Si otra persona carga datos desde otro celular, no se van a ver entre sí sin la sincronización.</p></details>
+  <details class="faq2"><summary>¿CampoIA procesa imágenes de dron (NDVI, conteo de hacienda)?</summary><p>No. Eso lo hacen plataformas especializadas como Auravant, Vistaguay o AvanSys. CampoIA lee el reporte que esas plataformas ya te exportan y lo consolida con el resto de tu operación (costos, mantenimiento).</p></details>
+  <details class="faq2"><summary>¿CampoIA reemplaza al corredor, veterinario o contador?</summary><p>No. Es una herramienta de apoyo. Acelera cálculos y detecta alertas, pero la validación final siempre es de un profesional matriculado.</p></details>
+  <details class="faq2"><summary>¿Cómo reporto un bug o sugerencia?</summary><p>WhatsApp: LABStudio.pna +54 9 3435-344597 · GitHub Issues: github.com/LabStudioPna/CampoIA</p></details>
+
+  <h2 id="glosario">📚 Glosario de Términos de Campo</h2>
+  <table class="tbl">
+    <tr><th>Término</th><th>Significado</th></tr>
+    <tr><td><b>Caravana</b></td><td>Identificador numerado que se coloca en la oreja del animal — la "matrícula" con la que se lo reconoce siempre.</td></tr>
+    <tr><td><b>DTe</b></td><td>Documento de Tránsito Electrónico — habilita el movimiento de hacienda entre establecimientos ante SENASA.</td></tr>
+    <tr><td><b>Retención</b></td><td>Porcentaje que se descuenta del precio bruto de venta de granos, fijado por el gobierno nacional.</td></tr>
+    <tr><td><b>Merma / descuento por humedad</b></td><td>Diferencia de peso que se descuenta cuando el grano entra con más humedad que la base admitida.</td></tr>
+    <tr><td><b>Salto de toro</b></td><td>Servicio natural — el toro cubre a la vaca directamente, a diferencia de la inseminación artificial (IA).</td></tr>
+    <tr><td><b>NDVI</b></td><td>Índice de vegetación (por imagen satelital o de dron) usado para medir el vigor de un cultivo.</td></tr>
+  </table>
+
+  <h2 id="tips">💡 Tips Profesionales</h2>
+  <ul>
+    <li><b>Conectá Google Sheets desde el primer día:</b> es mucho más fácil que migrar datos después.</li>
+    <li><b>Cargá el calendario sanitario apenas des de alta un animal:</b> te ahorra tipear cada vacuna a mano.</li>
+    <li><b>Anotá el costo</b> en vacunas, tratamientos, mantenimientos y vuelos aunque sea aproximado — es lo que después te arma el margen real.</li>
+    <li><b>Modo oscuro:</b> usá el botón 🌙 si trabajás muchas horas seguidas con la herramienta, sobre todo de noche en el campo.</li>
+    <li><b>Verificá siempre:</b> la IA es complementaria — confirmá montos, esquemas sanitarios y normativa crítica con tu profesional de confianza.</li>
+  </ul>
+
+  <p class="muted" style="margin-top:60px;border-top:1px solid var(--border);padding-top:20px;font-size:13px;">CampoIA — Gestor de Campo Inteligente · Desarrollado por LABStudio.pna · Paraná, Entre Ríos, Argentina.<br>Este documento es orientativo. CampoIA es una herramienta complementaria — siempre consultá con un profesional matriculado para decisiones críticas.</p>
+</div>
+
+<footer class="site">
+  <div class="container foot-bottom" style="border:none;">
+    <span>© 2026 CampoIA · Todos los derechos reservados</span>
+    <a href="index.html">← Volver a inicio</a>
+  </div>
+</footer>
+
+<script>
+  const toggle = document.getElementById('themeToggle');
+  const root = document.documentElement;
+  function applyTheme(t){ root.setAttribute('data-theme', t); toggle.textContent = t === 'dark' ? '☀️' : '🌙'; }
+  applyTheme('light');
+  toggle.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+  });
+
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const navlinksEl = document.querySelector('.navlinks');
+  if (hamburgerBtn && navlinksEl) {
+    hamburgerBtn.addEventListener('click', () => {
+      const isOpen = navlinksEl.classList.toggle('open');
+      hamburgerBtn.textContent = isOpen ? '✕' : '☰';
+    });
+    navlinksEl.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      navlinksEl.classList.remove('open');
+      hamburgerBtn.textContent = '☰';
+    }));
+  }
+</script>
+</body>
+</html>
