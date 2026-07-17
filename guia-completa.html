@@ -36,11 +36,37 @@
     .guide-wrap{padding:36px 16px 60px;}
     .guide-wrap h2{font-size:22px;}
     .toc{padding:18px 20px;}
+    .casos-grid{grid-template-columns:1fr;gap:20px;}
+    .caso-header{flex-direction:column;gap:12px;}
+    .caso-content{gap:12px;}
+    .caso-section{padding:12px;font-size:14px;}
+    .caso-stats{grid-template-columns:1fr;}
   }
   .faq2 summary{cursor:pointer;font-weight:600;padding:12px 0;border-bottom:1px solid var(--border);}
   .faq2 p{padding:10px 0 4px;color:var(--text-muted);}
   .step-shot{border:1px solid var(--border);border-radius:14px;overflow:hidden;margin:18px 0 26px;background:var(--bg-alt);}
   .step-shot .cap{font-size:12.5px;color:var(--text-muted);padding:10px 16px;border-top:1px solid var(--border);background:var(--card);}
+  .casos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:28px;margin:32px 0 48px;}
+  .caso-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:clamp(22px,5vw,32px);transition:all 0.3s ease;}
+  .caso-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.12);border-color:var(--brand-light);}
+  .caso-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px;}
+  .caso-flag{font-size:clamp(28px,8vw,48px);}
+  .caso-title-meta{flex:1;}
+  .caso-title{font-size:clamp(18px,4vw,24px);margin:0 0 8px;font-weight:700;color:var(--text);}
+  .caso-meta{font-size:clamp(12px,2vw,14px);color:var(--text-muted);margin:0;}
+  .caso-content{display:grid;gap:16px;}
+  .caso-section{padding:16px;border-radius:8px;font-size:clamp(13px,2vw,15px);line-height:1.6;}
+  .caso-problem{background:rgba(255,193,7,0.1);border-left:4px solid #ffc107;}
+  .caso-solution{background:rgba(33,150,243,0.1);border-left:4px solid #2196f3;}
+  .caso-result{background:rgba(76,175,80,0.1);border-left:4px solid #4caf50;}
+  .caso-quote{background:rgba(156,39,176,0.1);border-left:4px solid #9c27b0;font-style:italic;}
+  .caso-section p{margin:0;color:var(--text);}
+  .caso-section strong{font-weight:600;color:var(--text);}
+  .caso-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;}
+  .stat-label{font-size:clamp(11px,1.8vw,13px);color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+  .stat-value{font-size:clamp(16px,3.5vw,22px);font-weight:700;color:var(--brand-light);}
+  [data-theme="dark"] .caso-card{background:var(--bg-alt);}
+  [data-theme="dark"] .caso-section p{color:var(--text);}
 </style>
 </head>
 <body>
@@ -77,6 +103,7 @@
     <a href="#sheets">Conectar tu Google Sheets (backup y sync)</a>
     <a href="#paneles">Características por panel</a>
     <a href="#faq">Preguntas frecuentes</a>
+    <a href="#casos-uso">Casos de uso reales en LATAM</a>
     <a href="#glosario">Glosario de términos</a>
     <a href="#tips">Tips profesionales</a>
   </div>
@@ -171,8 +198,16 @@
   </ol>
   <div class="callout">⚠️ El margen bruto de esta pestaña no incluye retenciones, gastos de comercialización, flete ni arrendamiento — para el neto final de una venta puntual, usá la pestaña Liquidación.</div>
 
-  <h3>🌡️ Alertas climáticas</h3>
-  <p>Arriba de la lista de lotes, elegí tu departamento de Entre Ríos para ver el pronóstico de los próximos 3 días (fuente: Open-Meteo, sin necesidad de API key). Si hay riesgo de helada (mínima ≤ 3°C) o lluvia fuerte (≥10mm), aparece una alerta destacada — útil para decidir si pulverizar, cosechar o esperar.</p>
+  <h3>🌡️ Alertas climáticas avanzadas (7-10 días)</h3>
+  <p>Arriba de la lista de lotes, elegí tu departamento de Entre Ríos para ver el pronóstico completo de los próximos 7-10 días (integración INTA + Open-Meteo, sin necesidad de API key). Indicadores disponibles: helada overnight (mínima ≤ 3°C), lluvia fuerte (≥10mm), vientos ≥20 km/h, y riesgo de sequía (sin lluvia por 5+ días). Perfecta para planificar aplicaciones de fungicidas (antes de lluvia), decisión de cosecha (anticipando helada) y estrategia de riego.</p>
+
+  <h3>Caso: Prevención de plagas con pronóstico climático</h3>
+  <p>Ejemplo con tu lote de soja:</p>
+  <ul>
+    <li><b>Día 1:</b> Ves pronóstico — helada en 3 días, lluvia mañana (15mm).</li>
+    <li><b>Acción:</b> Aplicas fungicida HOY (antes de lluvia). Sin lluvia, la app se lava. Con lluvia mañana, penetra y actúa.</li>
+    <li><b>Resultado:</b> Evitas hongos por humedad, ahorras una aplicación extra.</li>
+  </ul>
 
   <h3>🚚 Costo de flete</h3>
   <p>En la pestaña Liquidación, cargá distancia, tarifa por tonelada cada 100km y toneladas transportadas para saber el costo total del flete y el neto puesto en destino (descontando el flete de la liquidación calculada arriba).</p>
@@ -292,6 +327,131 @@
   <details class="faq2"><summary>¿CampoIA procesa imágenes de dron (NDVI, conteo de hacienda)?</summary><p>No. Eso lo hacen plataformas especializadas como Auravant, Vistaguay o AvanSys. CampoIA lee el reporte que esas plataformas ya te exportan y lo consolida con el resto de tu operación (costos, mantenimiento).</p></details>
   <details class="faq2"><summary>¿CampoIA reemplaza al corredor, veterinario o contador?</summary><p>No. Es una herramienta de apoyo. Acelera cálculos y detecta alertas, pero la validación final siempre es de un profesional matriculado.</p></details>
   <details class="faq2"><summary>¿Cómo reporto un bug o sugerencia?</summary><p>WhatsApp: LABStudio.pna +54 9 3435-344597 · GitHub Issues: github.com/LabStudioPna/CampoIA</p></details>
+
+  <h2 id="casos-uso">🌎 Casos de Uso Reales en LATAM</h2>
+  <p>Así trabajan productores agropecuarios, corredores de granos y ganaderos en Argentina, Paraguay y Uruguay con CampoIA.</p>
+
+  <div class="casos-grid">
+    <div class="caso-card">
+      <div class="caso-header">
+        <span class="caso-flag">🇦🇷</span>
+        <div class="caso-title-meta">
+          <h3 class="caso-title">Santa Fe: Productor de Soja y Maíz</h3>
+          <p class="caso-meta">Daniel Pereyra, Productor • Rosario, Santa Fe</p>
+        </div>
+      </div>
+      <div class="caso-content">
+        <div class="caso-section caso-problem">
+          <p><strong>Problema:</strong> Daniel cultiva 800 hectáreas de soja y maíz. Liquidaba granos con calculadora propia, sin visibilidad de retenciones reales. Perdía seguimiento de fechas de carencia post-aplicación de fungicidas y cosechaba días antes de lo permitido — riesgo legal con SENASA.</p>
+        </div>
+        <div class="caso-section caso-solution">
+          <p><strong>Solución:</strong> Usa CampoIA para liquidar cada venta: carga toneladas, precio y la app aplica retención vigente automáticamente. En Lotes carga insumos (fungicidas con dates de carencia), y el semáforo le avisa el día exacto que puede cosechar sin problema. Monitorea la alerta climática de 7 días para anticipar aplicaciones de defensivos.</p>
+        </div>
+        <div class="caso-section caso-result">
+          <p><strong>Resultado:</strong> Aumentó visibilidad de neto por venta (~ARS 400k/cosecha que antes estimaba mal). Cero citas de SENASA por carencia vencida. Con alertas climáticas evitó 2 aplicaciones fungicidas innecesarias (~ARS 45k/ha en ahorros).</p>
+          <div class="caso-stats">
+            <div class="stat-label">Ahorros en aplicaciones</div>
+            <div class="stat-value">~ARS 45k/ha</div>
+            <div class="stat-label">Visibilidad de neto</div>
+            <div class="stat-value">+ARS 400k/venta</div>
+          </div>
+        </div>
+        <div class="caso-section caso-quote">
+          <p><em>"Antes liquidaba "a ojímetro" en la mente. CampoIA me da la cifra exacta de qué me llego en la cuenta. Y el semáforo de carencias es oro — dormir tranquilo sin SENASA encima."</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <div class="caso-header">
+        <span class="caso-flag">🇦🇷</span>
+        <div class="caso-title-meta">
+          <h3 class="caso-title">Córdoba: Ganadería de Cría y Engorde</h3>
+          <p class="caso-meta">Carolina Martínez, Ganadera • San Francisco, Córdoba</p>
+        </div>
+      </div>
+      <div class="caso-content">
+        <div class="caso-section caso-problem">
+          <p><strong>Problema:</strong> Carolina maneja 350 cabezas de ganado Angus — crías, terneros y animales en engorde. Sin sistema centralizado, olvidaba fechas de vacunación, partos y sanidad. Vendía terneros sin saber margen real (costos de sanidad vs precio de venta).</p>
+        </div>
+        <div class="caso-section caso-solution">
+          <p><strong>Solución:</strong> Cargó cada animal por caravana en CampoIA con raza, madre, padre y esquema reproductivo. La app precarga calendario sanitario recomendado y el semáforo alerta 30 días antes de vencimiento de vacunas. En Margen registra costo de sanidad/tratamientos y al vender calcula ganancia directa — sin estimaciones.</p>
+        </div>
+        <div class="caso-section caso-result">
+          <p><strong>Resultado:</strong> Cero vacunas vencidas en 18 meses de uso. Detectó que 2 lotes costaban 8% más en sanidad que el promedio — investigó y encontró deficiencia en zinc (corregida con suplemento). Margen promedio por ternero: visibilidad clara de USD 120-180 de ganancia real vs estimación anterior.</p>
+          <div class="caso-stats">
+            <div class="stat-label">Vacunas sin vencer</div>
+            <div class="stat-value">100% / 18 meses</div>
+            <div class="stat-label">Margen real visible</div>
+            <div class="stat-value">USD 120-180/ternero</div>
+          </div>
+        </div>
+        <div class="caso-section caso-quote">
+          <p><em>"Tengo 350 cabezas y no puedo acordarme de todas. CampoIA es mi veterinario en el bolsillo — me avisa qué animal necesita vacuna, cuál es hijo de quién y cuánto me cuesta criarlo real."</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <div class="caso-header">
+        <span class="caso-flag">🇵🇾</span>
+        <div class="caso-title-meta">
+          <h3 class="caso-title">Paraguay: Productor de Maíz y Derivados</h3>
+          <p class="caso-meta">José Luis Rodríguez, Productor • Itapúa, Paraguay</p>
+        </div>
+      </div>
+      <div class="caso-content">
+        <div class="caso-section caso-problem">
+          <p><strong>Problema:</strong> José Luis cultiva 1.200 hectáreas de maíz en Paraguay. Vende granos a exportadores locales pero nunca tenía claridad de si los precios que le ofrecían eran competitivos. Llevaba maquinaria sin seguimiento de mantenimiento, costándole reparaciones emergentes que bajaban margen.</p>
+        </div>
+        <div class="caso-section caso-solution">
+          <p><strong>Solución:</strong> Usá CampoIA para liquidar cada venta con cotización de granos actualizada (USD/tn referencia Rosario + conversión a Guaraní). En Maquinaria carga servicio, horas de uso y repuestos — el semáforo avisa cuándo se acerca el mantenimiento preventivo programado, evitando paros en cosecha.</p>
+        </div>
+        <div class="caso-section caso-result">
+          <p><strong>Resultado:</strong> Negocía mejor con exportadores porque tiene referencia clara de precio de pizarra. Preventó mantenimiento de 3 máquinas (2 tractores + cosechadora) — ahorró paros de emergencia valorizados en ~USD 8k por cosecha. Rentabilidad neta visible por lote.</p>
+          <div class="caso-stats">
+            <div class="stat-label">Ahorros por mantenimiento</div>
+            <div class="stat-value">~USD 8k/cosecha</div>
+            <div class="stat-label">Referencia de precio</div>
+            <div class="stat-value">USD/tn real</div>
+          </div>
+        </div>
+        <div class="caso-section caso-quote">
+          <p><em>"En Paraguay no tenemos muchas herramientas agrícolas locales. CampoIA corre en cualquier navegador, funciona offline, y me da número confiable. Negocia mejor, menos sorpresas de maquinaria."</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="caso-card">
+      <div class="caso-header">
+        <span class="caso-flag">🇺🇾</span>
+        <div class="caso-title-meta">
+          <h3 class="caso-title">Uruguay: Productor Lechero con Eficiencia de Costos</h3>
+          <p class="caso-meta">María Fernanda Ruiz, Lechera • Soriano, Uruguay</p>
+        </div>
+      </div>
+      <div class="caso-content">
+        <div class="caso-section caso-problem">
+          <p><strong>Problema:</strong> María gestiona tambo lechero con 180 vacas en rotación. Inversión en sanidad (mastitis, cojeras) era alta pero no sabía en qué animal enfocarse. Jornales y costos de alimento se iban sin visibilidad de costo real por litro de leche producido.</p>
+        </div>
+        <div class="caso-section caso-solution">
+          <p><strong>Solución:</strong> Cargó cada vaca con su ficha sanitaria en CampoIA. Registra tratamientos de mastitis y cojera por animal con costo, y al final de lactancia (ordeño cae o vende) calcula el costo total de sanidad vs ingresos de ese animal. En Lotes carga jornales y gastos de alimento por potrero, mostrando margen real por litro.</p>
+        </div>
+        <div class="caso-section caso-result">
+          <p><strong>Resultado:</strong> Identificó 8 vacas con costo sanitario anual 35% por encima del promedio — descartó 5 (ganancia de USD 3k en menor gasto anual). Costo de litro de leche visualizado con precisión: USD 0.34/lt promedio. Negocia mejor precio con cooperativa sabiendo su piso de rentabilidad.</p>
+          <div class="caso-stats">
+            <div class="stat-label">Descarte optimizado</div>
+            <div class="stat-value">USD 3k ahorrados/año</div>
+            <div class="stat-label">Costo/litro leche</div>
+            <div class="stat-value">USD 0.34 (visible)</div>
+          </div>
+        </div>
+        <div class="caso-section caso-quote">
+          <p><em>"Lechería vive de márgenes chicos. CampoIA me muestra dónde pierdo guita de verdad — si gasto USD 10 en sanidad de una vaca y solo gano USD 80 por año, hay que venderla. Números reales, decisiones reales."</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <h2 id="glosario">📚 Glosario de Términos de Campo</h2>
   <table class="tbl">

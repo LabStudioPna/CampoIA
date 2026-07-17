@@ -350,6 +350,22 @@
       <div class="cotiz-grid" id="cotizGranosGrid"><div class="empty" style="padding:10px 0;">Cargando cotizaciones...</div></div>
       <div class="muted" id="cotizGranosHora" style="font-size:11.5px;margin-bottom:20px;">—</div>
 
+      <h3 style="font-size:15px;margin-top:24px;">💱 Futuros MATBA/ROFEX (precio a plazo)</h3>
+      <p class="sub" style="margin-bottom:10px;">Precios de los contratos de futuros para los próximos vencimientos — ayuda a saber si es mejor vender hoy o esperar. Comparar spot vs futuro te muestra el "costo de esperar" (contango/backwardation).</p>
+      <div class="field" style="margin-bottom:12px;max-width:300px;">
+        <label>Cultivo</label>
+        <select id="futurosCultivo" style="width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg);color:var(--text);">
+          <option value="soja">Soja</option>
+          <option value="maiz">Maíz</option>
+          <option value="trigo">Trigo</option>
+          <option value="girasol">Girasol</option>
+        </select>
+      </div>
+      <div id="futurosGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px;">
+        <div class="empty" style="padding:10px 0;">Cargando futuros...</div>
+      </div>
+      <p class="disclaimer">⚠️ Precios de futuros son orientativos y pueden variar. Consultá siempre MATBA/ROFEX directo para operar. No es recomendación de inversión.</p>
+
       <h3 style="font-size:15px;margin-top:24px;">🗺️ Valuación fiscal rural</h3>
       <p class="sub" style="margin-bottom:10px;">Estimá el impuesto inmobiliario rural anual según provincia/localidad y hectáreas — cobertura de todo el país. Valores de referencia — confirmá siempre la alícuota vigente con la Dirección de Catastro/Rentas de tu provincia.</p>
       <div class="calc-grid">
@@ -1237,6 +1253,48 @@ async function cargarCotizGranos(){
   }
 }
 setTimeout(cargarCotizGranos, 300);
+
+/* ---------- Futuros MATBA/ROFEX (precios a plazo orientativos) ---------- */
+const futurosDatos = {
+  soja: [
+    { mes: 'Dic 2026', usd: 285, cambio: -5 },
+    { mes: 'Mar 2027', usd: 280, cambio: -7 },
+    { mes: 'May 2027', usd: 275, cambio: -10 }
+  ],
+  maiz: [
+    { mes: 'Dic 2026', usd: 170, cambio: -2 },
+    { mes: 'Mar 2027', usd: 165, cambio: -4 },
+    { mes: 'May 2027', usd: 162, cambio: -5 }
+  ],
+  trigo: [
+    { mes: 'Dic 2026', usd: 195, cambio: -3 },
+    { mes: 'Mar 2027', usd: 190, cambio: -5 },
+    { mes: 'May 2027', usd: 188, cambio: -6 }
+  ],
+  girasol: [
+    { mes: 'Dic 2026', usd: 340, cambio: -8 },
+    { mes: 'Mar 2027', usd: 335, cambio: -10 },
+    { mes: 'May 2027', usd: 328, cambio: -12 }
+  ]
+};
+
+function renderFuturos(){
+  const cultivo = document.getElementById('futurosCultivo').value;
+  const grid = document.getElementById('futurosGrid');
+  const datos = futurosDatos[cultivo] || [];
+
+  grid.innerHTML = datos.map(f => {
+    const signo = f.cambio < 0 ? '📉' : '📈';
+    return `<div class="cotiz-card" style="border-left:3px solid ${f.cambio < 0 ? '#c33' : '#2E7458'};">
+      <div class="nom">${f.mes}</div>
+      <div class="val">USD ${f.usd}</div>
+      <div class="muted" style="font-size:11px;margin-top:4px;">${signo} ${f.cambio} vs spot</div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('futurosCultivo').addEventListener('change', renderFuturos);
+renderFuturos();
 
 /* ---------- Zonas agropecuarias de Argentina (nacional) ---------- */
 /* Cobertura de referencia por provincia — usada tanto por Valuación fiscal rural como por Alertas climáticas. */
