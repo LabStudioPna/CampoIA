@@ -127,13 +127,21 @@
     .tab-row{display:flex;overflow-x:auto;gap:8px;-webkit-overflow-scrolling:touch;}
     .tab-btn{white-space:nowrap;width:auto;flex-shrink:0;margin-bottom:0;}
     .keybox{margin-top:12px;}
-    .calc-grid{grid-template-columns:1fr;}
-    .venc-form{grid-template-columns:1fr;}
-    .animal-form{grid-template-columns:1fr 1fr;}
-    .animal-meta{grid-template-columns:1fr 1fr;}
-    .mini-form{grid-template-columns:1fr;}
+    .calc-grid{grid-template-columns:1fr !important;}
+    .venc-form{grid-template-columns:1fr !important;}
+    .animal-form{grid-template-columns:1fr 1fr !important;}
+    .animal-meta{grid-template-columns:1fr 1fr !important;}
+    .mini-form{grid-template-columns:1fr !important;}
+    .range-box{grid-template-columns:1fr !important;}
     .app-main{padding:18px;}
     .chat-log{height:320px;}
+  }
+  @media(max-width:480px){
+    .animal-form{grid-template-columns:1fr !important;}
+    .animal-meta{grid-template-columns:1fr !important;}
+    .cotiz-grid{grid-template-columns:repeat(auto-fill,minmax(105px,1fr));}
+    .conv-row{align-items:stretch;}
+    .conv-row .field, .conv-row .result-box{width:100%;}
   }
 </style>
 </head>
@@ -280,7 +288,7 @@
           </div>
         </div>
         <div>
-          <h3 style="font-size:15px;">Descuento por humedad</h3>
+          <h3 style="font-size:15px;">Descuento por humedad y merma</h3>
           <div class="field">
             <label>Peso bruto de la entrega (kg)</label>
             <input type="number" id="pesoBruto" placeholder="Ej: 30000">
@@ -293,14 +301,51 @@
             <label>Humedad base del cultivo (%)</label>
             <input type="number" id="humedadBase" value="13.5" step="0.1">
           </div>
+          <div class="field">
+            <label>Merma técnica adicional (%)</label>
+            <input type="number" id="mermaPct" value="1" step="0.1">
+          </div>
           <div class="result-box">
             <div class="muted" style="font-size:12.5px;">Peso neto estimado</div>
             <div class="big" id="humedadResult">0 kg</div>
+            <div class="row-mini"><span id="humedadDescuentoLabel">Descuento por humedad</span><span id="humedadDescuentoKg">0 kg</span></div>
+            <div class="row-mini"><span>Merma técnica</span><span id="mermaKg">0 kg</span></div>
             <div class="muted" style="font-size:12px;margin-top:4px;" id="humedadDescuento"></div>
           </div>
         </div>
       </div>
       <p class="disclaimer">⚠️ Las alícuotas de retención son valores de referencia (Decreto 423/2026 — sujetas a cronograma de baja gradual y a cambios normativos). CampoIA no reemplaza la liquidación oficial de tu corredor ni el asesoramiento de un contador matriculado.</p>
+
+      <h3 style="font-size:15px;margin-top:24px;">💱 Cotizaciones de granos</h3>
+      <p class="sub" style="margin-bottom:10px;">Precios de pizarra orientativos (FOB/pizarra Rosario, en USD/tn) — verificá siempre el valor del día con tu corredor antes de cerrar una operación.</p>
+      <div class="cotiz-grid" id="cotizGranosGrid"><div class="empty" style="padding:10px 0;">Cargando cotizaciones...</div></div>
+      <div class="muted" id="cotizGranosHora" style="font-size:11.5px;margin-bottom:20px;">—</div>
+
+      <h3 style="font-size:15px;margin-top:24px;">🗺️ Valuación fiscal rural (Entre Ríos)</h3>
+      <p class="sub" style="margin-bottom:10px;">Estimá el impuesto inmobiliario rural anual según partido/departamento y hectáreas. Valores de referencia — confirmá siempre la alícuota vigente con ATER.</p>
+      <div class="calc-grid">
+        <div>
+          <div class="field">
+            <label>Departamento</label>
+            <select id="fiscalDepto"></select>
+          </div>
+          <div class="field">
+            <label>Hectáreas</label>
+            <input type="number" id="fiscalHectareas" placeholder="Ej: 250">
+          </div>
+          <div class="field">
+            <label>Valuación fiscal por hectárea ($)</label>
+            <input type="number" id="fiscalValorHa" placeholder="Ej: 850000">
+          </div>
+          <div class="result-box">
+            <div class="muted" style="font-size:12.5px;">Impuesto inmobiliario rural anual estimado</div>
+            <div class="big" id="fiscalResult">$0</div>
+            <div class="row-mini"><span>Valuación fiscal total</span><span id="fiscalValuacionTotal">$0</span></div>
+            <div class="row-mini"><span id="fiscalAlicuotaLabel">Alícuota</span><span id="fiscalAlicuota">—</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="disclaimer">⚠️ Alícuotas orientativas por departamento — la Dirección de Catastro y ATER pueden aplicar adicionales, mínimos o bonificaciones no contemplados acá. Confirmá siempre el valor exacto en tu boleta o en ater.gob.ar.</p>
     </section>
 
     <!-- VENCIMIENTOS -->
@@ -957,19 +1002,93 @@ function calcHumedad(){
   const pesoBruto = parseFloat(document.getElementById('pesoBruto').value) || 0;
   const humedadMedida = parseFloat(document.getElementById('humedadMedida').value) || 0;
   const humedadBase = parseFloat(document.getElementById('humedadBase').value) || 0;
-  let pesoNeto = pesoBruto;
+  const mermaPct = parseFloat(document.getElementById('mermaPct').value) || 0;
   let descuentoPct = 0;
   if (humedadMedida > humedadBase){
     descuentoPct = (humedadMedida - humedadBase) / (100 - humedadBase) * 100;
-    pesoNeto = pesoBruto * (1 - descuentoPct/100);
   }
+  const pesoTrasHumedad = pesoBruto * (1 - descuentoPct/100);
+  const kgHumedad = pesoBruto - pesoTrasHumedad;
+  const kgMerma = pesoTrasHumedad * (mermaPct/100);
+  const pesoNeto = pesoTrasHumedad - kgMerma;
+
   document.getElementById('humedadResult').textContent = Math.round(pesoNeto).toLocaleString('es-AR') + ' kg';
-  document.getElementById('humedadDescuento').textContent = descuentoPct > 0
-    ? `Descuento por humedad: ${descuentoPct.toFixed(2)}% (${Math.round(pesoBruto-pesoNeto).toLocaleString('es-AR')} kg)`
-    : 'Sin descuento: humedad dentro de base';
+  document.getElementById('humedadDescuentoLabel').textContent = `Descuento por humedad (${descuentoPct.toFixed(2)}%)`;
+  document.getElementById('humedadDescuentoKg').textContent = Math.round(kgHumedad).toLocaleString('es-AR') + ' kg';
+  document.getElementById('mermaKg').textContent = Math.round(kgMerma).toLocaleString('es-AR') + ' kg';
+  document.getElementById('humedadDescuento').textContent = (descuentoPct > 0 || mermaPct > 0)
+    ? `Descuento total: ${Math.round(pesoBruto-pesoNeto).toLocaleString('es-AR')} kg (humedad + merma técnica)`
+    : 'Sin descuentos: humedad dentro de base y sin merma cargada';
 }
-['pesoBruto','humedadMedida','humedadBase'].forEach(id => document.getElementById(id).addEventListener('input', calcHumedad));
+['pesoBruto','humedadMedida','humedadBase','mermaPct'].forEach(id => document.getElementById(id).addEventListener('input', calcHumedad));
 calcHumedad();
+
+/* ---------- Cotizaciones de granos (pizarra Rosario, orientativo) ---------- */
+const cotizGranosBase = {
+  soja:   { nombre: 'Soja',    usd: 300 },
+  maiz:   { nombre: 'Maíz',    usd: 175 },
+  trigo:  { nombre: 'Trigo',   usd: 200 },
+  girasol:{ nombre: 'Girasol', usd: 355 },
+  sorgo:  { nombre: 'Sorgo',   usd: 160 }
+};
+async function cargarCotizGranos(){
+  const grid = document.getElementById('cotizGranosGrid');
+  const horaEl = document.getElementById('cotizGranosHora');
+  try{
+    const arsRate = cotizCache && cotizCache.oficial ? cotizCache.oficial : null;
+    grid.innerHTML = Object.entries(cotizGranosBase).map(([key, g]) => {
+      const arsTxt = arsRate ? `<div class="muted" style="font-size:10.5px;">$${Math.round(g.usd*arsRate).toLocaleString('es-AR')}/tn</div>` : '';
+      return `<div class="cotiz-card"><div class="nom">${g.nombre}</div><div class="val">USD ${g.usd}</div>${arsTxt}</div>`;
+    }).join('');
+    horaEl.textContent = `Referencia orientativa · pizarra Rosario · actualizá con tu corredor · ${new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})}`;
+  } catch(e){
+    grid.innerHTML = '<div class="empty" style="padding:10px 0;">No se pudo cargar la cotización. Reintentá más tarde.</div>';
+  }
+}
+setTimeout(cargarCotizGranos, 300);
+
+/* ---------- Valuación fiscal rural (Entre Ríos) ---------- */
+const fiscalDeptos = {
+  parana:        { nombre: 'Paraná',        alicuota: 1.35 },
+  gualeguaychu:  { nombre: 'Gualeguaychú',  alicuota: 1.30 },
+  concordia:     { nombre: 'Concordia',     alicuota: 1.30 },
+  colon:         { nombre: 'Colón',         alicuota: 1.28 },
+  uruguay:       { nombre: 'Uruguay',       alicuota: 1.30 },
+  federacion:    { nombre: 'Federación',    alicuota: 1.25 },
+  diamante:      { nombre: 'Diamante',      alicuota: 1.32 },
+  nogoya:        { nombre: 'Nogoyá',        alicuota: 1.30 },
+  gualeguay:     { nombre: 'Gualeguay',     alicuota: 1.28 },
+  victoria:      { nombre: 'Victoria',      alicuota: 1.30 },
+  villaguay:     { nombre: 'Villaguay',     alicuota: 1.28 },
+  tala:          { nombre: 'Tala',          alicuota: 1.28 },
+  federal:       { nombre: 'Federal',       alicuota: 1.25 },
+  feliciano:     { nombre: 'Feliciano',     alicuota: 1.22 },
+  laPaz:         { nombre: 'La Paz',        alicuota: 1.25 },
+  islas:         { nombre: 'Islas del Ibicuy', alicuota: 1.20 }
+};
+(function initFiscalDepto(){
+  const sel = document.getElementById('fiscalDepto');
+  if (!sel) return;
+  sel.innerHTML = Object.entries(fiscalDeptos).map(([k,d]) => `<option value="${k}">${d.nombre}</option>`).join('');
+})();
+function calcFiscal(){
+  const deptoKey = document.getElementById('fiscalDepto').value;
+  const depto = fiscalDeptos[deptoKey];
+  const hectareas = parseFloat(document.getElementById('fiscalHectareas').value) || 0;
+  const valorHa = parseFloat(document.getElementById('fiscalValorHa').value) || 0;
+  if (!depto){ return; }
+  const valuacionTotal = hectareas * valorHa;
+  const impuesto = valuacionTotal * (depto.alicuota/100);
+  document.getElementById('fiscalResult').textContent = fmtMoney(impuesto);
+  document.getElementById('fiscalValuacionTotal').textContent = fmtMoney(valuacionTotal);
+  document.getElementById('fiscalAlicuotaLabel').textContent = `Alícuota (${depto.nombre})`;
+  document.getElementById('fiscalAlicuota').textContent = `${depto.alicuota.toFixed(2)}%`;
+}
+['fiscalDepto','fiscalHectareas','fiscalValorHa'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', calcFiscal);
+});
+calcFiscal();
 
 /* ---------- Vencimientos ---------- */
 function loadVenc(){ return JSON.parse(localStorage.getItem('campoia_vencimientos') || '[]'); }
