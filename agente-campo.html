@@ -350,12 +350,12 @@
       <div class="cotiz-grid" id="cotizGranosGrid"><div class="empty" style="padding:10px 0;">Cargando cotizaciones...</div></div>
       <div class="muted" id="cotizGranosHora" style="font-size:11.5px;margin-bottom:20px;">—</div>
 
-      <h3 style="font-size:15px;margin-top:24px;">🗺️ Valuación fiscal rural (Entre Ríos)</h3>
-      <p class="sub" style="margin-bottom:10px;">Estimá el impuesto inmobiliario rural anual según partido/departamento y hectáreas. Valores de referencia — confirmá siempre la alícuota vigente con ATER.</p>
+      <h3 style="font-size:15px;margin-top:24px;">🗺️ Valuación fiscal rural</h3>
+      <p class="sub" style="margin-bottom:10px;">Estimá el impuesto inmobiliario rural anual según provincia/localidad y hectáreas — cobertura de todo el país. Valores de referencia — confirmá siempre la alícuota vigente con la Dirección de Catastro/Rentas de tu provincia.</p>
       <div class="calc-grid">
         <div>
           <div class="field">
-            <label>Departamento</label>
+            <label>Provincia / Localidad</label>
             <select id="fiscalDepto"></select>
           </div>
           <div class="field">
@@ -374,7 +374,7 @@
           </div>
         </div>
       </div>
-      <p class="disclaimer">⚠️ Alícuotas orientativas por departamento — la Dirección de Catastro y ATER pueden aplicar adicionales, mínimos o bonificaciones no contemplados acá. Confirmá siempre el valor exacto en tu boleta o en ater.gob.ar.</p>
+      <p class="disclaimer">⚠️ Alícuotas orientativas por provincia/localidad — cada Dirección de Catastro o Rentas provincial puede aplicar adicionales, mínimos o bonificaciones no contemplados acá. Confirmá siempre el valor exacto en tu boleta o en el organismo de rentas de tu provincia.</p>
     </section>
 
     <!-- VENCIMIENTOS -->
@@ -710,10 +710,10 @@
       <div class="result-box" style="margin-bottom:20px;">
         <div class="muted" style="font-size:12.5px;">🌡️ Alertas climáticas</div>
         <div class="field" style="margin:10px 0 12px;max-width:260px;">
-          <label>Departamento (Entre Ríos)</label>
+          <label>Provincia / Localidad</label>
           <select id="climaDepto"></select>
         </div>
-        <div id="climaResult" class="empty" style="padding:10px 0;">Elegí tu departamento para ver el pronóstico.</div>
+        <div id="climaResult" class="empty" style="padding:10px 0;">Elegí tu localidad para ver el pronóstico.</div>
       </div>
 
       <div id="loteListView">
@@ -1238,29 +1238,127 @@ async function cargarCotizGranos(){
 }
 setTimeout(cargarCotizGranos, 300);
 
-/* ---------- Valuación fiscal rural (Entre Ríos) ---------- */
-const fiscalDeptos = {
-  parana:        { nombre: 'Paraná',        alicuota: 1.35 },
-  gualeguaychu:  { nombre: 'Gualeguaychú',  alicuota: 1.30 },
-  concordia:     { nombre: 'Concordia',     alicuota: 1.30 },
-  colon:         { nombre: 'Colón',         alicuota: 1.28 },
-  uruguay:       { nombre: 'Uruguay',       alicuota: 1.30 },
-  federacion:    { nombre: 'Federación',    alicuota: 1.25 },
-  diamante:      { nombre: 'Diamante',      alicuota: 1.32 },
-  nogoya:        { nombre: 'Nogoyá',        alicuota: 1.30 },
-  gualeguay:     { nombre: 'Gualeguay',     alicuota: 1.28 },
-  victoria:      { nombre: 'Victoria',      alicuota: 1.30 },
-  villaguay:     { nombre: 'Villaguay',     alicuota: 1.28 },
-  tala:          { nombre: 'Tala',          alicuota: 1.28 },
-  federal:       { nombre: 'Federal',       alicuota: 1.25 },
-  feliciano:     { nombre: 'Feliciano',     alicuota: 1.22 },
-  laPaz:         { nombre: 'La Paz',        alicuota: 1.25 },
-  islas:         { nombre: 'Islas del Ibicuy', alicuota: 1.20 }
-};
+/* ---------- Zonas agropecuarias de Argentina (nacional) ---------- */
+/* Cobertura de referencia por provincia — usada tanto por Valuación fiscal rural como por Alertas climáticas. */
+const ZONAS_AGRO_ARG = [
+  { provincia: 'Buenos Aires', zonas: [
+    { key: 'pergamino',    nombre: 'Pergamino',      lat: -33.89, lon: -60.57, alicuota: 1.35 },
+    { key: 'junin',        nombre: 'Junín',          lat: -34.58, lon: -60.95, alicuota: 1.32 },
+    { key: 'nuevejulio',   nombre: 'Nueve de Julio', lat: -35.44, lon: -60.88, alicuota: 1.30 },
+    { key: 'bragado',      nombre: 'Bragado',        lat: -35.12, lon: -60.49, alicuota: 1.30 },
+    { key: 'tandil',       nombre: 'Tandil',         lat: -37.32, lon: -59.13, alicuota: 1.28 },
+    { key: 'bahiablanca',  nombre: 'Bahía Blanca',   lat: -38.72, lon: -62.27, alicuota: 1.25 },
+    { key: 'azul',         nombre: 'Azul',           lat: -36.78, lon: -59.86, alicuota: 1.28 }
+  ]},
+  { provincia: 'Córdoba', zonas: [
+    { key: 'cordobacap',   nombre: 'Córdoba Capital',  lat: -31.42, lon: -64.18, alicuota: 1.20 },
+    { key: 'riocuarto',    nombre: 'Río Cuarto',       lat: -33.13, lon: -64.35, alicuota: 1.22 },
+    { key: 'marcosjuarez', nombre: 'Marcos Juárez',    lat: -32.70, lon: -62.11, alicuota: 1.25 },
+    { key: 'villamaria',   nombre: 'Villa María',      lat: -32.41, lon: -63.24, alicuota: 1.22 }
+  ]},
+  { provincia: 'Santa Fe', zonas: [
+    { key: 'rosario',       nombre: 'Rosario',        lat: -32.95, lon: -60.64, alicuota: 1.30 },
+    { key: 'rafaela',       nombre: 'Rafaela',        lat: -31.26, lon: -61.49, alicuota: 1.28 },
+    { key: 'reconquista',   nombre: 'Reconquista',    lat: -29.15, lon: -59.65, alicuota: 1.20 },
+    { key: 'venadotuerto',  nombre: 'Venado Tuerto',  lat: -33.75, lon: -61.97, alicuota: 1.28 }
+  ]},
+  { provincia: 'Entre Ríos', zonas: [
+    { key: 'parana',        nombre: 'Paraná',                     lat: -31.73, lon: -60.53, alicuota: 1.35 },
+    { key: 'gualeguaychu',  nombre: 'Gualeguaychú',                lat: -33.01, lon: -58.52, alicuota: 1.30 },
+    { key: 'concordia',     nombre: 'Concordia',                  lat: -31.39, lon: -58.02, alicuota: 1.30 },
+    { key: 'colon',         nombre: 'Colón',                      lat: -32.22, lon: -58.14, alicuota: 1.28 },
+    { key: 'uruguay',       nombre: 'Concepción del Uruguay',     lat: -32.48, lon: -58.24, alicuota: 1.30 },
+    { key: 'federacion',    nombre: 'Federación',                 lat: -30.98, lon: -57.91, alicuota: 1.25 },
+    { key: 'diamante',      nombre: 'Diamante',                   lat: -32.06, lon: -60.65, alicuota: 1.32 },
+    { key: 'nogoya',        nombre: 'Nogoyá',                     lat: -32.39, lon: -59.80, alicuota: 1.30 },
+    { key: 'gualeguay',     nombre: 'Gualeguay',                  lat: -33.14, lon: -59.31, alicuota: 1.28 },
+    { key: 'victoria',      nombre: 'Victoria',                   lat: -32.62, lon: -60.15, alicuota: 1.30 },
+    { key: 'villaguay',     nombre: 'Villaguay',                  lat: -31.87, lon: -59.03, alicuota: 1.28 },
+    { key: 'tala',          nombre: 'Tala',                       lat: -32.71, lon: -59.09, alicuota: 1.28 },
+    { key: 'federal',       nombre: 'Federal',                    lat: -30.95, lon: -58.78, alicuota: 1.25 },
+    { key: 'feliciano',     nombre: 'Feliciano',                  lat: -30.40, lon: -59.13, alicuota: 1.22 },
+    { key: 'laPaz',         nombre: 'La Paz',                     lat: -30.75, lon: -59.64, alicuota: 1.25 },
+    { key: 'islas',         nombre: 'Islas del Ibicuy',           lat: -33.75, lon: -59.20, alicuota: 1.20 }
+  ]},
+  { provincia: 'La Pampa', zonas: [
+    { key: 'santarosa',    nombre: 'Santa Rosa',    lat: -36.62, lon: -64.29, alicuota: 1.15 },
+    { key: 'generalpico',  nombre: 'General Pico',  lat: -35.66, lon: -63.76, alicuota: 1.15 }
+  ]},
+  { provincia: 'Chaco', zonas: [
+    { key: 'resistencia',  nombre: 'Resistencia',  lat: -27.45, lon: -58.99, alicuota: 1.05 },
+    { key: 'saenzpena',    nombre: 'Sáenz Peña',   lat: -26.79, lon: -60.44, alicuota: 1.05 }
+  ]},
+  { provincia: 'Santiago del Estero', zonas: [
+    { key: 'santiago',  nombre: 'Santiago del Estero',  lat: -27.78, lon: -64.26, alicuota: 1.00 },
+    { key: 'anatuya',   nombre: 'Añatuya',              lat: -28.46, lon: -62.83, alicuota: 1.00 }
+  ]},
+  { provincia: 'Tucumán', zonas: [
+    { key: 'tucuman',  nombre: 'San Miguel de Tucumán',  lat: -26.82, lon: -65.22, alicuota: 1.10 }
+  ]},
+  { provincia: 'Salta', zonas: [
+    { key: 'salta',  nombre: 'Salta Capital',  lat: -24.78, lon: -65.41, alicuota: 1.00 },
+    { key: 'oran',   nombre: 'Orán',           lat: -23.13, lon: -64.33, alicuota: 1.00 }
+  ]},
+  { provincia: 'Jujuy', zonas: [
+    { key: 'jujuy',  nombre: 'San Salvador de Jujuy',  lat: -24.19, lon: -65.30, alicuota: 0.95 }
+  ]},
+  { provincia: 'Corrientes', zonas: [
+    { key: 'corrientes',  nombre: 'Corrientes Capital',  lat: -27.47, lon: -58.83, alicuota: 1.05 },
+    { key: 'goya',        nombre: 'Goya',                lat: -29.14, lon: -59.26, alicuota: 1.05 }
+  ]},
+  { provincia: 'Misiones', zonas: [
+    { key: 'posadas',  nombre: 'Posadas',  lat: -27.36, lon: -55.90, alicuota: 1.00 },
+    { key: 'obera',    nombre: 'Oberá',    lat: -27.49, lon: -55.12, alicuota: 1.00 }
+  ]},
+  { provincia: 'Formosa', zonas: [
+    { key: 'formosa',  nombre: 'Formosa Capital',  lat: -26.18, lon: -58.18, alicuota: 0.95 }
+  ]},
+  { provincia: 'San Luis', zonas: [
+    { key: 'sanluis',       nombre: 'San Luis Capital',  lat: -33.30, lon: -66.34, alicuota: 1.10 },
+    { key: 'villamercedes', nombre: 'Villa Mercedes',    lat: -33.68, lon: -65.45, alicuota: 1.10 }
+  ]},
+  { provincia: 'Mendoza', zonas: [
+    { key: 'mendoza',    nombre: 'Mendoza Capital',  lat: -32.89, lon: -68.83, alicuota: 1.15 },
+    { key: 'sanrafael',  nombre: 'San Rafael',       lat: -34.62, lon: -68.33, alicuota: 1.10 }
+  ]},
+  { provincia: 'San Juan', zonas: [
+    { key: 'sanjuan',  nombre: 'San Juan Capital',  lat: -31.54, lon: -68.54, alicuota: 1.05 }
+  ]},
+  { provincia: 'La Rioja', zonas: [
+    { key: 'larioja',  nombre: 'La Rioja Capital',  lat: -29.41, lon: -66.85, alicuota: 1.00 }
+  ]},
+  { provincia: 'Catamarca', zonas: [
+    { key: 'catamarca',  nombre: 'San Fernando del Valle de Catamarca',  lat: -28.47, lon: -65.79, alicuota: 1.00 }
+  ]},
+  { provincia: 'Neuquén', zonas: [
+    { key: 'neuquen',  nombre: 'Neuquén Capital',  lat: -38.95, lon: -68.06, alicuota: 1.00 }
+  ]},
+  { provincia: 'Río Negro', zonas: [
+    { key: 'viedma',       nombre: 'Viedma',        lat: -40.81, lon: -63.00, alicuota: 1.05 },
+    { key: 'generalroca',  nombre: 'General Roca',  lat: -39.03, lon: -67.58, alicuota: 1.05 }
+  ]},
+  { provincia: 'Chubut', zonas: [
+    { key: 'trelew',     nombre: 'Trelew',               lat: -43.25, lon: -65.31, alicuota: 0.95 },
+    { key: 'comodoro',   nombre: 'Comodoro Rivadavia',   lat: -45.86, lon: -67.48, alicuota: 0.95 }
+  ]},
+  { provincia: 'Santa Cruz', zonas: [
+    { key: 'riogallegos',  nombre: 'Río Gallegos',  lat: -51.62, lon: -69.22, alicuota: 0.90 }
+  ]},
+  { provincia: 'Tierra del Fuego', zonas: [
+    { key: 'ushuaia',  nombre: 'Ushuaia',  lat: -54.81, lon: -68.31, alicuota: 0.90 }
+  ]},
+  { provincia: 'CABA', zonas: [
+    { key: 'caba',  nombre: 'Ciudad de Buenos Aires',  lat: -34.61, lon: -58.38, alicuota: 1.20 }
+  ]}
+];
+
+/* ---------- Valuación fiscal rural (nacional) ---------- */
+const fiscalDeptos = {};
+ZONAS_AGRO_ARG.forEach(g => g.zonas.forEach(z => { fiscalDeptos[z.key] = { nombre: `${z.nombre} (${g.provincia})`, alicuota: z.alicuota }; }));
 (function initFiscalDepto(){
   const sel = document.getElementById('fiscalDepto');
   if (!sel) return;
-  sel.innerHTML = Object.entries(fiscalDeptos).map(([k,d]) => `<option value="${k}">${d.nombre}</option>`).join('');
+  sel.innerHTML = ZONAS_AGRO_ARG.map(g => `<optgroup label="${g.provincia}">${g.zonas.map(z => `<option value="${z.key}">${z.nombre}</option>`).join('')}</optgroup>`).join('');
 })();
 function calcFiscal(){
   const deptoKey = document.getElementById('fiscalDepto').value;
@@ -2125,29 +2223,13 @@ async function analizarReporteVuelo(file){
   }
 }
 
-/* ---------- Alertas climáticas (Open-Meteo, sin API key) ---------- */
-const CLIMA_DEPTOS = {
-  parana:        { nombre: 'Paraná',        lat: -31.73, lon: -60.53 },
-  gualeguaychu:  { nombre: 'Gualeguaychú',  lat: -33.01, lon: -58.52 },
-  concordia:     { nombre: 'Concordia',     lat: -31.39, lon: -58.02 },
-  colon:         { nombre: 'Colón',         lat: -32.22, lon: -58.14 },
-  uruguay:       { nombre: 'Uruguay (C. del Uruguay)', lat: -32.48, lon: -58.24 },
-  federacion:    { nombre: 'Federación',    lat: -30.98, lon: -57.91 },
-  diamante:      { nombre: 'Diamante',      lat: -32.06, lon: -60.65 },
-  nogoya:        { nombre: 'Nogoyá',        lat: -32.39, lon: -59.80 },
-  gualeguay:     { nombre: 'Gualeguay',     lat: -33.14, lon: -59.31 },
-  victoria:      { nombre: 'Victoria',      lat: -32.62, lon: -60.15 },
-  villaguay:     { nombre: 'Villaguay',     lat: -31.87, lon: -59.03 },
-  tala:          { nombre: 'Tala',          lat: -32.71, lon: -59.09 },
-  federal:       { nombre: 'Federal',       lat: -30.95, lon: -58.78 },
-  feliciano:     { nombre: 'Feliciano',     lat: -30.40, lon: -59.13 },
-  laPaz:         { nombre: 'La Paz',        lat: -30.75, lon: -59.64 },
-  islas:         { nombre: 'Islas del Ibicuy', lat: -33.75, lon: -59.20 }
-};
+/* ---------- Alertas climáticas (Open-Meteo, sin API key) — cobertura nacional ---------- */
+const CLIMA_DEPTOS = {};
+ZONAS_AGRO_ARG.forEach(g => g.zonas.forEach(z => { CLIMA_DEPTOS[z.key] = { nombre: `${z.nombre} (${g.provincia})`, lat: z.lat, lon: z.lon }; }));
 (function initClimaDepto(){
   const sel = document.getElementById('climaDepto');
   if (!sel) return;
-  sel.innerHTML = '<option value="">Elegí un departamento...</option>' + Object.entries(CLIMA_DEPTOS).map(([k,d]) => `<option value="${k}">${d.nombre}</option>`).join('');
+  sel.innerHTML = '<option value="">Elegí tu localidad...</option>' + ZONAS_AGRO_ARG.map(g => `<optgroup label="${g.provincia}">${g.zonas.map(z => `<option value="${z.key}">${z.nombre}</option>`).join('')}</optgroup>`).join('');
   const guardado = localStorage.getItem('campoia_clima_depto');
   if (guardado && CLIMA_DEPTOS[guardado]) sel.value = guardado;
   sel.addEventListener('change', () => {
