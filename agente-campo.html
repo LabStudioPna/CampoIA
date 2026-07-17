@@ -21,6 +21,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   body{background:var(--bg-alt);}
@@ -172,6 +173,7 @@
       <button class="tab-btn" data-tab="venc">📅 Vencimientos</button>
       <button class="tab-btn" data-tab="animales">🐄 Animales</button>
       <button class="tab-btn" data-tab="maquinaria">🚜 Maquinaria</button>
+      <button class="tab-btn" data-tab="lotes">🌱 Lotes</button>
     </div>
 
     <div class="keybox">
@@ -200,6 +202,12 @@
         </div>
       </div>
       <div id="googleConnectStatus" style="font-size:11px;color:var(--text-muted);margin-top:6px;"></div>
+    </div>
+
+    <div class="keybox">
+      <label>📄 Reporte general</label>
+      <p style="font-size:11px;color:var(--text-muted);margin:4px 0 10px;">Descargá un PDF con el resumen de animales, gastos de maquinaria, vencimientos próximos y lotes cargados hasta hoy.</p>
+      <button id="btnDescargarReporte" class="btn btn-ghost" style="width:100%;font-size:12.5px;padding:9px;">⬇️ Descargar reporte (PDF)</button>
     </div>
   </aside>
 
@@ -313,8 +321,29 @@
             <div class="muted" style="font-size:12px;margin-top:4px;" id="humedadDescuento"></div>
           </div>
         </div>
+        <div>
+          <h3 style="font-size:15px;">Costo de flete</h3>
+          <div class="field">
+            <label>Distancia (km)</label>
+            <input type="number" id="fleteDistancia" placeholder="Ej: 85">
+          </div>
+          <div class="field">
+            <label>Tarifa ($/tn cada 100 km)</label>
+            <input type="number" id="fleteTarifa" placeholder="Ej: 3500">
+          </div>
+          <div class="field">
+            <label>Toneladas transportadas</label>
+            <input type="number" id="fleteToneladas" placeholder="Ej: 30">
+          </div>
+          <div class="result-box">
+            <div class="muted" style="font-size:12.5px;">Costo total del flete</div>
+            <div class="big" id="fleteResultTotal">$0</div>
+            <div class="row-mini"><span>Costo por tonelada</span><span id="fleteResultPorTn">$0</span></div>
+            <div class="row-mini"><span>Neto puesto en destino (c/ flete)</span><span id="fleteResultNeto">—</span></div>
+          </div>
+        </div>
       </div>
-      <p class="disclaimer">⚠️ Las alícuotas de retención son valores de referencia (Decreto 423/2026 — sujetas a cronograma de baja gradual y a cambios normativos). CampoIA no reemplaza la liquidación oficial de tu corredor ni el asesoramiento de un contador matriculado.</p>
+      <p class="disclaimer">⚠️ Las alícuotas de retención son valores de referencia (Decreto 423/2026 — sujetas a cronograma de baja gradual y a cambios normativos). La tarifa de flete es orientativa — confirmá siempre el valor vigente con tu transportista. CampoIA no reemplaza la liquidación oficial de tu corredor ni el asesoramiento de un contador matriculado.</p>
 
       <h3 style="font-size:15px;margin-top:24px;">💱 Cotizaciones de granos</h3>
       <p class="sub" style="margin-bottom:10px;">Precios de pizarra orientativos (FOB/pizarra Rosario, en USD/tn) — verificá siempre el valor del día con tu corredor antes de cerrar una operación.</p>
@@ -616,15 +645,31 @@
 
           <!-- REPUESTOS -->
           <div class="subpanel" id="msub-repuestos">
-            <p class="sub" style="margin-bottom:10px;">Cargá cada repuesto con el intervalo de horas recomendado — te avisamos con semáforo cuándo te vas quedando sin margen.</p>
-            <div class="mini-form" style="grid-template-columns:1.2fr .8fr .8fr auto;">
+            <p class="sub" style="margin-bottom:10px;">Registrá cada repuesto roto, reparado o comprado con su importe — es tu libro de gastos de repuestos. Si además cargás el intervalo de horas, te avisamos con semáforo cuándo te vas quedando sin margen.</p>
+            <div class="mini-form" style="grid-template-columns:.9fr 1.1fr 1fr .8fr;">
+              <div class="field" style="margin-bottom:0;"><label>Fecha</label><input type="date" id="repFecha"></div>
               <div class="field" style="margin-bottom:0;"><label>Repuesto</label><input type="text" id="repNombre" placeholder="Ej: Filtro de aceite"></div>
-              <div class="field" style="margin-bottom:0;"><label>Cambia cada (hs)</label><input type="number" id="repIntervalo" placeholder="Ej: 250"></div>
-              <div class="field" style="margin-bottom:0;"><label>Últ. cambio (hs)</label><input type="number" id="repUltimoCambio" placeholder="Ej: 1000"></div>
+              <div class="field" style="margin-bottom:0;"><label>Motivo</label>
+                <select id="repMotivo">
+                  <option value="Rotura">Rotura</option>
+                  <option value="Reparación">Reparación</option>
+                  <option value="Compra">Compra / recambio</option>
+                  <option value="Preventivo">Cambio preventivo</option>
+                </select>
+              </div>
+              <div class="field" style="margin-bottom:0;"><label>Importe ($)</label><input type="number" id="repCosto" placeholder="Ej: 45000"></div>
+            </div>
+            <div class="mini-form" style="grid-template-columns:.9fr .9fr auto;margin-top:-4px;">
+              <div class="field" style="margin-bottom:0;"><label>Cambia cada (hs) — opcional</label><input type="number" id="repIntervalo" placeholder="Ej: 250"></div>
+              <div class="field" style="margin-bottom:0;"><label>Últ. cambio (hs) — opcional</label><input type="number" id="repUltimoCambio" placeholder="Ej: 1000"></div>
               <button class="btn btn-primary" id="repAddBtn" style="height:40px;">Agregar</button>
             </div>
+            <div class="result-box" style="margin-bottom:14px;">
+              <div class="muted" style="font-size:12.5px;">💰 Total invertido en repuestos</div>
+              <div class="big" id="repTotalInvertido" style="font-size:20px;">$0</div>
+            </div>
             <table class="mini" id="repTable">
-              <thead><tr><th></th><th>Repuesto</th><th>Horas restantes</th><th></th><th></th></tr></thead>
+              <thead><tr><th>Fecha</th><th></th><th>Repuesto</th><th>Motivo</th><th>Importe</th><th>Horas restantes</th><th></th><th></th></tr></thead>
               <tbody id="repTbody"></tbody>
             </table>
             <div id="repEmpty" class="empty" style="display:none;padding:16px 0;">Sin repuestos cargados.</div>
@@ -652,6 +697,130 @@
               <tbody id="vueloTbody"></tbody>
             </table>
             <div id="vueloEmpty" class="empty" style="display:none;padding:16px 0;">Sin vuelos registrados.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOTES -->
+    <section class="panel" id="panel-lotes">
+      <h2>🌱 Lotes</h2>
+      <p class="sub">Margen bruto agrícola, libro de insumos con alerta de carencia y jornales por lote — para saber si un lote te da ganancia real, no solo rinde.</p>
+
+      <div class="result-box" style="margin-bottom:20px;">
+        <div class="muted" style="font-size:12.5px;">🌡️ Alertas climáticas</div>
+        <div class="field" style="margin:10px 0 12px;max-width:260px;">
+          <label>Departamento (Entre Ríos)</label>
+          <select id="climaDepto"></select>
+        </div>
+        <div id="climaResult" class="empty" style="padding:10px 0;">Elegí tu departamento para ver el pronóstico.</div>
+      </div>
+
+      <div id="loteListView">
+        <div class="animal-form" style="grid-template-columns:1.2fr .8fr 1fr .8fr auto;">
+          <div class="field" style="margin-bottom:0;"><label>Nombre del lote</label><input type="text" id="loteNombre" placeholder="Ej: Lote Norte"></div>
+          <div class="field" style="margin-bottom:0;"><label>Hectáreas</label><input type="number" id="loteHectareas" placeholder="Ej: 45"></div>
+          <div class="field" style="margin-bottom:0;"><label>Cultivo</label>
+            <select id="loteCultivo"></select>
+          </div>
+          <div class="field" style="margin-bottom:0;"><label>Estado</label>
+            <select id="loteEstado"><option>Sembrado</option><option>En barbecho</option><option>Cosechado</option></select>
+          </div>
+          <button class="btn btn-primary" id="loteAddBtn" style="height:42px;">Agregar lote</button>
+        </div>
+
+        <table class="animales" id="loteTable">
+          <thead><tr><th>Lote</th><th>Hectáreas</th><th>Cultivo</th><th>Estado</th><th></th></tr></thead>
+          <tbody id="loteTbody"></tbody>
+        </table>
+        <div id="loteEmpty" class="empty" style="display:none;">Todavía no cargaste ningún lote.</div>
+      </div>
+
+      <div id="loteDetailView" style="display:none;">
+        <button class="back-link" id="loteBackBtn">← Volver al listado</button>
+        <div class="animal-card">
+          <div class="top">
+            <div>
+              <h3 id="loteDetNombre">Lote</h3>
+              <span class="cat-chip" id="loteDetCultivo"></span>
+            </div>
+            <div>
+              <button class="btn btn-ghost" id="loteDeleteBtn" style="color:#c33;border-color:#c33;">Eliminar lote</button>
+            </div>
+          </div>
+          <div class="animal-meta">
+            <div><div class="lbl">Hectáreas</div><div class="v" id="loteDetHectareas">—</div></div>
+            <div><div class="lbl">Estado</div><div class="v" id="loteDetEstado">—</div></div>
+            <div><div class="lbl">Costo insumos + jornales</div><div class="v" id="loteDetCostoTotal">—</div></div>
+            <div><div class="lbl">Próxima carencia</div><div class="v" id="loteDetProximaCarencia" style="font-size:13px;">—</div></div>
+          </div>
+
+          <div class="subtab-row">
+            <button class="subtab-btn active" data-lsub="margen">📊 Margen</button>
+            <button class="subtab-btn" data-lsub="insumos">🧪 Insumos</button>
+            <button class="subtab-btn" data-lsub="jornales">👷 Jornales</button>
+          </div>
+
+          <!-- MARGEN -->
+          <div class="subpanel active" id="lsub-margen">
+            <div class="calc-grid">
+              <div>
+                <div class="field"><label>Rinde esperado (qq/ha)</label><input type="number" id="loteRinde" placeholder="Ej: 35"></div>
+                <div class="field"><label>Precio por quintal ($)</label><input type="number" id="lotePrecioQq" placeholder="Ej: 21000"></div>
+              </div>
+              <div class="result-box">
+                <div class="muted" style="font-size:12.5px;">Margen bruto estimado</div>
+                <div class="big" id="loteMargenResultado">—</div>
+                <div class="row-mini"><span>Ingreso bruto estimado</span><span id="loteMargenIngreso">$0</span></div>
+                <div class="row-mini"><span>Costo insumos</span><span id="loteMargenCostoInsumos">$0</span></div>
+                <div class="row-mini"><span>Costo jornales</span><span id="loteMargenCostoJornales">$0</span></div>
+                <div class="row-mini"><span>Margen por hectárea</span><span id="loteMargenPorHa">—</span></div>
+              </div>
+            </div>
+            <p class="disclaimer">Margen bruto = (rinde × precio × hectáreas) − insumos − jornales cargados en este lote. No incluye retenciones, gastos de comercialización, flete, arrendamiento ni amortización de maquinaria — usá la pestaña Liquidación para el neto final de venta.</p>
+          </div>
+
+          <!-- INSUMOS -->
+          <div class="subpanel" id="lsub-insumos">
+            <p class="sub" style="margin-bottom:10px;">Cargá cada aplicación con su período de carencia — te avisamos con semáforo cuándo se cumple el plazo para poder cosechar o vender.</p>
+            <div class="mini-form" style="grid-template-columns:.9fr 1.2fr .8fr .8fr .8fr auto;">
+              <div class="field" style="margin-bottom:0;"><label>Fecha aplicación</label><input type="date" id="insFecha"></div>
+              <div class="field" style="margin-bottom:0;"><label>Producto</label><input type="text" id="insProducto" placeholder="Ej: Glifosato"></div>
+              <div class="field" style="margin-bottom:0;"><label>Dosis</label><input type="text" id="insDosis" placeholder="Ej: 3 L/ha"></div>
+              <div class="field" style="margin-bottom:0;"><label>Carencia (días)</label><input type="number" id="insCarencia" placeholder="Ej: 15"></div>
+              <div class="field" style="margin-bottom:0;"><label>Costo ($)</label><input type="number" id="insCosto" placeholder="Opcional"></div>
+              <button class="btn btn-primary" id="insAddBtn" style="height:40px;">Agregar</button>
+            </div>
+            <div class="result-box" style="margin-bottom:14px;">
+              <div class="muted" style="font-size:12.5px;">💰 Total invertido en insumos</div>
+              <div class="big" id="insTotalInvertido" style="font-size:20px;">$0</div>
+            </div>
+            <table class="mini" id="insTable">
+              <thead><tr><th></th><th>Fecha</th><th>Producto</th><th>Dosis</th><th>Carencia</th><th>Costo</th><th></th></tr></thead>
+              <tbody id="insTbody"></tbody>
+            </table>
+            <div id="insEmpty" class="empty" style="display:none;padding:16px 0;">Sin insumos registrados.</div>
+          </div>
+
+          <!-- JORNALES -->
+          <div class="subpanel" id="lsub-jornales">
+            <p class="sub" style="margin-bottom:10px;">Registrá la mano de obra contratada para este lote — para que el margen sea más real.</p>
+            <div class="mini-form" style="grid-template-columns:.9fr 1.2fr 1fr .8fr auto;">
+              <div class="field" style="margin-bottom:0;"><label>Fecha</label><input type="date" id="jorFecha"></div>
+              <div class="field" style="margin-bottom:0;"><label>Tarea</label><input type="text" id="jorTarea" placeholder="Ej: Siembra, cosecha, pulverización"></div>
+              <div class="field" style="margin-bottom:0;"><label>Trabajador / cuadrilla</label><input type="text" id="jorTrabajador" placeholder="Opcional"></div>
+              <div class="field" style="margin-bottom:0;"><label>Costo ($)</label><input type="number" id="jorCosto" placeholder="Ej: 30000"></div>
+              <button class="btn btn-primary" id="jorAddBtn" style="height:40px;">Agregar</button>
+            </div>
+            <div class="result-box" style="margin-bottom:14px;">
+              <div class="muted" style="font-size:12.5px;">💰 Total invertido en jornales</div>
+              <div class="big" id="jorTotalInvertido" style="font-size:20px;">$0</div>
+            </div>
+            <table class="mini" id="jorTable">
+              <thead><tr><th>Fecha</th><th>Tarea</th><th>Trabajador</th><th>Costo</th><th></th></tr></thead>
+              <tbody id="jorTbody"></tbody>
+            </table>
+            <div id="jorEmpty" class="empty" style="display:none;padding:16px 0;">Sin jornales registrados.</div>
           </div>
         </div>
       </div>
@@ -1022,6 +1191,28 @@ function calcHumedad(){
 }
 ['pesoBruto','humedadMedida','humedadBase','mermaPct'].forEach(id => document.getElementById(id).addEventListener('input', calcHumedad));
 calcHumedad();
+
+/* ---------- Costo de flete ---------- */
+function calcFlete(){
+  const distancia = parseFloat(document.getElementById('fleteDistancia').value) || 0;
+  const tarifa = parseFloat(document.getElementById('fleteTarifa').value) || 0;
+  const toneladas = parseFloat(document.getElementById('fleteToneladas').value) || 0;
+  const costoTotal = (distancia/100) * tarifa * toneladas;
+  const costoPorTn = toneladas > 0 ? costoTotal / toneladas : 0;
+  document.getElementById('fleteResultTotal').textContent = fmtMoney(costoTotal);
+  document.getElementById('fleteResultPorTn').textContent = fmtMoney(costoPorTn);
+
+  const netoTexto = (document.getElementById('liquResult').textContent || '').replace(/[^\d]/g, '');
+  const netoLiqu = netoTexto ? parseFloat(netoTexto) : 0;
+  const netoEl = document.getElementById('fleteResultNeto');
+  netoEl.textContent = (netoLiqu > 0 && costoTotal > 0) ? fmtMoney(netoLiqu - costoTotal) : '—';
+}
+['fleteDistancia','fleteTarifa','fleteToneladas'].forEach(id => document.getElementById(id).addEventListener('input', calcFlete));
+document.getElementById('toneladas').addEventListener('input', calcFlete);
+document.getElementById('precioTn').addEventListener('input', calcFlete);
+document.getElementById('pctGastos').addEventListener('input', calcFlete);
+document.getElementById('cultivoSelect').addEventListener('input', calcFlete);
+calcFlete();
 
 /* ---------- Cotizaciones de granos (pizarra Rosario, orientativo) ---------- */
 const cotizGranosBase = {
@@ -1690,7 +1881,8 @@ function openMaqDetail(id){
 
   const costoMant = (m.mantenimientos || []).reduce((s, x) => s + (parseFloat(x.costo) || 0), 0);
   const costoVuelos = (m.vuelos || []).reduce((s, x) => s + (parseFloat(x.costo) || 0), 0);
-  document.getElementById('maqDetCostoTotal').textContent = fmtMoney(costoMant + costoVuelos);
+  const costoRep = (m.repuestos || []).reduce((s, x) => s + (parseFloat(x.costo) || 0), 0);
+  document.getElementById('maqDetCostoTotal').textContent = fmtMoney(costoMant + costoVuelos + costoRep);
 
   renderMantenimientos(m);
   renderRepuestos(m);
@@ -1731,7 +1923,8 @@ function actualizarCostoTotalMaq(m){
   if (!m) return;
   const costoMant = (m.mantenimientos || []).reduce((s, x) => s + (parseFloat(x.costo) || 0), 0);
   const costoVuelos = (m.vuelos || []).reduce((s, x) => s + (parseFloat(x.costo) || 0), 0);
-  document.getElementById('maqDetCostoTotal').textContent = fmtMoney(costoMant + costoVuelos);
+  const costoRep = (m.repuestos || []).reduce((s, x) => s + (parseFloat(x.costo) || 0), 0);
+  document.getElementById('maqDetCostoTotal').textContent = fmtMoney(costoMant + costoVuelos + costoRep);
 }
 
 /* --- Mantenimiento --- */
@@ -1777,26 +1970,35 @@ function renderRepuestos(m){
   const emptyEl = document.getElementById('repEmpty');
   const list = m.repuestos || [];
   const proximoEl = document.getElementById('maqDetProximo');
+  const totalInvertido = list.reduce((s, r) => s + (parseFloat(r.costo) || 0), 0);
+  document.getElementById('repTotalInvertido').textContent = fmtMoney(totalInvertido);
   if (!list.length){ tbody.innerHTML=''; emptyEl.style.display='block'; proximoEl.textContent = '—'; return; }
   emptyEl.style.display = 'none';
 
   const conRestantes = list.map((r, idx) => {
+    const tieneIntervalo = parseFloat(r.intervalo) > 0;
     const usadas = (m.horas || 0) - (parseFloat(r.ultimoCambio) || 0);
-    const restantes = (parseFloat(r.intervalo) || 0) - usadas;
-    return { ...r, idx, restantes };
-  }).sort((a,b) => a.restantes - b.restantes);
+    const restantes = tieneIntervalo ? (parseFloat(r.intervalo) || 0) - usadas : null;
+    return { ...r, idx, restantes, tieneIntervalo };
+  }).sort((a,b) => (a.restantes ?? Infinity) - (b.restantes ?? Infinity));
 
-  const critico = conRestantes[0];
+  const critico = conRestantes.find(r => r.tieneIntervalo);
   proximoEl.textContent = critico ? `${critico.nombre} (${Math.round(critico.restantes)} hs)` : '—';
 
   tbody.innerHTML = conRestantes.map(r => {
-    let color = 'verde';
-    if (r.restantes <= 0) color = 'rojo'; else if (r.restantes <= (parseFloat(r.intervalo)||0) * 0.15) color = 'naranja';
+    let color = null;
+    if (r.tieneIntervalo){
+      color = 'verde';
+      if (r.restantes <= 0) color = 'rojo'; else if (r.restantes <= (parseFloat(r.intervalo)||0) * 0.15) color = 'naranja';
+    }
     return `<tr>
-      <td><span class="semaforo ${color}"></span></td>
+      <td>${r.fecha || '—'}</td>
+      <td>${color ? `<span class="semaforo ${color}"></span>` : ''}</td>
       <td>${r.nombre}</td>
-      <td>${Math.round(r.restantes)} hs</td>
-      <td><button data-idx="${r.idx}" class="marcarRepBtn" style="border:none;background:none;color:var(--brand-light);cursor:pointer;font-size:12px;">Marcar cambiado</button></td>
+      <td>${r.motivo || '—'}</td>
+      <td>${r.costo ? fmtMoney(parseFloat(r.costo)) : '—'}</td>
+      <td>${r.tieneIntervalo ? Math.round(r.restantes) + ' hs' : '—'}</td>
+      <td>${r.tieneIntervalo ? `<button data-idx="${r.idx}" class="marcarRepBtn" style="border:none;background:none;color:var(--brand-light);cursor:pointer;font-size:12px;">Marcar cambiado</button>` : ''}</td>
       <td><button data-idx="${r.idx}" class="delRepBtn" style="border:none;background:none;color:#c33;cursor:pointer;">Eliminar</button></td>
     </tr>`;
   }).join('');
@@ -1811,13 +2013,17 @@ function renderRepuestos(m){
 }
 document.getElementById('repAddBtn').addEventListener('click', () => {
   const nombre = document.getElementById('repNombre').value.trim();
-  const intervalo = document.getElementById('repIntervalo').value;
+  const fecha = document.getElementById('repFecha').value ? new Date(document.getElementById('repFecha').value + 'T00:00:00').toLocaleDateString('es-AR') : new Date().toLocaleDateString('es-AR');
+  const motivo = document.getElementById('repMotivo').value;
+  const costo = document.getElementById('repCosto').value || 0;
+  const intervalo = document.getElementById('repIntervalo').value || 0;
   const ultimoCambio = document.getElementById('repUltimoCambio').value || 0;
-  if (!nombre || !intervalo) return;
-  updateCurrentMaq(m => { m.repuestos = m.repuestos || []; m.repuestos.push({ nombre, intervalo, ultimoCambio }); });
+  if (!nombre) return;
+  updateCurrentMaq(m => { m.repuestos = m.repuestos || []; m.repuestos.push({ nombre, fecha, motivo, costo, intervalo, ultimoCambio }); });
   const equipo = getMaqById(currentMaqId);
-  registrarFilaSheets('repuestos', [new Date().toLocaleDateString('es-AR'), equipo.nombre, nombre, intervalo, ultimoCambio]);
+  registrarFilaSheets('repuestos', [fecha, equipo.nombre, nombre, motivo, costo, intervalo, ultimoCambio]);
   document.getElementById('repNombre').value = '';
+  document.getElementById('repCosto').value = '';
   document.getElementById('repIntervalo').value = '';
   document.getElementById('repUltimoCambio').value = '';
   renderRepuestos(getMaqById(currentMaqId));
@@ -1919,6 +2125,410 @@ async function analizarReporteVuelo(file){
   }
 }
 
+/* ---------- Alertas climáticas (Open-Meteo, sin API key) ---------- */
+const CLIMA_DEPTOS = {
+  parana:        { nombre: 'Paraná',        lat: -31.73, lon: -60.53 },
+  gualeguaychu:  { nombre: 'Gualeguaychú',  lat: -33.01, lon: -58.52 },
+  concordia:     { nombre: 'Concordia',     lat: -31.39, lon: -58.02 },
+  colon:         { nombre: 'Colón',         lat: -32.22, lon: -58.14 },
+  uruguay:       { nombre: 'Uruguay (C. del Uruguay)', lat: -32.48, lon: -58.24 },
+  federacion:    { nombre: 'Federación',    lat: -30.98, lon: -57.91 },
+  diamante:      { nombre: 'Diamante',      lat: -32.06, lon: -60.65 },
+  nogoya:        { nombre: 'Nogoyá',        lat: -32.39, lon: -59.80 },
+  gualeguay:     { nombre: 'Gualeguay',     lat: -33.14, lon: -59.31 },
+  victoria:      { nombre: 'Victoria',      lat: -32.62, lon: -60.15 },
+  villaguay:     { nombre: 'Villaguay',     lat: -31.87, lon: -59.03 },
+  tala:          { nombre: 'Tala',          lat: -32.71, lon: -59.09 },
+  federal:       { nombre: 'Federal',       lat: -30.95, lon: -58.78 },
+  feliciano:     { nombre: 'Feliciano',     lat: -30.40, lon: -59.13 },
+  laPaz:         { nombre: 'La Paz',        lat: -30.75, lon: -59.64 },
+  islas:         { nombre: 'Islas del Ibicuy', lat: -33.75, lon: -59.20 }
+};
+(function initClimaDepto(){
+  const sel = document.getElementById('climaDepto');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">Elegí un departamento...</option>' + Object.entries(CLIMA_DEPTOS).map(([k,d]) => `<option value="${k}">${d.nombre}</option>`).join('');
+  const guardado = localStorage.getItem('campoia_clima_depto');
+  if (guardado && CLIMA_DEPTOS[guardado]) sel.value = guardado;
+  sel.addEventListener('change', () => {
+    localStorage.setItem('campoia_clima_depto', sel.value);
+    cargarClima();
+  });
+  if (sel.value) cargarClima();
+})();
+
+async function cargarClima(){
+  const depto = CLIMA_DEPTOS[document.getElementById('climaDepto').value];
+  const resultEl = document.getElementById('climaResult');
+  if (!depto){ resultEl.innerHTML = 'Elegí tu departamento para ver el pronóstico.'; resultEl.className = 'empty'; return; }
+  resultEl.innerHTML = '<div class="loading" style="color:var(--brand-light);"><span></span><span></span><span></span></div>';
+  resultEl.className = '';
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${depto.lat}&longitude=${depto.lon}&daily=temperature_2m_min,precipitation_sum&timezone=America%2FArgentina%2FBuenos_Aires&forecast_days=3`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const dias = data.daily.time.map((fecha, i) => ({
+      fecha,
+      tempMin: data.daily.temperature_2m_min[i],
+      lluvia: data.daily.precipitation_sum[i]
+    }));
+    const hayHelada = dias.some(d => d.tempMin <= 3);
+    const hayLluviaFuerte = dias.some(d => d.lluvia >= 10);
+    let alertasHtml = '';
+    if (hayHelada) alertasHtml += `<div style="background:rgba(212,160,23,.14);border-left:3px solid var(--accent);padding:8px 12px;border-radius:6px;margin-bottom:8px;font-size:13px;">🥶 Riesgo de helada en los próximos 3 días (mínima ≤ 3°C)</div>`;
+    if (hayLluviaFuerte) alertasHtml += `<div style="background:rgba(46,116,88,.14);border-left:3px solid var(--brand-light);padding:8px 12px;border-radius:6px;margin-bottom:8px;font-size:13px;">🌧️ Lluvia fuerte prevista (≥10mm) — evaluá pulverizaciones o cosecha</div>`;
+    const cotiz = dias.map(d => {
+      const fechaFmt = new Date(d.fecha + 'T00:00:00').toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric', month: 'short' });
+      return `<div class="cotiz-card"><div class="nom">${fechaFmt}</div><div class="val">${Math.round(d.tempMin)}°C mín</div><div class="muted" style="font-size:10.5px;">${d.lluvia > 0 ? d.lluvia.toFixed(0) + 'mm lluvia' : 'sin lluvia'}</div></div>`;
+    }).join('');
+    resultEl.innerHTML = alertasHtml + `<div class="cotiz-grid" style="margin-top:8px;">${cotiz}</div>`;
+  } catch(e){
+    resultEl.innerHTML = 'No se pudo cargar el pronóstico. Reintentá más tarde.';
+    resultEl.className = 'empty';
+  }
+}
+
+/* ---------- Lotes ---------- */
+function loadLotes(){ return JSON.parse(localStorage.getItem('campoia_lotes') || '[]'); }
+function saveLotes(list){ localStorage.setItem('campoia_lotes', JSON.stringify(list)); }
+
+let currentLoteId = null;
+const loteListView = document.getElementById('loteListView');
+const loteDetailView = document.getElementById('loteDetailView');
+const loteTbody = document.getElementById('loteTbody');
+const loteEmpty = document.getElementById('loteEmpty');
+
+const loteCultivoSelect = document.getElementById('loteCultivo');
+Object.keys(RETENCIONES).forEach(c => {
+  const opt = document.createElement('option'); opt.value = c; opt.textContent = c; loteCultivoSelect.appendChild(opt);
+});
+
+function renderLotes(){
+  const list = loadLotes();
+  if (!list.length){ loteTbody.innerHTML = ''; loteEmpty.style.display = 'block'; return; }
+  loteEmpty.style.display = 'none';
+  loteTbody.innerHTML = list.map(l => `
+    <tr>
+      <td><b>${l.nombre}</b></td>
+      <td>${l.hectareas || 0} ha</td>
+      <td>${l.cultivo}</td>
+      <td><span class="cat-chip">${l.estado}</span></td>
+      <td>
+        <button data-id="${l.id}" class="verLoteBtn" style="border:none;background:none;color:var(--brand-light);cursor:pointer;font-weight:600;">Ver ficha</button>
+        <button data-id="${l.id}" class="delLoteBtn" style="border:none;background:none;color:#c33;cursor:pointer;margin-left:8px;">Eliminar</button>
+      </td>
+    </tr>
+  `).join('');
+  loteTbody.querySelectorAll('.verLoteBtn').forEach(b => b.addEventListener('click', () => openLoteDetail(b.dataset.id)));
+  loteTbody.querySelectorAll('.delLoteBtn').forEach(b => b.addEventListener('click', () => {
+    if (!confirm('¿Eliminar este lote y todo su historial?')) return;
+    saveLotes(loadLotes().filter(l => l.id !== b.dataset.id));
+    renderLotes();
+  }));
+}
+renderLotes();
+
+document.getElementById('loteAddBtn').addEventListener('click', () => {
+  const nombre = document.getElementById('loteNombre').value.trim();
+  if (!nombre){ alert('Ingresá un nombre para el lote.'); return; }
+  const list = loadLotes();
+  const lote = {
+    id: uid(),
+    nombre,
+    hectareas: parseFloat(document.getElementById('loteHectareas').value) || 0,
+    cultivo: document.getElementById('loteCultivo').value,
+    estado: document.getElementById('loteEstado').value,
+    insumos: [], jornales: [], rinde: '', precioQq: ''
+  };
+  list.push(lote);
+  saveLotes(list);
+  registrarFilaSheets('lotes', [new Date().toLocaleDateString('es-AR'), lote.nombre, lote.hectareas, lote.cultivo, lote.estado]);
+  document.getElementById('loteNombre').value = '';
+  document.getElementById('loteHectareas').value = '';
+  renderLotes();
+});
+
+function getLoteById(id){ return loadLotes().find(l => l.id === id); }
+function updateCurrentLote(mutateFn){
+  const list = loadLotes();
+  const l = list.find(l => l.id === currentLoteId);
+  if (!l) return;
+  mutateFn(l);
+  saveLotes(list);
+}
+
+function openLoteDetail(id){
+  const l = getLoteById(id);
+  if (!l) return;
+  currentLoteId = l.id;
+  loteListView.style.display = 'none';
+  loteDetailView.style.display = 'block';
+  document.getElementById('loteDetNombre').textContent = l.nombre;
+  document.getElementById('loteDetCultivo').textContent = l.cultivo;
+  document.getElementById('loteDetHectareas').textContent = (l.hectareas || 0) + ' ha';
+  document.getElementById('loteDetEstado').textContent = l.estado;
+  document.getElementById('loteRinde').value = l.rinde || '';
+  document.getElementById('lotePrecioQq').value = l.precioQq || '';
+
+  renderInsumos(l);
+  renderJornales(l);
+  actualizarCostoTotalLote(getLoteById(currentLoteId));
+  calcMargenLote();
+
+  document.querySelectorAll('.subtab-btn[data-lsub]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#loteDetailView .subpanel').forEach(p => p.classList.remove('active'));
+  document.querySelector('.subtab-btn[data-lsub="margen"]').classList.add('active');
+  document.getElementById('lsub-margen').classList.add('active');
+}
+
+document.getElementById('loteBackBtn').addEventListener('click', () => {
+  loteDetailView.style.display = 'none';
+  loteListView.style.display = 'block';
+  renderLotes();
+});
+document.getElementById('loteDeleteBtn').addEventListener('click', () => {
+  if (!confirm('¿Eliminar este lote y todo su historial?')) return;
+  saveLotes(loadLotes().filter(l => l.id !== currentLoteId));
+  document.getElementById('loteBackBtn').click();
+});
+
+document.querySelectorAll('.subtab-btn[data-lsub]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.subtab-btn[data-lsub]').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#loteDetailView .subpanel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('lsub-' + btn.dataset.lsub).classList.add('active');
+  });
+});
+
+function actualizarCostoTotalLote(l){
+  if (!l) return;
+  const costoInsumos = (l.insumos || []).reduce((s, x) => s + (parseFloat(x.costo) || 0), 0);
+  const costoJornales = (l.jornales || []).reduce((s, x) => s + (parseFloat(x.costo) || 0), 0);
+  document.getElementById('loteDetCostoTotal').textContent = fmtMoney(costoInsumos + costoJornales);
+
+  const proximaEl = document.getElementById('loteDetProximaCarencia');
+  const pendientes = (l.insumos || [])
+    .map(i => ({ ...i, diasRestantes: diasCarenciaRestantes(i) }))
+    .filter(i => i.diasRestantes !== null)
+    .sort((a,b) => a.diasRestantes - b.diasRestantes);
+  proximaEl.textContent = pendientes.length ? `${pendientes[0].producto} (${Math.max(0, pendientes[0].diasRestantes)} días)` : '—';
+}
+
+/* --- Margen --- */
+function calcMargenLote(){
+  const l = getLoteById(currentLoteId);
+  if (!l) return;
+  const rinde = parseFloat(document.getElementById('loteRinde').value) || 0;
+  const precioQq = parseFloat(document.getElementById('lotePrecioQq').value) || 0;
+  const hectareas = parseFloat(l.hectareas) || 0;
+  const costoInsumos = (l.insumos || []).reduce((s, x) => s + (parseFloat(x.costo) || 0), 0);
+  const costoJornales = (l.jornales || []).reduce((s, x) => s + (parseFloat(x.costo) || 0), 0);
+  const ingreso = rinde * precioQq * hectareas;
+  const margen = ingreso - costoInsumos - costoJornales;
+
+  document.getElementById('loteMargenIngreso').textContent = fmtMoney(ingreso);
+  document.getElementById('loteMargenCostoInsumos').textContent = fmtMoney(costoInsumos);
+  document.getElementById('loteMargenCostoJornales').textContent = fmtMoney(costoJornales);
+  document.getElementById('loteMargenResultado').textContent = ingreso > 0 ? fmtMoney(margen) : '—';
+  document.getElementById('loteMargenPorHa').textContent = (ingreso > 0 && hectareas > 0) ? fmtMoney(margen / hectareas) : '—';
+}
+['loteRinde','lotePrecioQq'].forEach(id => {
+  document.getElementById(id).addEventListener('input', () => {
+    updateCurrentLote(l => {
+      l.rinde = document.getElementById('loteRinde').value;
+      l.precioQq = document.getElementById('lotePrecioQq').value;
+    });
+    calcMargenLote();
+  });
+});
+
+/* --- Insumos --- */
+function diasCarenciaRestantes(i){
+  if (!i.carencia || !i.fecha) return null;
+  const fechaAplicacion = new Date(i.fecha + 'T00:00:00');
+  const fechaHabilitada = new Date(fechaAplicacion.getTime() + (parseFloat(i.carencia) || 0) * 86400000);
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  return Math.round((fechaHabilitada - hoy) / 86400000);
+}
+function renderInsumos(l){
+  const tbody = document.getElementById('insTbody');
+  const emptyEl = document.getElementById('insEmpty');
+  const list = l.insumos || [];
+  const totalInvertido = list.reduce((s, i) => s + (parseFloat(i.costo) || 0), 0);
+  document.getElementById('insTotalInvertido').textContent = fmtMoney(totalInvertido);
+  if (!list.length){ tbody.innerHTML=''; emptyEl.style.display='block'; return; }
+  emptyEl.style.display = 'none';
+  tbody.innerHTML = list.map((i, idx) => {
+    const restantes = diasCarenciaRestantes(i);
+    let color = null;
+    if (restantes !== null){
+      color = restantes <= 0 ? 'verde' : (restantes <= 3 ? 'naranja' : 'rojo');
+    }
+    return `<tr>
+      <td>${color ? `<span class="semaforo ${color}"></span>` : ''}</td>
+      <td>${i.fecha ? new Date(i.fecha + 'T00:00:00').toLocaleDateString('es-AR') : '—'}</td>
+      <td>${i.producto}</td>
+      <td>${i.dosis || '—'}</td>
+      <td>${restantes !== null ? (restantes <= 0 ? 'Cumplida' : restantes + ' días') : '—'}</td>
+      <td>${i.costo ? fmtMoney(parseFloat(i.costo)) : '—'}</td>
+      <td><button data-idx="${idx}" class="delInsBtn" style="border:none;background:none;color:#c33;cursor:pointer;">Eliminar</button></td>
+    </tr>`;
+  }).join('');
+  tbody.querySelectorAll('.delInsBtn').forEach(b => b.addEventListener('click', () => {
+    updateCurrentLote(l => l.insumos.splice(parseInt(b.dataset.idx), 1));
+    renderInsumos(getLoteById(currentLoteId));
+    actualizarCostoTotalLote(getLoteById(currentLoteId));
+    calcMargenLote();
+  }));
+}
+document.getElementById('insAddBtn').addEventListener('click', () => {
+  const producto = document.getElementById('insProducto').value.trim();
+  const fecha = document.getElementById('insFecha').value;
+  const dosis = document.getElementById('insDosis').value.trim();
+  const carencia = document.getElementById('insCarencia').value || 0;
+  const costo = document.getElementById('insCosto').value || 0;
+  if (!producto) return;
+  updateCurrentLote(l => { l.insumos = l.insumos || []; l.insumos.push({ fecha, producto, dosis, carencia, costo }); });
+  const lote = getLoteById(currentLoteId);
+  registrarFilaSheets('insumos', [fecha, lote.nombre, producto, dosis, carencia, costo]);
+  document.getElementById('insProducto').value = '';
+  document.getElementById('insDosis').value = '';
+  document.getElementById('insCarencia').value = '';
+  document.getElementById('insCosto').value = '';
+  renderInsumos(getLoteById(currentLoteId));
+  actualizarCostoTotalLote(getLoteById(currentLoteId));
+  calcMargenLote();
+});
+
+/* --- Jornales --- */
+function renderJornales(l){
+  const tbody = document.getElementById('jorTbody');
+  const emptyEl = document.getElementById('jorEmpty');
+  const list = l.jornales || [];
+  const totalInvertido = list.reduce((s, j) => s + (parseFloat(j.costo) || 0), 0);
+  document.getElementById('jorTotalInvertido').textContent = fmtMoney(totalInvertido);
+  if (!list.length){ tbody.innerHTML=''; emptyEl.style.display='block'; return; }
+  emptyEl.style.display = 'none';
+  tbody.innerHTML = list.map((j, idx) => `<tr>
+    <td>${j.fecha ? new Date(j.fecha + 'T00:00:00').toLocaleDateString('es-AR') : '—'}</td>
+    <td>${j.tarea}</td>
+    <td>${j.trabajador || '—'}</td>
+    <td>${j.costo ? fmtMoney(parseFloat(j.costo)) : '—'}</td>
+    <td><button data-idx="${idx}" class="delJorBtn" style="border:none;background:none;color:#c33;cursor:pointer;">Eliminar</button></td>
+  </tr>`).join('');
+  tbody.querySelectorAll('.delJorBtn').forEach(b => b.addEventListener('click', () => {
+    updateCurrentLote(l => l.jornales.splice(parseInt(b.dataset.idx), 1));
+    renderJornales(getLoteById(currentLoteId));
+    actualizarCostoTotalLote(getLoteById(currentLoteId));
+    calcMargenLote();
+  }));
+}
+document.getElementById('jorAddBtn').addEventListener('click', () => {
+  const tarea = document.getElementById('jorTarea').value.trim();
+  const fecha = document.getElementById('jorFecha').value;
+  const trabajador = document.getElementById('jorTrabajador').value.trim();
+  const costo = document.getElementById('jorCosto').value || 0;
+  if (!tarea) return;
+  updateCurrentLote(l => { l.jornales = l.jornales || []; l.jornales.push({ fecha, tarea, trabajador, costo }); });
+  const lote = getLoteById(currentLoteId);
+  registrarFilaSheets('jornales', [fecha, lote.nombre, tarea, trabajador, costo]);
+  document.getElementById('jorFecha').value = '';
+  document.getElementById('jorTarea').value = '';
+  document.getElementById('jorTrabajador').value = '';
+  document.getElementById('jorCosto').value = '';
+  renderJornales(getLoteById(currentLoteId));
+  actualizarCostoTotalLote(getLoteById(currentLoteId));
+  calcMargenLote();
+});
+
+/* ---------- Reporte general en PDF ---------- */
+document.getElementById('btnDescargarReporte').addEventListener('click', () => {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  const marginX = 40;
+  let y = 50;
+  const lineH = 16;
+
+  function titulo(texto){
+    doc.setFont(undefined, 'bold'); doc.setFontSize(13);
+    doc.text(texto, marginX, y); y += lineH + 4;
+    doc.setFont(undefined, 'normal'); doc.setFontSize(10.5);
+  }
+  function linea(texto){
+    if (y > 780){ doc.addPage(); y = 50; }
+    doc.text(texto, marginX, y); y += lineH;
+  }
+
+  doc.setFont(undefined, 'bold'); doc.setFontSize(17);
+  doc.text('CampoIA — Reporte general', marginX, y); y += lineH + 4;
+  doc.setFont(undefined, 'normal'); doc.setFontSize(10);
+  doc.setTextColor(110);
+  doc.text(`Generado el ${new Date().toLocaleDateString('es-AR')} — datos cargados en este navegador`, marginX, y);
+  doc.setTextColor(20);
+  y += lineH + 14;
+
+  // Animales
+  const animales = loadAnimales();
+  titulo('🐄 Animales por caravana');
+  if (!animales.length) linea('Sin animales cargados.');
+  else {
+    const porEspecie = {};
+    animales.forEach(a => { porEspecie[a.especie] = (porEspecie[a.especie] || 0) + 1; });
+    linea(`Total: ${animales.length} animales`);
+    Object.entries(porEspecie).forEach(([esp, cant]) => linea(`  • ${esp}: ${cant}`));
+  }
+  y += 10;
+
+  // Maquinaria
+  const maquinas = loadMaquinas();
+  titulo('🚜 Maquinaria');
+  if (!maquinas.length) linea('Sin equipos cargados.');
+  else {
+    let costoTotalGeneral = 0;
+    maquinas.forEach(m => {
+      const costoMant = (m.mantenimientos || []).reduce((s, x) => s + (parseFloat(x.costo) || 0), 0);
+      const costoVuelos = (m.vuelos || []).reduce((s, x) => s + (parseFloat(x.costo) || 0), 0);
+      const costoRep = (m.repuestos || []).reduce((s, x) => s + (parseFloat(x.costo) || 0), 0);
+      const total = costoMant + costoVuelos + costoRep;
+      costoTotalGeneral += total;
+      linea(`  • ${m.nombre} (${m.tipo}) — ${m.horas || 0} hs — invertido: ${fmtMoney(total)}`);
+    });
+    linea(`Total invertido en maquinaria: ${fmtMoney(costoTotalGeneral)}`);
+  }
+  y += 10;
+
+  // Lotes
+  const lotes = loadLotes();
+  titulo('🌱 Lotes');
+  if (!lotes.length) linea('Sin lotes cargados.');
+  else {
+    lotes.forEach(l => {
+      const costoInsumos = (l.insumos || []).reduce((s, x) => s + (parseFloat(x.costo) || 0), 0);
+      const costoJornales = (l.jornales || []).reduce((s, x) => s + (parseFloat(x.costo) || 0), 0);
+      linea(`  • ${l.nombre} — ${l.hectareas || 0} ha — ${l.cultivo} (${l.estado}) — insumos+jornales: ${fmtMoney(costoInsumos + costoJornales)}`);
+    });
+  }
+  y += 10;
+
+  // Vencimientos próximos
+  const vencs = loadVenc();
+  titulo('📅 Vencimientos próximos (60 días)');
+  if (!vencs.length) linea('Sin vencimientos cargados.');
+  else {
+    const proximos = vencs.map(item => {
+      const venceDate = new Date(item.inicio);
+      venceDate.setMonth(venceDate.getMonth() + parseInt(item.plazo));
+      const days = Math.ceil((venceDate - new Date()) / (1000*60*60*24));
+      return { ...item, venceDate, days };
+    }).filter(v => v.days <= 60).sort((a,b) => a.days - b.days);
+    if (!proximos.length) linea('Ningún vencimiento dentro de los próximos 60 días.');
+    else proximos.forEach(v => linea(`  • ${v.cliente} — vence ${v.venceDate.toLocaleDateString('es-AR')} (${v.days} días)`));
+  }
+
+  doc.save(`CampoIA_reporte_${new Date().toISOString().split('T')[0]}.pdf`);
+});
+
 /* ---------- Sincronización con Google Sheets propio (mismo patrón OAuth que FiscoIA) ---------- */
 // Mismo Client ID que FiscoIA/MiPropIA: comparten origen (labstudiopna.github.io), así que
 // ya está autorizado para este subpath sin tocar nada en Google Cloud Console.
@@ -1979,8 +2589,11 @@ const HOJAS_CAMPOIA = {
   partos: { nombre: 'Reproduccion_Partos', headers: ['Fecha','Caravana','Vivos','Muertos','Observaciones'] },
   maquinaria: { nombre: 'Maquinaria', headers: ['Fecha alta','Nombre','Tipo','Marca/Modelo','Horas','Estado'] },
   mantenimientos: { nombre: 'Mantenimientos', headers: ['Fecha','Equipo','Servicio','Horas','Costo'] },
-  repuestos: { nombre: 'Repuestos', headers: ['Fecha alta','Equipo','Repuesto','Intervalo (hs)','Últ. cambio (hs)'] },
-  vuelos: { nombre: 'Vuelos', headers: ['Fecha','Equipo','Hectáreas','Producto','Costo'] }
+  repuestos: { nombre: 'Repuestos', headers: ['Fecha','Equipo','Repuesto','Motivo','Importe ($)','Intervalo (hs)','Últ. cambio (hs)'] },
+  vuelos: { nombre: 'Vuelos', headers: ['Fecha','Equipo','Hectáreas','Producto','Costo'] },
+  lotes: { nombre: 'Lotes', headers: ['Fecha alta','Lote','Hectáreas','Cultivo','Estado'] },
+  insumos: { nombre: 'Insumos', headers: ['Fecha','Lote','Producto','Dosis','Carencia (días)','Costo'] },
+  jornales: { nombre: 'Jornales', headers: ['Fecha','Lote','Tarea','Trabajador','Costo'] }
 };
 
 async function crearHojaCampoIA(){

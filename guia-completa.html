@@ -73,6 +73,7 @@
     <a href="#granos">Liquidación de granos y contratos</a>
     <a href="#animales">Animales por caravana</a>
     <a href="#maquinaria">Maquinaria, repuestos y drones</a>
+    <a href="#lotes">Lotes: margen, insumos y jornales</a>
     <a href="#sheets">Conectar tu Google Sheets (backup y sync)</a>
     <a href="#paneles">Características por panel</a>
     <a href="#faq">Preguntas frecuentes</a>
@@ -155,10 +156,29 @@
   <ol>
     <li>Andá a la pestaña <b>Maquinaria</b>, cargá nombre, tipo, marca/modelo, horas de uso y estado.</li>
     <li>En <b>Mantenimiento</b> registrá cada service con horas y costo — así vas armando el historial.</li>
-    <li>En <b>Repuestos</b> cargá cada pieza con el intervalo recomendado en horas — el semáforo te avisa cuándo se acerca el cambio, y "Marcar cambiado" reinicia el contador.</li>
+    <li>En <b>Repuestos</b> llevás el libro de gastos de repuestos: cada pieza rota, reparada o comprada con su fecha, motivo e importe — arriba de la tabla ves el total invertido acumulado. Si además cargás el intervalo recomendado en horas, sumás el semáforo que avisa cuándo se acerca el próximo cambio, y "Marcar cambiado" reinicia el contador.</li>
     <li>Si el equipo es tipo <b>Dron</b>, aparece la sub-pestaña <b>Vuelos</b>: cargá manualmente hectáreas/producto/costo, o subí el PDF que ya te exporta tu plataforma de vuelo (Auravant, Vistaguay, AvanSys u otra) — la IA lee ese reporte y te saca en limpio hectáreas, tipo de vuelo y alertas, sin reprocesar imágenes.</li>
   </ol>
   <div class="callout">CampoIA no procesa imágenes de dron (NDVI, conteo de hacienda) — eso lo siguen haciendo las plataformas especializadas. Lo que hace CampoIA es consolidar ese reporte con el resto de tu operación: costo, mantenimiento y plata.</div>
+
+  <h2 id="lotes">🌱 Lotes: margen, insumos y jornales</h2>
+  <p>La pestaña Lotes es donde se junta todo lo que gastás por potrero — para saber si un lote te da ganancia real, no solo rinde.</p>
+  <ol>
+    <li>Andá a la pestaña <b>Lotes</b> y cargá nombre, hectáreas, cultivo y estado (Sembrado, En barbecho o Cosechado).</li>
+    <li>En <b>Margen</b> cargá el rinde esperado (qq/ha) y el precio por quintal — CampoIA calcula el ingreso bruto estimado y le resta automáticamente los insumos y jornales que cargues en las otras dos pestañas, mostrando el margen total y por hectárea.</li>
+    <li>En <b>Insumos</b> registrá cada aplicación (herbicida, fungicida, fertilizante) con su período de carencia en días — el semáforo te avisa cuándo se cumple el plazo para poder cosechar o vender sin problema.</li>
+    <li>En <b>Jornales</b> anotá la mano de obra contratada por tarea (siembra, cosecha, pulverización) para que el margen sea más real, no solo el costo de insumos.</li>
+  </ol>
+  <div class="callout">⚠️ El margen bruto de esta pestaña no incluye retenciones, gastos de comercialización, flete ni arrendamiento — para el neto final de una venta puntual, usá la pestaña Liquidación.</div>
+
+  <h3>🌡️ Alertas climáticas</h3>
+  <p>Arriba de la lista de lotes, elegí tu departamento de Entre Ríos para ver el pronóstico de los próximos 3 días (fuente: Open-Meteo, sin necesidad de API key). Si hay riesgo de helada (mínima ≤ 3°C) o lluvia fuerte (≥10mm), aparece una alerta destacada — útil para decidir si pulverizar, cosechar o esperar.</p>
+
+  <h3>🚚 Costo de flete</h3>
+  <p>En la pestaña Liquidación, cargá distancia, tarifa por tonelada cada 100km y toneladas transportadas para saber el costo total del flete y el neto puesto en destino (descontando el flete de la liquidación calculada arriba).</p>
+
+  <h3>📄 Reporte general en PDF</h3>
+  <p>Desde el panel izquierdo, tocá "Descargar reporte (PDF)" para bajar un resumen con animales por especie, gastos totales de maquinaria, lotes cargados con su costo de insumos y jornales, y los vencimientos que caen dentro de los próximos 60 días. Es un buen punto de partida para llevarle algo armado a tu contador o simplemente tener una foto del estado general.</p>
 
   <h2 id="sheets">🔄 Conectar tu Google Sheets (backup y sincronización)</h2>
   <p>Por defecto, todo lo que cargás en CampoIA vive solo en el navegador donde lo cargaste (<code>localStorage</code>). Si cambiás de celular o se te borra el caché, se pierde. Conectando tu propio Google Sheets, cada alta se guarda también en una hoja de cálculo de <b>tu</b> Google Drive — CampoIA nunca la ve ni la guarda en un servidor propio.</p>
@@ -261,7 +281,8 @@
     <tr><td>📄 Contratos</td><td>Analiza contratos de arrendamiento rural: plazo, forma de pago, superficie, mejoras y alertas.</td></tr>
     <tr><td>📅 Vencimientos</td><td>Guías SENASA, DTe y trazabilidad con semáforo por documento/lote.</td></tr>
     <tr><td>🐄 Animales</td><td>Ficha por caravana: sanidad, reproducción, genealogía, margen y QR.</td></tr>
-    <tr><td>🚜 Maquinaria</td><td>Inventario con horas de uso, mantenimiento, repuestos y vuelos de dron.</td></tr>
+    <tr><td>🚜 Maquinaria</td><td>Inventario con horas de uso, mantenimiento, libro de gastos de repuestos (motivo + importe) y vuelos de dron.</td></tr>
+    <tr><td>🌱 Lotes</td><td>Margen bruto agrícola, libro de insumos con alerta de carencia, jornales por lote y alertas climáticas (helada/lluvia) por departamento.</td></tr>
   </table>
 
   <h2 id="faq">❓ Preguntas Frecuentes</h2>
