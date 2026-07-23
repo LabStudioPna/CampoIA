@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="manifest" href="site.webmanifest">
-<meta name="theme-color" content="#3B5628">
+<meta name="theme-color" content="#0A101C">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="CampoIA">
 
@@ -30,357 +30,456 @@
 <meta name="twitter:image" content="https://labstudiopna.github.io/CampoIA/og-image.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A101C;--bg-2:#111A2A;--bg-3:#182338;--bg-soft:#0D1524;
+  --border:#1F2C40;--border-soft:#182233;
+  --text:#EAF0F8;--mid:#93A2B8;--dim:#5C6C82;
+  --brand:#5D8438;--brand-soft:#8FC15E;--brand-2:#D4A017;--brand-2-soft:#E8C24A;
+  --amber:#F59E0B;--red:#F87171;--ok:#10B981;--ok-soft:#34D399;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --radius:16px;
+}
+</style>
+<link rel="stylesheet" href="bento.css">
+<script src="tracker.js" defer></script>
 </head>
 <body>
 
-<header class="site">
-  <nav class="nav">
-    <a href="#" class="brand"><img src="favicon-192.png" alt="CampoIA" style="width:34px;height:34px;border-radius:9px;"> Campo<span class="ia">IA</span></a>
-    <div class="navlinks">
-      <a href="#features">Características</a>
-      <a href="#pricing">Precios</a>
-      <a href="guia-completa.html">📚 Guía Completa</a>
-      <a href="#contacto">Contacto</a>
-      <a href="agente-campo.html" class="mobile-only-cta">Ir al Agente →</a>
-    </div>
-    <div class="nav-actions">
-      <button class="theme-toggle" id="themeToggle" title="Modo claro/oscuro">🌙</button>
-      <a href="agente-campo.html" class="btn btn-primary">Ir al Agente →</a>
-      <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú">☰</button>
-    </div>
-  </nav>
-</header>
+<nav>
+  <a href="#" class="logo">
+    <img src="favicon-192.png" alt="CampoIA">
+    <div class="logo-name">Campo<em>IA</em></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Características</a></li>
+    <li><a href="#pricing">Precios</a></li>
+    <li><a href="#faq">Preguntas frecuentes</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+    <li><a href="guia-completa.html" target="_blank">Guía Completa</a></li>
+  </ul>
+  <a href="agente-campo.html" class="nav-cta" id="nav-cta-desktop">Ir al Agente →</a>
+  <button class="hamburger" id="hamburger" aria-label="Abrir menú" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#features" onclick="closeMobileMenu()">Características</a>
+  <a href="#pricing" onclick="closeMobileMenu()">Precios</a>
+  <a href="#faq" onclick="closeMobileMenu()">Preguntas frecuentes</a>
+  <a href="#contacto" onclick="closeMobileMenu()">Contacto</a>
+  <a href="guia-completa.html" target="_blank">Guía Completa</a>
+  <a href="agente-campo.html" class="nav-cta">Ir al Agente →</a>
+</div>
+
+<!-- HERO -->
 <section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
   <div class="container hero-grid">
     <div>
-      <span class="pill">🌾 Hecho en Paraná, para los campos argentinos</span>
-      <h1>Tu gestor de campo <span>experto en IA</span></h1>
-      <p class="lead">Liquida granos, calcula retenciones y gastos de comercialización, y analiza tus contratos de arrendamiento rural. Sin instalación, sin complicaciones — igual de simple que abrir WhatsApp.</p>
+      <span class="pill"><span class="dot"></span>Hecho en Paraná, para el campo de Entre Ríos</span>
+      <h1>Liquidá tu cosecha <em>sin perder un peso</em></h1>
+      <p class="lead">Liquidá granos, calculá retenciones y gastos de comercialización, y analizá tus contratos de arrendamiento rural. Sin instalación, sin complicaciones — igual de simple que abrir WhatsApp.</p>
       <div class="hero-cta">
-        <a href="agente-campo.html" class="btn btn-primary">Prueba 5 días gratis →</a>
+        <a href="agente-campo.html" class="btn btn-primary">Liquidar mi primera venta →</a>
         <a href="#features" class="btn btn-ghost">Ver características</a>
       </div>
       <div class="hero-stats">
-        <div class="stat"><b>30 seg</b><span>Liquidación de granos completa</span></div>
-        <div class="stat"><b>6</b><span>Cultivos con retenciones cargadas</span></div>
-        <div class="stat"><b>0%</b><span>Instalación</span></div>
-        <div class="stat"><b>24 hs</b><span>Soporte técnico</span></div>
+        <div class="hstat"><b>30 seg</b><span>Liquidación completa</span></div>
+        <div class="hstat"><b>6</b><span>Cultivos con retenciones cargadas</span></div>
+        <div class="hstat"><b>24 hs</b><span>Soporte técnico</span></div>
       </div>
     </div>
-    <div class="mock">
-      <div class="mock-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span>&nbsp; campoia.labstudiopna.github.io</div>
-      <div class="mock-body">
-        <div class="msg user">Vendí 180 tn de soja a $320.000/tn, calculame la liquidación</div>
-        <div class="msg bot"><b>CampoIA:</b> Calculando con retención vigente del 24% + gastos de comercialización...</div>
-        <div class="mock-result">✓ Bruto: $57.600.000 &nbsp;|&nbsp; Retención (24%): $13.824.000 &nbsp;|&nbsp; Neto estimado: $41.904.000<br>⚠️ Restá gastos de flete y comisión del corredor para el neto final</div>
+    <div class="hero-bento">
+      <div class="hb-tile hb-wide" style="grid-row:span 2">
+        <div class="hb-tag">Liquidación · en vivo</div>
+        <div class="hb-chat-u">"Vendí 180 tn de soja a $320.000/tn, calculame la liquidación"</div>
+        <div class="hb-chat-a">Calculando con retención vigente del 24% + gastos de comercialización...</div>
+        <div class="bento-hero-visual" style="margin-top:12px">
+          <div class="bhv-row"><span>Bruto</span><b>$57.600.000</b></div>
+          <div class="bhv-row"><span>Retención (24%)</span><b>$13.824.000</b></div>
+          <div class="bhv-row"><span>Neto estimado</span><b>$41.904.000</b></div>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">El problema</span>
-      <h2>Lo que hoy se resuelve a ojo, a mano, o llamando al corredor</h2>
-      <p class="muted">El campo argentino produce para el mundo — todavía con planillas sueltas y cálculos de memoria.</p>
-    </div>
-    <div class="grid cols-3">
-      <div class="card">
-        <span class="icon">🌾</span>
-        <h3>Hasta 24%</h3>
-        <p>de cada venta de soja se va en retenciones (Decreto 423/2026). Sin el cálculo exacto por cultivo, es fácil subestimar cuánto queda neto antes de cerrar el boleto.</p>
+      <div class="hb-tile">
+        <div class="hb-big">24%</div>
+        <div class="hb-lbl">retención soja vigente</div>
       </div>
-      <div class="card">
-        <span class="icon">📄</span>
-        <h3>Cláusulas que nadie relee</h3>
-        <p>Plazo, forma de pago en quintales y mejoras quedan enterradas en contratos de arrendamiento de varias páginas — hasta que un detalle sale caro.</p>
+      <div class="hb-tile">
+        <div class="hb-big g">30s</div>
+        <div class="hb-lbl">por liquidación</div>
       </div>
-      <div class="card">
-        <span class="icon">💉</span>
-        <h3>Un refuerzo que se pasa</h3>
-        <p>Sin un calendario sanitario a mano, una vacuna de refuerzo se posterga fácil — y una enfermedad evitable termina costando más que la vacuna.</p>
+      <div class="hb-tile hb-wide">
+        <div class="hb-tag">Vencimientos SENASA</div>
+        <div class="hb-badges">
+          <span class="hb-badge a">1 guía próxima</span>
+          <span class="hb-badge g">trazabilidad al día</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- TRUST STRIP -->
+<section class="trust" style="padding:0">
+  <div class="container trust-grid">
+    <div class="tstat"><b>Hasta <em>24</em>%</b><span>Se va en retenciones — calculalo exacto, no a ojo</span></div>
+    <div class="tstat"><b><em>6</em></b><span>Cultivos con retenciones cargadas (Decreto 423/2026)</span></div>
+    <div class="tstat"><b><em>0</em>%</b><span>Instalación</span></div>
+    <div class="tstat"><b><em>24</em>hs</b><span>Soporte técnico</span></div>
+  </div>
+</section>
+
+<!-- FEATURES BENTO -->
 <section id="features">
-  <div class="container">
-    <div class="banner">
-      <div>
-        <h3>✨ Julio 2026 — retenciones actualizadas al Decreto 423/2026</h3>
-        <p>Soja 24%, trigo/cebada 5,5%, maíz/sorgo 8,5% — cargadas y listas para calcular tu liquidación en segundos, con el cronograma de baja gradual ya contemplado.</p>
-      </div>
-      <a href="agente-campo.html" class="btn btn-accent">Probar calculadora →</a>
-    </div>
-  </div>
-</section>
-
-<section>
   <div class="container">
     <div class="section-head">
       <span class="eyebrow">Suite de herramientas</span>
       <h2>Todo lo que hoy resolvés a mano o llamando al corredor</h2>
-      <p class="muted">Nada de "IA que opina el precio del grano". Cada módulo produce un cálculo o un documento listo para usar.</p>
+      <p>Nada de "IA que opina el precio del grano". Cada módulo produce un cálculo o un documento listo para usar.</p>
     </div>
-    <div class="grid cols-4">
-      <div class="card"><span class="icon">💬</span><h3>Chat de campo IA</h3><p>Preguntas libres sobre retenciones, arrendamientos rurales, SENASA. Adjuntá un documento y seguí la charla.</p></div>
-      <div class="card"><span class="icon">🌾</span><h3>Liquidación de granos <span class="badge">MVP</span></h3><p>Calculá bruto, retención, gastos de comercialización y neto por tonelada vendida, cultivo por cultivo.</p></div>
-      <div class="card"><span class="icon">📄</span><h3>Analizador de contratos</h3><p>Subí tu contrato de arrendamiento rural: extrae plazo, renta en quintales, forma de pago y marca cláusulas confusas.</p></div>
-      <div class="card"><span class="icon">📅</span><h3>Vencimientos SENASA</h3><p>Guías sanitarias, DTe y trazabilidad — alertas antes de que un vencimiento te frene un embarque.</p></div>
-      <div class="card"><span class="icon">📊</span><h3>Humedad y merma</h3><p>Calculá el descuento por humedad y merma técnica sobre el peso bruto de tu entrega.</p></div>
-      <div class="card"><span class="icon">🗺️</span><h3>Valuación fiscal rural</h3><p>Impuesto inmobiliario rural estimado por partido/departamento de Entre Ríos.</p></div>
-      <div class="card"><span class="icon">🛰️</span><h3>Monitoreo con dron</h3><p>Coordiná un vuelo de LABStudio para medir superficie o monitorear el estado de tus lotes, integrado al mismo panel. <span class="badge">Fase 2</span></p></div>
-      <div class="card"><span class="icon">💱</span><h3>Cotizaciones de granos</h3><p>Precios de pizarra orientativos de soja, maíz, trigo, girasol y sorgo para no vender a ciegas.</p></div>
-      <div class="card"><span class="icon">🚚</span><h3>Costo de flete</h3><p>Calculá el costo del flete por tonelada y el neto puesto en destino antes de cerrar la venta.</p></div>
-      <div class="card"><span class="icon">🌱</span><h3>Margen bruto por lote</h3><p>Rinde esperado, precio e insumos + jornales cargados — para saber si un lote realmente te da ganancia.</p></div>
-      <div class="card"><span class="icon">🧪</span><h3>Libro de insumos con carencia</h3><p>Cada aplicación con su período de carencia y semáforo de cuándo podés cosechar o vender.</p></div>
-      <div class="card"><span class="icon">👷</span><h3>Jornales por lote</h3><p>Registrá la mano de obra contratada para que el margen de cada lote sea más real.</p></div>
-      <div class="card"><span class="icon">🌡️</span><h3>Alertas climáticas</h3><p>Pronóstico de helada, lluvia fuerte y estrés hídrico para los próximos 7-10 días, por departamento de Entre Ríos.</p></div>
-      <div class="card"><span class="icon">📄</span><h3>Reporte general en PDF</h3><p>Descargá un resumen de animales, maquinaria, lotes y vencimientos con un clic.</p></div>
+
+    <div class="bento-grid">
+      <div class="bento b-2x2">
+        <span class="badge-new">MVP</span>
+        <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h3>Liquidación de granos</h3>
+        <p>Calculá bruto, retención, gastos de comercialización y neto por tonelada vendida, cultivo por cultivo, actualizado al Decreto 423/2026.</p>
+        <div class="bento-hero-visual">
+          <div class="bhv-row"><span>Soja</span><b>24%</b></div>
+          <div class="bhv-row"><span>Trigo/Cebada</span><b>5,5%</b></div>
+          <div class="bhv-row"><span>Maíz/Sorgo</span><b>8,5%</b></div>
+        </div>
+      </div>
+      <div class="bento b-2x1">
+        <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg></div>
+        <h3>Analizador de contratos rurales</h3>
+        <p>Subí tu contrato de arrendamiento: extrae plazo, renta en quintales, forma de pago y marca cláusulas confusas.</p>
+      </div>
+      <div class="bento b-1x1">
+        <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+        <h3>Chat de campo IA</h3>
+        <p>Retenciones, arrendamientos rurales, SENASA — todo en una charla.</p>
+      </div>
+      <div class="bento b-1x1">
+        <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <h3>Vencimientos SENASA</h3>
+        <p>Guías sanitarias, DTe y trazabilidad con alerta antes de frenarte un embarque.</p>
+      </div>
+      <div class="bento b-1x1">
+        <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+        <h3>Humedad y merma</h3>
+        <p>Descuento por humedad y merma técnica sobre el peso bruto entregado.</p>
+      </div>
+      <div class="bento b-1x1">
+        <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+        <h3>Margen bruto por lote</h3>
+        <p>Rinde, precio, insumos y jornales — para saber si un lote realmente da ganancia.</p>
+      </div>
+    </div>
+
+    <div class="included">
+      <div class="included-head">
+        <h4>También incluido</h4>
+        <span>Sin cargo extra</span>
+      </div>
+      <div class="included-grid">
+        <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Valuación fiscal rural</b> — impuesto inmobiliario estimado por departamento</div>
+        <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Monitoreo con dron</b> — coordiná un vuelo LABStudio, integrado al panel (Fase 2)</div>
+        <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Cotizaciones de granos</b> — precios de pizarra orientativos, 5 cultivos</div>
+        <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Costo de flete</b> — neto puesto en destino antes de cerrar la venta</div>
+        <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Libro de insumos con carencia</b> — semáforo de cuándo podés cosechar o vender</div>
+        <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Jornales por lote</b> — mano de obra cargada para un margen más real</div>
+        <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Alertas climáticas</b> — helada, lluvia fuerte y estrés hídrico a 7-10 días</div>
+        <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Reporte general en PDF</b> — animales, maquinaria, lotes y vencimientos en un clic</div>
+      </div>
     </div>
   </div>
 </section>
 
-<section style="background:var(--bg-alt);">
+<!-- BACKUP SHEETS -->
+<section style="background:var(--bg-soft);border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft)">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Backup automático</span>
+      <h2>Tus datos, también en tu propio Google Sheets</h2>
+      <p>Opcional y gratis. Así ves los mismos animales, maquinaria y liquidaciones desde el celular y la compu, sin depender de un solo navegador.</p>
+    </div>
+    <div class="bento-grid">
+      <div class="bento b-1x1"><h3>1. Conectá tu cuenta</h3><p>Un botón "Conectar con Google" en el panel — no instalás nada.</p></div>
+      <div class="bento b-1x1"><h3>2. Autorizá el acceso</h3><p>Google muestra su propia ventana de permiso. Aceptás y listo.</p></div>
+      <div class="bento b-1x1"><h3>3. Se sincroniza solo</h3><p>Cada dato cargado queda guardado también en tu Sheets, sin botones extra.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section>
   <div class="container">
     <div class="section-head">
       <span class="eyebrow">Flujo simple</span>
       <h2>Tres pasos hasta la liquidación</h2>
     </div>
-    <div class="steps">
+    <div class="steps-wrap">
       <div class="step">
-        <div class="num">1</div>
-        <h4>Cargá tu API key de Anthropic</h4>
-        <p>Creás cuenta gratis en console.anthropic.com, generás una key y la pegás en CampoIA. Nadie ve tu clave, solo vos.</p>
-        <span class="time">1 minuto</span>
+        <div class="stepn">1</div>
+        <div>
+          <div class="stept">Cargá tu API key de Anthropic</div>
+          <div class="stepd">Creás cuenta gratis en console.anthropic.com, generás una key y la pegás en CampoIA. Nadie más la ve.</div>
+          <span class="stag">1 minuto</span>
+        </div>
       </div>
       <div class="step">
-        <div class="num">2</div>
-        <h4>Cargá tu operación o contrato</h4>
-        <p>Toneladas vendidas, cultivo y precio — o subí el PDF de tu contrato de arrendamiento.</p>
-        <span class="time">Segundos</span>
+        <div class="stepn">2</div>
+        <div>
+          <div class="stept">Cargá tu operación o contrato</div>
+          <div class="stepd">Toneladas vendidas, cultivo y precio — o subí el PDF de tu contrato de arrendamiento.</div>
+          <span class="stag">Segundos</span>
+        </div>
       </div>
       <div class="step">
-        <div class="num">3</div>
-        <h4>Descargá el resultado</h4>
-        <p>Liquidación con retención, gastos y neto estimado, lista para cotejar con la del corredor.</p>
-        <span class="time">Instantáneo</span>
+        <div class="stepn">3</div>
+        <div>
+          <div class="stept">Descargá el resultado</div>
+          <div class="stepd">Liquidación con retención, gastos y neto estimado, lista para cotejar con la del corredor.</div>
+          <span class="stag">Instantáneo</span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<section>
+<!-- TESTIMONIAL -->
+<section style="background:var(--bg-soft);border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft)">
   <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">Backup automático</span>
-      <h2>Tus datos, también en tu propio Google Sheets</h2>
-      <p class="muted">Opcional y gratis. Así vas a ver los mismos animales, maquinaria y liquidaciones desde el celular y la computadora, sin depender de un solo navegador.</p>
-    </div>
-    <div class="steps">
-      <div class="step">
-        <div class="num">1</div>
-        <h4>📎 Conectá tu cuenta</h4>
-        <p>Un solo botón "Conectar con Google" en el panel del agente — no instalás nada ni creás usuario nuevo.</p>
-        <span class="time">1 clic</span>
-      </div>
-      <div class="step">
-        <div class="num">2</div>
-        <h4>✅ Autorizá el acceso</h4>
-        <p>Google te muestra su propia ventana de permiso. Aceptás, y CampoIA crea (o usa) tu hoja de cálculo personal.</p>
-        <span class="time">10 segundos</span>
-      </div>
-      <div class="step">
-        <div class="num">3</div>
-        <h4>🔄 Listo, se sincroniza solo</h4>
-        <p>Cada animal, máquina o liquidación que cargues queda guardado también en tu Google Sheets — sin botones de guardar ni pasos extra.</p>
-        <span class="time">Automático</span>
-      </div>
+    <div class="bento" style="max-width:700px;margin:0 auto;text-align:center;padding:40px">
+      <p style="font-family:var(--serif);font-size:20px;font-style:italic;color:#fff;line-height:1.6;margin-bottom:16px">"Antes esperaba que me pasaran la liquidación para saber cuánto me quedaba neto. Ahora lo calculo yo antes de vender, y negocio mejor."</p>
+      <div style="font-size:13px;color:var(--dim)"><b style="color:var(--mid)">Ricardo P.</b> — Productor agropecuario, Entre Ríos</div>
     </div>
   </div>
 </section>
 
-<section style="background:var(--bg-alt);">
-  <div class="container">
-    <div class="quote">
-      <p>"Antes esperaba que me pasaran la liquidación para saber cuánto me quedaba neto. Ahora lo calculo yo antes de vender, y negocio mejor."</p>
-      <div class="who"><b>Ricardo P.</b> — Productor agropecuario, Entre Ríos</div>
-    </div>
-  </div>
-</section>
-
+<!-- PRICING -->
 <section id="pricing">
   <div class="container">
     <div class="section-head">
       <span class="eyebrow">Transparente y sin sorpresas</span>
       <h2>Planes flexibles</h2>
-      <p class="muted">El costo de la IA lo pagás directamente a Anthropic. CampoIA es la plataforma que lo hace agropecuario.</p>
+      <p>El costo de la IA lo pagás directamente a Anthropic. CampoIA es la plataforma que lo hace agropecuario.</p>
     </div>
-    <div class="pricing-grid">
+    <div class="pgrid">
       <div class="plan">
         <h3>Uso propio</h3>
         <div class="price">Gratis</div>
-        <p class="desc">Acceso completo · pagás solo la API (~USD 0.01–0.02 por consulta)</p>
+        <div class="period">Acceso completo · pagás solo la API (~USD 0.01–0.02 por consulta)</div>
         <ul>
-          <li>Chat de campo IA</li>
-          <li>Liquidación de granos</li>
-          <li>Analizador de contratos de arrendamiento</li>
-          <li>Animales por caravana (sanidad y reproducción)</li>
+          <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Chat de campo IA</li>
+          <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Liquidación de granos</li>
+          <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Analizador de contratos de arrendamiento</li>
+          <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Animales por caravana (sanidad y reproducción)</li>
         </ul>
-        <a href="agente-campo.html" class="btn btn-ghost">Empezar gratis</a>
+        <a href="agente-campo.html" class="btn btn-ghost" style="justify-content:center">Empezar gratis</a>
       </div>
-      <div class="plan">
+      <div class="plan feat">
+        <span class="plan-badge">Recomendado</span>
         <h3>Campo</h3>
         <div class="price">USD 80<small>/mes</small></div>
-        <p class="desc">Por productor, corredor o establecimiento ganadero · hasta 5 usuarios</p>
+        <div class="period">Por productor, corredor o establecimiento · hasta 5 usuarios</div>
         <ul>
-          <li>Todo de Uso propio — granos y ganado en un solo plan</li>
-          <li>Retenciones actualizadas automáticamente</li>
-          <li>Soporte por WhatsApp (24 hs)</li>
-          <li>Vencimientos SENASA con alertas</li>
-          <li>Maquinaria y repuestos con alerta de mantenimiento</li>
+          <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Todo de Uso propio — granos y ganado en un solo plan</li>
+          <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Retenciones actualizadas automáticamente</li>
+          <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Soporte por WhatsApp (24 hs)</li>
+          <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Vencimientos SENASA con alertas</li>
+          <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Maquinaria y repuestos con alerta de mantenimiento</li>
         </ul>
-        <a href="agente-campo.html" class="btn btn-primary">Contratar plan</a>
+        <a href="agente-campo.html" class="btn btn-primary" style="justify-content:center">Contratar plan →</a>
       </div>
     </div>
   </div>
 </section>
 
-<section>
+<!-- FAQ -->
+<section id="faq" style="background:var(--bg-soft);border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft)">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Lo que más nos preguntan</span>
+      <h2>Preguntas frecuentes</h2>
+    </div>
+    <div class="faq-wrap">
+      <div class="faqitem">
+        <div class="faqq" onclick="toggleFaq(this)">¿Qué es una API key y cuánto cuesta?<span class="faqico">+</span></div>
+        <div class="faqa">Es una clave personal para usar la IA de Anthropic. Creás cuenta gratis en console.anthropic.com, cargás crédito y generás tu key. Con USD 5 hacés varios cientos de consultas.</div>
+      </div>
+      <div class="faqitem">
+        <div class="faqq" onclick="toggleFaq(this)">¿Mis datos de campo son privados?<span class="faqico">+</span></div>
+        <div class="faqa">Sí. CampoIA no tiene backend propio. Tu API key y los archivos van directo de tu navegador a Anthropic. Al cerrar la pestaña, todo se borra salvo lo que decidas guardar en tu Sheets.</div>
+      </div>
+      <div class="faqitem">
+        <div class="faqq" onclick="toggleFaq(this)">¿Reemplaza al corredor de granos?<span class="faqico">+</span></div>
+        <div class="faqa">No. Es una herramienta de apoyo para negociar mejor. Calculá tu neto estimado antes de vender — la operación y el precio final siempre se cierran con tu corredor.</div>
+      </div>
+      <div class="faqitem">
+        <div class="faqq" onclick="toggleFaq(this)">¿Funciona en el celular?<span class="faqico">+</span></div>
+        <div class="faqa">Sí, es responsive. Funciona bien en smartphone y tablet, incluso en el campo con señal débil, sin instalar ninguna app.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section id="contacto">
   <div class="container">
     <div class="cta-final">
       <h2>Probalo ahora, gratis</h2>
       <p>Sin registro, sin tarjeta. Solo tu API key y listo.</p>
       <div class="hero-cta">
-        <a href="agente-campo.html" class="btn btn-accent">Abrir CampoIA →</a>
-        <a href="guia-completa.html" class="btn btn-ghost" style="border-color:rgba(255,255,255,.3);">📚 Leer documentación</a>
+        <a href="agente-campo.html" class="btn btn-primary">Abrir CampoIA →</a>
+        <a href="guia-completa.html" target="_blank" class="btn btn-ghost">Leer documentación</a>
       </div>
     </div>
   </div>
 </section>
 
-<section id="contacto">
-  <div class="container">
-    <div class="section-head">
+<!-- CONTACTO -->
+<section style="padding-top:0">
+  <div class="container contact-wrap">
+    <div class="section-head" style="text-align:left;margin-bottom:0">
       <span class="eyebrow">¿Tenés dudas?</span>
       <h2>Escribinos</h2>
-      <p class="muted">¿Tenés una pregunta o una propuesta para tu empresa? Contanos y te respondemos a la brevedad.</p>
+      <p>¿Tenés una pregunta o una propuesta para tu empresa? Contanos y te respondemos a la brevedad.</p>
     </div>
-    <form class="waitlist" id="contactForm" action="https://formspree.io/f/mwvgvgkj" method="POST">
-      <div class="row">
-        <div>
-          <label for="cf-name">Nombre</label>
-          <input id="cf-name" type="text" name="name" required placeholder="Tu nombre">
-        </div>
-        <div>
-          <label for="cf-email">Email</label>
-          <input id="cf-email" type="email" name="email" required placeholder="vos@email.com">
-        </div>
+    <form class="cform" id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <div class="cfield">
+        <label for="cf-name">Nombre</label>
+        <input id="cf-name" type="text" name="name" required placeholder="Tu nombre">
       </div>
-      <div class="row">
-        <div class="full">
-          <label for="cf-whatsapp">WhatsApp (opcional)</label>
-          <input id="cf-whatsapp" type="tel" name="whatsapp" placeholder="+54 9 343...">
-        </div>
+      <div class="cfield">
+        <label for="cf-email">Email</label>
+        <input id="cf-email" type="email" name="email" required placeholder="vos@email.com">
       </div>
-      <div class="row">
-        <div class="full">
-          <label for="cf-msg">Mensaje</label>
-          <textarea id="cf-msg" name="message" required placeholder="Contanos qué necesitás..."></textarea>
-        </div>
+      <div class="cfield">
+        <label for="cf-whatsapp">WhatsApp (opcional)</label>
+        <input id="cf-whatsapp" type="tel" name="whatsapp" placeholder="+54 9 343...">
+      </div>
+      <div class="cfield">
+        <label for="cf-msg">Mensaje</label>
+        <textarea id="cf-msg" name="message" required placeholder="Contanos qué necesitás..."></textarea>
       </div>
       <input type="hidden" name="_subject" value="Nuevo contacto — CampoIA">
-      <button type="submit" class="btn btn-primary">Enviar mensaje</button>
-      <div class="form-success" id="cfSuccess">✓ ¡Listo! Recibimos tu mensaje, te respondemos a la brevedad.</div>
+      <button type="submit" class="cform-submit" id="cform-submit">Enviar mensaje</button>
+      <div class="cform-status" id="cform-status" role="status" aria-live="polite"></div>
     </form>
   </div>
 </section>
 
+<!-- FOOTER -->
 <footer class="site">
   <div class="container">
     <div class="foot-grid">
       <div class="foot-brand">
-        <a href="#" class="brand"><img src="favicon-192.png" alt="CampoIA" style="width:30px;height:30px;"> Campo<span class="ia" style="color:var(--accent-light);">IA</span></a>
-        <p style="margin-top:12px;max-width:320px;">Liquida granos, calcula retenciones y analiza contratos de arrendamiento rural. Hecho por LABStudio.pna.</p>
+        <div class="logo-name">Campo<em>IA</em></div>
+        <p>Liquida granos, calcula retenciones y analiza contratos de arrendamiento rural. Hecho por LABStudio.pna.</p>
       </div>
       <div class="foot-links">
-        <b style="color:#fff;font-size:13px;">Producto</b><br><br>
+        <b>Producto</b>
         <a href="#features">Características</a>
         <a href="#pricing">Precios</a>
-        <a href="guia-completa.html">Guía completa</a>
+        <a href="guia-completa.html">Guía Completa</a>
       </div>
       <div class="foot-links">
-        <b style="color:#fff;font-size:13px;">Soporte</b><br><br>
+        <b>Soporte</b>
         <a href="https://wa.me/5493435344597?text=Hola,%20quiero%20info%20sobre%20CampoIA">WhatsApp</a>
-        <a href="#contacto">Escribinos</a>
+        <a href="#faq">FAQ</a>
         <a href="terminos.html">Términos y Privacidad</a>
       </div>
     </div>
     <div class="foot-bottom">
       <span>© 2026 CampoIA · Todos los derechos reservados</span>
-      <span>Desarrollado por<a href="https://labstudiopna.github.io" target="_blank">LABStudio.pna</a> · Paraná, Entre Ríos, Argentina</span>
+      <span>Desarrollado por LABStudio.pna · Paraná, Entre Ríos, Argentina</span>
     </div>
   </div>
 </footer>
 
 <script>
-  const toggle = document.getElementById('themeToggle');
-  const root = document.documentElement;
-  function applyTheme(t){ root.setAttribute('data-theme', t); toggle.textContent = t === 'dark' ? '☀️' : '🌙'; }
-  applyTheme('light');
-  toggle.addEventListener('click', () => {
-    const current = root.getAttribute('data-theme');
-    applyTheme(current === 'dark' ? 'light' : 'dark');
+function toggleMobileMenu(){
+  document.getElementById('hamburger').classList.toggle('active');
+  document.getElementById('mobile-menu').classList.toggle('active');
+}
+function closeMobileMenu(){
+  document.getElementById('hamburger').classList.remove('active');
+  document.getElementById('mobile-menu').classList.remove('active');
+}
+document.querySelector('.logo').addEventListener('click', closeMobileMenu);
+
+function toggleFaq(el){
+  const item=el.parentElement;
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.faqitem').forEach(i=>i.classList.remove('open'));
+  if(!isOpen)item.classList.add('open');
+}
+
+(function(){
+  const isTouch = window.matchMedia('(hover: none)').matches;
+  const cards = document.querySelectorAll('.bento, .hb-tile');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      if (isTouch) return;
+      const rx = (((e.clientY - r.top) / r.height) - 0.5) * -4;
+      const ry = (((e.clientX - r.left) / r.width) - 0.5) * 4;
+      card.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-2px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(700px) rotateX(0) rotateY(0) translateY(0)';
+    });
   });
+})();
 
-  const hamburgerBtn = document.getElementById('hamburgerBtn');
-  const navlinksEl = document.querySelector('.navlinks');
-  if (hamburgerBtn && navlinksEl) {
-    hamburgerBtn.addEventListener('click', () => {
-      const isOpen = navlinksEl.classList.toggle('open');
-      hamburgerBtn.textContent = isOpen ? '✕' : '☰';
-    });
-    navlinksEl.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-      navlinksEl.classList.remove('open');
-      hamburgerBtn.textContent = '☰';
-    }));
-  }
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.bento, .step, .plan, .hb-tile').forEach(el => {
+  el.style.opacity = '0'; el.style.transform = 'translateY(16px)';
+  el.style.transition = 'opacity .5s ease, transform .5s ease';
+  obs.observe(el);
+});
 
-  const cfForm = document.getElementById('contactForm');
-  const cfSuccess = document.getElementById('cfSuccess');
-  if (cfForm) {
-    cfForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = cfForm.querySelector('button[type="submit"]');
-      const originalText = btn.textContent;
-      btn.textContent = 'Enviando...';
-      btn.disabled = true;
-      try {
-        const res = await fetch(cfForm.action, {
-          method: 'POST',
-          body: new FormData(cfForm),
-          headers: { 'Accept': 'application/json' }
-        });
-        if (res.ok) {
-          cfForm.reset();
-          cfSuccess.style.display = 'block';
-        } else {
-          alert('No se pudo enviar. Probá de nuevo o escribinos por WhatsApp.');
-        }
-      } catch (err) {
-        alert('No se pudo enviar. Probá de nuevo o escribinos por WhatsApp.');
-      } finally {
-        btn.textContent = originalText;
-        btn.disabled = false;
-      }
-    });
-  }
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('cform-submit');
+    const status = document.getElementById('cform-status');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    status.className = 'cform-status show';
+    status.textContent = '';
+    try {
+      const res = await fetch(contactForm.action, { method: 'POST', body: new FormData(contactForm), headers: { 'Accept': 'application/json' } });
+      if (res.ok) {
+        status.className = 'cform-status show ok';
+        status.textContent = '¡Listo! Te respondemos a la brevedad.';
+        contactForm.reset();
+      } else { throw new Error('error'); }
+    } catch (err) {
+      status.className = 'cform-status show err';
+      status.textContent = 'No pudimos enviar el mensaje. Escribinos por WhatsApp.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Enviar mensaje';
+    }
+  });
+}
 </script>
-  <script src="tracker.js" defer></script>
 </body>
 </html>
