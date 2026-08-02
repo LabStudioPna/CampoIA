@@ -24,6 +24,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   body{background:var(--bg-alt);}
@@ -276,6 +278,18 @@
         <div id="storageBar" style="height:100%;width:0%;background:var(--brand-light);transition:width .3s ease;"></div>
       </div>
       <div id="storageText" style="font-size:11px;color:var(--text-muted);">—</div>
+    </div>
+
+    <div class="keybox">
+      <label>🛰️ Copernicus (satelital)</label>
+      <p style="font-size:11px;color:var(--text-muted);margin:4px 0 8px;">Gratis. Se registra una vez en dataspace.copernicus.eu y se crea un cliente OAuth.</p>
+      <input type="text" id="copernicusId" placeholder="Client ID" autocomplete="off" style="margin-bottom:6px;">
+      <input type="password" id="copernicusSecret" placeholder="Client Secret" autocomplete="off">
+      <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted);margin:8px 0 0;font-weight:400;cursor:pointer;">
+        <input type="checkbox" id="copernicusRecordar" style="width:auto;margin:0;"> Recordar en este dispositivo
+      </label>
+      <div class="key-status" style="margin-top:6px;"><span class="dot-status" id="copDot"></span><span id="copStatusText">Sin configurar</span></div>
+      <p style="font-size:10.5px;color:var(--text-muted);margin-top:6px;">Sin tildar, el secret se borra al cerrar la pestaña. Tildado, queda guardado en este navegador.</p>
     </div>
 
     <div class="keybox">
@@ -944,6 +958,7 @@
 
           <div class="subtab-row">
             <button class="subtab-btn active" data-lsub="margen">📊 Margen</button>
+            <button class="subtab-btn" data-lsub="satelital">🛰️ Satelital</button>
             <button class="subtab-btn" data-lsub="insumos">🧪 Insumos</button>
             <button class="subtab-btn" data-lsub="jornales">👷 Jornales</button>
           </div>
@@ -965,6 +980,72 @@
               </div>
             </div>
             <p class="disclaimer">Margen bruto = (rinde × precio × hectáreas) − insumos − jornales cargados en este lote. No incluye retenciones, gastos de comercialización, flete, arrendamiento ni amortización de maquinaria — usá la pestaña Liquidación para el neto final de venta.</p>
+          </div>
+
+          <!-- SATELITAL -->
+          <div class="subpanel" id="lsub-satelital">
+            <p class="sub" style="margin-bottom:12px;">Índice de vegetación (NDVI) del lote a partir de imágenes Sentinel-2, filtrando nubes automáticamente. Sirve para ver si la pastura o el cultivo está mejorando o cayendo, antes de que se note a ojo.</p>
+
+            <div id="satSinCredenciales" class="result-box" style="display:none;margin-bottom:14px;border-color:var(--accent);">
+              <h4 style="font-size:14px;margin-bottom:6px;">🔑 Falta conectar Copernicus</h4>
+              <p class="sub" style="margin:0 0 8px;font-size:12.5px;">Las imágenes satelitales son gratuitas, pero hay que registrarse una vez en Copernicus Data Space (el programa satelital de la Unión Europea) y cargar tus credenciales en el panel lateral, abajo de la API Key.</p>
+              <a href="https://dataspace.copernicus.eu/" target="_blank" rel="noopener" class="btn btn-ghost" style="font-size:12.5px;padding:8px 14px;">Crear cuenta gratis ↗</a>
+            </div>
+
+            <div id="satSinUbicacion" class="result-box" style="margin-bottom:14px;">
+              <h4 style="font-size:14px;margin-bottom:6px;">📍 Ubicá el lote en el mapa</h4>
+              <p class="sub" style="margin:0 0 10px;font-size:12.5px;">Hacé click en el centro del lote. Con las <b id="satHaRef">0</b> ha que cargaste dibujamos un círculo equivalente — no hace falta marcar el contorno exacto.</p>
+              <div id="satMapa" style="height:320px;border-radius:12px;border:1px solid var(--border);overflow:hidden;"></div>
+              <div class="mini-form" style="grid-template-columns:1fr 1fr auto;gap:10px;margin-top:12px;">
+                <div class="field" style="margin-bottom:0;"><label>Latitud</label><input type="number" id="satLat" step="0.000001" placeholder="-31.7333"></div>
+                <div class="field" style="margin-bottom:0;"><label>Longitud</label><input type="number" id="satLon" step="0.000001" placeholder="-60.5297"></div>
+                <button class="btn btn-primary" id="satGuardarUbic" style="height:40px;">Guardar ubicación</button>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+                <button id="satMiUbicacion" style="border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:9px;padding:7px 12px;font-size:12.5px;cursor:pointer;">📱 Usar mi ubicación actual</button>
+                <button id="satBorrarUbic" style="border:1px solid var(--border);background:var(--bg);color:var(--text-muted);border-radius:9px;padding:7px 12px;font-size:12.5px;cursor:pointer;display:none;">Borrar ubicación</button>
+              </div>
+            </div>
+
+            <div id="satDatos" style="display:none;">
+              <div class="range-box" style="grid-template-columns:repeat(4,1fr);">
+                <div class="result-box"><div class="muted" style="font-size:12.5px;">NDVI actual</div><div class="big" id="satNdviActual" style="font-size:22px;">—</div></div>
+                <div class="result-box"><div class="muted" style="font-size:12.5px;">Variación 30 días</div><div class="big" id="satVariacion" style="font-size:22px;">—</div></div>
+                <div class="result-box"><div class="muted" style="font-size:12.5px;">Oferta relativa</div><div class="big" id="satOferta" style="font-size:22px;">—</div></div>
+                <div class="result-box"><div class="muted" style="font-size:12.5px;">Última imagen</div><div class="big" id="satFecha" style="font-size:16px;">—</div></div>
+              </div>
+
+              <div id="satAlerta" style="margin-bottom:14px;"></div>
+
+              <div class="result-box" style="margin-bottom:14px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+                  <h4 style="font-size:14px;margin:0;">Evolución del NDVI</h4>
+                  <div style="display:flex;gap:8px;align-items:center;">
+                    <select id="satRango" style="padding:6px 8px;border-radius:8px;border:1px solid var(--border);font-size:12.5px;background:var(--bg);color:var(--text);">
+                      <option value="6">Últimos 6 meses</option>
+                      <option value="12" selected>Últimos 12 meses</option>
+                      <option value="24">Últimos 2 años</option>
+                    </select>
+                    <button id="satActualizar" style="border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:8px;padding:6px 12px;font-size:12.5px;cursor:pointer;">🔄 Actualizar</button>
+                  </div>
+                </div>
+                <canvas id="chartNdvi" height="110"></canvas>
+                <div id="satEstadoCarga" class="empty" style="padding:12px 0;">Tocá "Actualizar" para traer las imágenes.</div>
+              </div>
+
+              <div class="result-box" style="margin-bottom:14px;">
+                <h4 style="font-size:14px;margin-bottom:8px;">🌾 Calibración de biomasa <span style="font-size:11px;font-weight:400;color:var(--text-muted);">(opcional)</span></h4>
+                <p class="sub" style="margin:0 0 10px;font-size:12.5px;">Si alguna vez cortaste y pesaste una muestra de pastura, cargá ese dato y convertimos el NDVI a kilos de materia seca por hectárea para este lote.</p>
+                <div class="mini-form" style="grid-template-columns:1fr 1fr auto;gap:10px;">
+                  <div class="field" style="margin-bottom:0;"><label>NDVI del día del corte</label><input type="number" id="calNdvi" step="0.01" placeholder="Ej: 0.62"></div>
+                  <div class="field" style="margin-bottom:0;"><label>Materia seca medida (kg/ha)</label><input type="number" id="calKgMs" placeholder="Ej: 2400"></div>
+                  <button class="btn btn-primary" id="calGuardar" style="height:40px;">Guardar</button>
+                </div>
+                <div id="calResultado" style="margin-top:10px;"></div>
+              </div>
+
+              <p class="disclaimer">El NDVI mide vigor de vegetación, no rendimiento. Se satura en cultivos muy densos y no distingue maleza de cultivo. Sin calibración a campo, la estimación de biomasa es un índice comparativo entre fechas y lotes tuyos, no un valor absoluto confiable. Las imágenes Sentinel-2 pasan cada 5 días, pero con nubes puede haber huecos de dos o tres semanas.</p>
+            </div>
           </div>
 
           <!-- INSUMOS -->
@@ -3233,6 +3314,7 @@ function openLoteDetail(id){
 
   renderInsumos(l);
   renderJornales(l);
+  renderSatelital(l);
   actualizarCostoTotalLote(getLoteById(currentLoteId));
   calcMargenLote();
 
@@ -3249,7 +3331,9 @@ document.getElementById('loteBackBtn').addEventListener('click', () => {
 });
 document.getElementById('loteDeleteBtn').addEventListener('click', () => {
   if (!confirm('¿Eliminar este lote y todo su historial?')) return;
+  localStorage.removeItem(cacheNdviKey(currentLoteId));
   saveLotes(loadLotes().filter(l => l.id !== currentLoteId));
+  marcarCambio();
   document.getElementById('loteBackBtn').click();
 });
 
@@ -3259,6 +3343,11 @@ document.querySelectorAll('.subtab-btn[data-lsub]').forEach(btn => {
     document.querySelectorAll('#loteDetailView .subpanel').forEach(p => p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('lsub-' + btn.dataset.lsub).classList.add('active');
+    if (btn.dataset.lsub === 'satelital'){
+      if (satMapaInst) setTimeout(() => satMapaInst.invalidateSize(), 60);
+      const l = getLoteById(currentLoteId);
+      if (l && !satMapaInst) renderSatelital(l);
+    }
   });
 });
 
@@ -3553,7 +3642,7 @@ const HOJAS_CAMPOIA = {
   mantenimientos: { nombre:'Mantenimientos',          headers:['equipo_id','Equipo','Fecha','Servicio','Horas','Costo'] },
   repuestos:      { nombre:'Repuestos',               headers:['equipo_id','Equipo','Repuesto','Fecha','Motivo','Importe ($)','Intervalo (hs)','Últ. cambio (hs)'] },
   vuelos:         { nombre:'Vuelos',                  headers:['equipo_id','Equipo','Fecha','Hectáreas','Producto','Costo'] },
-  lotes:          { nombre:'Lotes',                   headers:['id','Lote','Hectáreas','Cultivo','Estado','Rinde (qq/ha)','Precio qq'] },
+  lotes:          { nombre:'Lotes',                   headers:['id','Lote','Hectáreas','Cultivo','Estado','Rinde (qq/ha)','Precio qq','Latitud','Longitud','Calib. NDVI','Calib. kg MS/ha'] },
   insumos:        { nombre:'Insumos',                 headers:['lote_id','Lote','Fecha','Producto','Dosis','Carencia (días)','Costo'] },
   jornales:       { nombre:'Jornales',                headers:['lote_id','Lote','Fecha','Tarea','Trabajador','Costo'] },
   vencimientos:   { nombre:'Vencimientos',            headers:['Documento/Lote','Fecha inicio','Vigencia (meses)'] }
@@ -3638,7 +3727,7 @@ function construirSnapshot(){
   });
 
   loadLotes().forEach(l => {
-    snap.lotes.push([l.id, l.nombre||'', l.hectareas??'', l.cultivo||'', l.estado||'', l.rinde??'', l.precioQq??'']);
+    snap.lotes.push([l.id, l.nombre||'', l.hectareas??'', l.cultivo||'', l.estado||'', l.rinde??'', l.precioQq??'', l.lat??'', l.lon??'', l.calNdvi??'', l.calKgMs??'']);
     (l.insumos||[]).forEach(x => snap.insumos.push([l.id, l.nombre||'', x.fecha||'', x.producto||'', x.dosis||'', x.carencia??'', x.costo??'']));
     (l.jornales||[]).forEach(x => snap.jornales.push([l.id, l.nombre||'', x.fecha||'', x.tarea||'', x.trabajador||'', x.costo??'']));
   });
@@ -3678,8 +3767,10 @@ function reconstruirDesdeFilas(datos){
 
   const lotes = (datos.lotes||[]).filter(f => f && f[0]).map(f => ({
     id: val(f,0), nombre: val(f,1), hectareas: num(f,2) || 0, cultivo: val(f,3), estado: val(f,4),
-    rinde: val(f,5), precioQq: val(f,6), insumos: [], jornales: []
-  }));
+    rinde: val(f,5), precioQq: val(f,6),
+    lat: num(f,7), lon: num(f,8), calNdvi: num(f,9), calKgMs: num(f,10),
+    insumos: [], jornales: []
+  })).map(l => { if (l.lat === '') delete l.lat; if (l.lon === '') delete l.lon; return l; });
   const idxL = {}; lotes.forEach(l => idxL[l.id] = l);
   (datos.insumos||[]).forEach(f => { const l = idxL[val(f,0)]; if (l) l.insumos.push({ fecha: val(f,2), producto: val(f,3), dosis: val(f,4), carencia: num(f,5), costo: val(f,6) }); });
   (datos.jornales||[]).forEach(f => { const l = idxL[val(f,0)]; if (l) l.jornales.push({ fecha: val(f,2), tarea: val(f,3), trabajador: val(f,4), costo: val(f,5) }); });
@@ -3888,6 +3979,472 @@ function actualizarMedidorEspacio(){
 }
 actualizarMedidorEspacio();
 setInterval(actualizarMedidorEspacio, 20000);
+
+
+/* ================= SATELITAL: SENTINEL-2 VÍA COPERNICUS ================= */
+/* Las imágenes son gratuitas pero la API pide autenticación OAuth. Igual que
+   con la API Key de Anthropic, las credenciales son del usuario y viajan
+   directo desde su navegador a Copernicus — no pasan por LABStudio. */
+
+const CDSE_TOKEN_URL = 'https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token';
+const CDSE_STATS_URL = 'https://sh.dataspace.copernicus.eu/api/v1/statistics';
+
+/* ---------- Credenciales ---------- */
+function getCopernicusCreds(){
+  const id = localStorage.getItem('campoia_cop_id') || '';
+  const secret = localStorage.getItem('campoia_cop_secret') || sessionStorage.getItem('campoia_cop_secret') || '';
+  return { id, secret };
+}
+function hayCredencialesCopernicus(){
+  const c = getCopernicusCreds();
+  return !!(c.id && c.secret);
+}
+function actualizarEstadoCopernicus(){
+  const c = getCopernicusCreds();
+  const dot = document.getElementById('copDot');
+  const txt = document.getElementById('copStatusText');
+  if (!dot || !txt) return;
+  if (c.id && c.secret){ dot.style.background = 'var(--brand-light)'; txt.textContent = 'Configurado'; }
+  else if (c.id || c.secret){ dot.style.background = 'var(--accent)'; txt.textContent = 'Falta un dato'; }
+  else { dot.style.background = 'var(--border)'; txt.textContent = 'Sin configurar'; }
+}
+
+(function initCopernicusUI(){
+  const inpId = document.getElementById('copernicusId');
+  const inpSecret = document.getElementById('copernicusSecret');
+  const chk = document.getElementById('copernicusRecordar');
+
+  inpId.value = localStorage.getItem('campoia_cop_id') || '';
+  const guardado = localStorage.getItem('campoia_cop_secret');
+  chk.checked = !!guardado;
+  inpSecret.value = guardado || sessionStorage.getItem('campoia_cop_secret') || '';
+
+  const persistir = () => {
+    const id = inpId.value.trim();
+    const secret = inpSecret.value.trim();
+    if (id) localStorage.setItem('campoia_cop_id', id); else localStorage.removeItem('campoia_cop_id');
+    if (chk.checked){
+      if (secret) localStorage.setItem('campoia_cop_secret', secret); else localStorage.removeItem('campoia_cop_secret');
+      sessionStorage.removeItem('campoia_cop_secret');
+    } else {
+      localStorage.removeItem('campoia_cop_secret');
+      if (secret) sessionStorage.setItem('campoia_cop_secret', secret); else sessionStorage.removeItem('campoia_cop_secret');
+    }
+    cdseToken = null; // fuerza pedir uno nuevo con las credenciales nuevas
+    actualizarEstadoCopernicus();
+  };
+  inpId.addEventListener('input', persistir);
+  inpSecret.addEventListener('input', persistir);
+  chk.addEventListener('change', persistir);
+  actualizarEstadoCopernicus();
+})();
+
+/* ---------- Token OAuth (se cachea hasta que vence) ---------- */
+let cdseToken = null;
+let cdseTokenExpira = 0;
+
+async function obtenerTokenCDSE(){
+  if (cdseToken && Date.now() < cdseTokenExpira - 60000) return cdseToken;
+  const c = getCopernicusCreds();
+  if (!c.id || !c.secret) throw new Error('Faltan las credenciales de Copernicus.');
+
+  const body = new URLSearchParams({ grant_type: 'client_credentials', client_id: c.id, client_secret: c.secret });
+  const res = await fetch(CDSE_TOKEN_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: body.toString()
+  });
+  if (!res.ok){
+    if (res.status === 401) throw new Error('Client ID o Secret incorrectos. Revisalos en el panel lateral.');
+    throw new Error('Copernicus rechazó la conexión (código ' + res.status + ').');
+  }
+  const data = await res.json();
+  cdseToken = data.access_token;
+  cdseTokenExpira = Date.now() + ((data.expires_in || 600) * 1000);
+  return cdseToken;
+}
+
+/* ---------- Geometría: círculo equivalente a la superficie del lote ---------- */
+function radioDesdeHectareas(ha){
+  const m2 = Math.max(1, ha || 1) * 10000;
+  return Math.sqrt(m2 / Math.PI); // en metros
+}
+
+// Aproxima el círculo con un polígono de 32 lados, en coordenadas geográficas.
+function circuloGeoJSON(lat, lon, radioM, lados){
+  lados = lados || 32;
+  const coords = [];
+  const dLat = radioM / 111320;
+  const dLon = radioM / (111320 * Math.cos(lat * Math.PI / 180));
+  for (let i = 0; i <= lados; i++){
+    const ang = (i / lados) * 2 * Math.PI;
+    coords.push([ +(lon + dLon * Math.cos(ang)).toFixed(6), +(lat + dLat * Math.sin(ang)).toFixed(6) ]);
+  }
+  return { type: 'Polygon', coordinates: [coords] };
+}
+
+/* ---------- Consulta de NDVI ---------- */
+const EVALSCRIPT_NDVI = `//VERSION=3
+function setup() {
+  return {
+    input: [{ bands: ["B04", "B08", "SCL", "dataMask"] }],
+    output: [
+      { id: "ndvi", bands: 1, sampleType: "FLOAT32" },
+      { id: "dataMask", bands: 1 }
+    ]
+  };
+}
+function evaluatePixel(s) {
+  var ndvi = (s.B08 + s.B04) === 0 ? 0 : (s.B08 - s.B04) / (s.B08 + s.B04);
+  // Descartar: sin dato, saturado, sombra de nube, nube media/alta, cirros y nieve
+  var malo = (s.SCL === 0 || s.SCL === 1 || s.SCL === 3 || s.SCL === 8 || s.SCL === 9 || s.SCL === 10 || s.SCL === 11);
+  return { ndvi: [ndvi], dataMask: [malo ? 0 : s.dataMask] };
+}`;
+
+async function consultarNDVI(lat, lon, hectareas, meses){
+  const token = await obtenerTokenCDSE();
+  const hasta = new Date();
+  const desde = new Date();
+  desde.setMonth(desde.getMonth() - (meses || 12));
+
+  const cuerpo = {
+    input: {
+      bounds: {
+        geometry: circuloGeoJSON(lat, lon, radioDesdeHectareas(hectareas)),
+        properties: { crs: 'http://www.opengis.net/def/crs/OGC/1.3/CRS84' }
+      },
+      data: [{ type: 'sentinel-2-l2a', dataFilter: { mosaickingOrder: 'leastCC' } }]
+    },
+    aggregation: {
+      timeRange: { from: desde.toISOString().split('T')[0] + 'T00:00:00Z', to: hasta.toISOString().split('T')[0] + 'T23:59:59Z' },
+      aggregationInterval: { of: 'P10D' },
+      evalscript: EVALSCRIPT_NDVI,
+      resx: 10, resy: 10
+    },
+    calculations: { ndvi: { statistics: { default: { percentiles: { k: [10, 50, 90] } } } } }
+  };
+
+  const res = await fetch(CDSE_STATS_URL, {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(cuerpo)
+  });
+
+  if (res.status === 401){ cdseToken = null; throw new Error('La sesión con Copernicus venció. Probá de nuevo.'); }
+  if (res.status === 429) throw new Error('Copernicus está limitando las consultas (cuota gratuita). Esperá unos minutos.');
+  if (!res.ok){
+    let detalle = '';
+    try { const e = await res.json(); detalle = e.error?.message || e.message || ''; } catch(_){}
+    throw new Error('Copernicus devolvió un error ' + res.status + (detalle ? ': ' + detalle : ''));
+  }
+
+  const data = await res.json();
+  const puntos = [];
+  (data.data || []).forEach(d => {
+    const st = d.outputs?.ndvi?.bands?.B0?.stats;
+    if (!st || st.sampleCount === undefined) return;
+    const validos = st.sampleCount - (st.noDataCount || 0);
+    if (validos <= 0) return;
+    const cobertura = validos / st.sampleCount;
+    if (cobertura < 0.25) return;          // demasiada nube: el dato no es representativo
+    if (st.mean === undefined || isNaN(st.mean)) return;
+    puntos.push({
+      fecha: (d.interval?.from || '').split('T')[0],
+      ndvi: +st.mean.toFixed(4),
+      p10: st.percentiles?.['10.0'] !== undefined ? +st.percentiles['10.0'].toFixed(4) : null,
+      p90: st.percentiles?.['90.0'] !== undefined ? +st.percentiles['90.0'].toFixed(4) : null,
+      cobertura: +(cobertura * 100).toFixed(0)
+    });
+  });
+  puntos.sort((a, b) => a.fecha.localeCompare(b.fecha));
+  return puntos;
+}
+
+/* ---------- Caché por lote ---------- */
+function cacheNdviKey(loteId){ return 'campoia_ndvi_' + loteId; }
+function leerCacheNdvi(loteId){
+  try { return JSON.parse(localStorage.getItem(cacheNdviKey(loteId)) || 'null'); } catch(_){ return null; }
+}
+function guardarCacheNdvi(loteId, meses, puntos){
+  try {
+    localStorage.setItem(cacheNdviKey(loteId), JSON.stringify({ actualizado: Date.now(), meses, puntos }));
+  } catch(e){ console.warn('No se pudo cachear el NDVI:', e); }
+}
+
+/* ---------- Mapa ---------- */
+let satMapaInst = null, satMarcador = null, satCirculo = null, satLatLon = null;
+
+function iniciarMapaLote(lote){
+  const cont = document.getElementById('satMapa');
+  if (!cont || typeof L === 'undefined') return;
+
+  const lat = lote.lat ? parseFloat(lote.lat) : -31.7333;   // Paraná como punto de partida
+  const lon = lote.lon ? parseFloat(lote.lon) : -60.5297;
+  const zoom = lote.lat ? 14 : 6;
+
+  if (satMapaInst){ satMapaInst.remove(); satMapaInst = null; }
+  satMapaInst = L.map(cont).setView([lat, lon], zoom);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18, attribution: '© OpenStreetMap'
+  }).addTo(satMapaInst);
+
+  satMarcador = null; satCirculo = null;
+  if (lote.lat && lote.lon){
+    satLatLon = { lat: parseFloat(lote.lat), lon: parseFloat(lote.lon) };
+    dibujarPuntoLote(satLatLon.lat, satLatLon.lon, lote.hectareas);
+  } else {
+    satLatLon = null;
+  }
+
+  satMapaInst.on('click', e => {
+    satLatLon = { lat: +e.latlng.lat.toFixed(6), lon: +e.latlng.lng.toFixed(6) };
+    document.getElementById('satLat').value = satLatLon.lat;
+    document.getElementById('satLon').value = satLatLon.lon;
+    dibujarPuntoLote(satLatLon.lat, satLatLon.lon, lote.hectareas);
+  });
+
+  // Leaflet mide mal el contenedor si estaba oculto al crearse
+  setTimeout(() => satMapaInst && satMapaInst.invalidateSize(), 120);
+}
+
+function dibujarPuntoLote(lat, lon, hectareas){
+  if (!satMapaInst) return;
+  if (satMarcador) satMapaInst.removeLayer(satMarcador);
+  if (satCirculo) satMapaInst.removeLayer(satCirculo);
+  satMarcador = L.marker([lat, lon]).addTo(satMapaInst);
+  satCirculo = L.circle([lat, lon], {
+    radius: radioDesdeHectareas(hectareas),
+    color: '#5D8438', fillColor: '#5D8438', fillOpacity: .18, weight: 2
+  }).addTo(satMapaInst);
+}
+
+/* ---------- Render del panel ---------- */
+let chartNdviInst = null;
+
+function renderSatelital(lote){
+  if (!lote) return;
+  document.getElementById('satHaRef').textContent = lote.hectareas || 0;
+  document.getElementById('satSinCredenciales').style.display = hayCredencialesCopernicus() ? 'none' : 'block';
+
+  document.getElementById('satLat').value = lote.lat || '';
+  document.getElementById('satLon').value = lote.lon || '';
+  document.getElementById('satBorrarUbic').style.display = lote.lat ? 'inline-block' : 'none';
+  document.getElementById('satDatos').style.display = lote.lat && lote.lon ? 'block' : 'none';
+
+  iniciarMapaLote(lote);
+
+  document.getElementById('calNdvi').value = lote.calNdvi || '';
+  document.getElementById('calKgMs').value = lote.calKgMs || '';
+
+  const cache = leerCacheNdvi(lote.id);
+  if (cache && cache.puntos && cache.puntos.length){
+    document.getElementById('satRango').value = String(cache.meses || 12);
+    pintarNDVI(lote, cache.puntos, cache.actualizado);
+  } else {
+    document.getElementById('satEstadoCarga').style.display = 'block';
+    document.getElementById('satEstadoCarga').textContent = lote.lat
+      ? 'Tocá "Actualizar" para traer las imágenes.'
+      : 'Primero ubicá el lote en el mapa.';
+    if (chartNdviInst){ chartNdviInst.destroy(); chartNdviInst = null; }
+    ['satNdviActual','satVariacion','satOferta','satFecha'].forEach(id => document.getElementById(id).textContent = '—');
+    document.getElementById('satAlerta').innerHTML = '';
+  }
+}
+
+function pintarNDVI(lote, puntos, actualizado){
+  const estado = document.getElementById('satEstadoCarga');
+  if (!puntos.length){
+    estado.style.display = 'block';
+    estado.textContent = 'No hay imágenes sin nubes en el período elegido. Probá ampliando el rango.';
+    return;
+  }
+  estado.style.display = 'none';
+
+  const ult = puntos[puntos.length - 1];
+  document.getElementById('satNdviActual').textContent = ult.ndvi.toFixed(3);
+  document.getElementById('satFecha').textContent = formatearFechaCorta(ult.fecha) +
+    (actualizado ? '' : '');
+
+  // Variación contra la lectura más cercana a 30 días atrás
+  const objetivo = new Date(ult.fecha); objetivo.setDate(objetivo.getDate() - 30);
+  const objIso = objetivo.toISOString().split('T')[0];
+  let ref = null, mejorDist = Infinity;
+  puntos.slice(0, -1).forEach(p => {
+    const d = Math.abs((new Date(p.fecha) - new Date(objIso)) / 86400000);
+    if (d < mejorDist){ mejorDist = d; ref = p; }
+  });
+
+  const elVar = document.getElementById('satVariacion');
+  let variacionPct = null;
+  if (ref && mejorDist <= 25 && ref.ndvi > 0.05){
+    variacionPct = ((ult.ndvi - ref.ndvi) / ref.ndvi) * 100;
+    const col = variacionPct >= 0 ? 'var(--brand-light)' : '#c33';
+    elVar.innerHTML = `<span style="color:${col}">${variacionPct >= 0 ? '+' : ''}${variacionPct.toFixed(1)}%</span>`;
+  } else {
+    elVar.textContent = '—';
+  }
+
+  // Oferta relativa: dónde está hoy respecto del máximo histórico de este lote
+  const maxHist = Math.max(...puntos.map(p => p.ndvi));
+  const ofertaRel = maxHist > 0 ? (ult.ndvi / maxHist) * 100 : 0;
+  const elOferta = document.getElementById('satOferta');
+  const colOferta = ofertaRel >= 75 ? 'var(--brand-light)' : (ofertaRel >= 50 ? 'var(--accent)' : '#c33');
+  elOferta.innerHTML = `<span style="color:${colOferta}">${ofertaRel.toFixed(0)}%</span>`;
+  elOferta.title = 'Respecto del máximo registrado en este lote (' + maxHist.toFixed(3) + ')';
+
+  // Semáforo
+  const alerta = document.getElementById('satAlerta');
+  if (variacionPct !== null && variacionPct <= -25){
+    alerta.innerHTML = `<div class="result-box" style="border-color:#c33;margin:0;"><b style="color:#c33;">🔴 Caída fuerte del índice</b><p class="sub" style="margin:6px 0 0;font-size:12.5px;">El NDVI bajó ${Math.abs(variacionPct).toFixed(0)}% en el último mes. Puede ser sequía, plaga, pisoteo por sobrecarga animal o simplemente que el cultivo entró en madurez. Vale una recorrida.</p></div>`;
+  } else if (variacionPct !== null && variacionPct <= -12){
+    alerta.innerHTML = `<div class="result-box" style="border-color:var(--accent);margin:0;"><b style="color:var(--accent);">🟡 Tendencia a la baja</b><p class="sub" style="margin:6px 0 0;font-size:12.5px;">Caída del ${Math.abs(variacionPct).toFixed(0)}% en 30 días. Todavía no es crítico, pero conviene seguirlo.</p></div>`;
+  } else if (ofertaRel < 45){
+    alerta.innerHTML = `<div class="result-box" style="border-color:var(--accent);margin:0;"><b style="color:var(--accent);">🟡 Oferta baja</b><p class="sub" style="margin:6px 0 0;font-size:12.5px;">El lote está al ${ofertaRel.toFixed(0)}% de su mejor momento registrado. Si tenés hacienda adentro, evaluá rotar.</p></div>`;
+  } else {
+    alerta.innerHTML = `<div class="result-box" style="border-color:var(--brand-light);margin:0;"><b style="color:var(--brand-light);">🟢 Sin alertas</b><p class="sub" style="margin:6px 0 0;font-size:12.5px;">El índice se mantiene estable respecto del mes pasado.</p></div>`;
+  }
+
+  // Gráfico
+  const cc = chartColorsCampo();
+  if (chartNdviInst) chartNdviInst.destroy();
+  chartNdviInst = new Chart(document.getElementById('chartNdvi'), {
+    type: 'line',
+    data: {
+      labels: puntos.map(p => formatearFechaCorta(p.fecha)),
+      datasets: [
+        { label: 'NDVI medio', data: puntos.map(p => p.ndvi), borderColor: '#5D8438',
+          backgroundColor: 'rgba(93,132,56,.14)', borderWidth: 2, tension: .3, fill: true,
+          pointRadius: 2.5, pointBackgroundColor: '#5D8438' },
+        { label: 'Zona más pobre (p10)', data: puntos.map(p => p.p10), borderColor: '#B8860B',
+          borderWidth: 1, borderDash: [4,3], tension: .3, fill: false, pointRadius: 0 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: true, labels: { boxWidth: 12, font: { size: 11 } } },
+        tooltip: { callbacks: { afterBody: items => {
+          const p = puntos[items[0].dataIndex];
+          return `Píxeles sin nube: ${p.cobertura}%`;
+        } } }
+      },
+      scales: {
+        y: { min: 0, max: 1, ticks: { color: cc.text }, grid: { color: cc.grid } },
+        x: { ticks: { color: cc.text, maxTicksLimit: 10 }, grid: { display: false } }
+      }
+    }
+  });
+
+  renderCalibracion(lote, ult.ndvi);
+}
+
+function renderCalibracion(lote, ndviActual){
+  const out = document.getElementById('calResultado');
+  const cn = parseFloat(lote.calNdvi), ck = parseFloat(lote.calKgMs);
+  if (!cn || !ck || cn <= 0){ out.innerHTML = ''; return; }
+  // Regla de tres sobre el par medido. Es lineal y grosera, pero es el dato del propio lote.
+  const estimado = (ndviActual / cn) * ck;
+  out.innerHTML = `<div class="row-mini"><span>Materia seca estimada hoy</span><span><b>${Math.round(estimado).toLocaleString('es-AR')} kg MS/ha</b></span></div>
+    <div class="row-mini"><span>Total del lote (${lote.hectareas || 0} ha)</span><span>${Math.round(estimado * (lote.hectareas || 0)).toLocaleString('es-AR')} kg MS</span></div>
+    <p class="disclaimer" style="margin-top:8px;">Extrapolado linealmente desde tu único punto de calibración (NDVI ${cn} = ${ck} kg MS/ha). Cuanto más lejos esté el NDVI de hoy de ese valor, menos confiable es.</p>`;
+}
+
+/* ---------- Eventos ---------- */
+document.getElementById('satGuardarUbic').addEventListener('click', () => {
+  const lat = parseFloat(document.getElementById('satLat').value);
+  const lon = parseFloat(document.getElementById('satLon').value);
+  if (isNaN(lat) || isNaN(lon)){ alert('Marcá un punto en el mapa o cargá latitud y longitud.'); return; }
+  if (lat < -90 || lat > 90 || lon < -180 || lon > 180){ alert('Las coordenadas están fuera de rango.'); return; }
+
+  updateCurrentLote(l => { l.lat = lat; l.lon = lon; });
+  marcarCambio();
+  localStorage.removeItem(cacheNdviKey(currentLoteId)); // la ubicación cambió: el caché ya no sirve
+  renderSatelital(getLoteById(currentLoteId));
+  document.getElementById('satEstadoCarga').textContent = 'Ubicación guardada. Tocá "Actualizar" para traer las imágenes.';
+});
+
+document.getElementById('satBorrarUbic').addEventListener('click', () => {
+  if (!confirm('¿Borrar la ubicación de este lote? También se borra el historial de NDVI descargado.')) return;
+  updateCurrentLote(l => { delete l.lat; delete l.lon; });
+  localStorage.removeItem(cacheNdviKey(currentLoteId));
+  marcarCambio();
+  renderSatelital(getLoteById(currentLoteId));
+});
+
+document.getElementById('satMiUbicacion').addEventListener('click', () => {
+  if (!navigator.geolocation){ alert('Tu navegador no permite obtener la ubicación.'); return; }
+  const btn = document.getElementById('satMiUbicacion');
+  btn.textContent = 'Buscando…'; btn.disabled = true;
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const lat = +pos.coords.latitude.toFixed(6), lon = +pos.coords.longitude.toFixed(6);
+      document.getElementById('satLat').value = lat;
+      document.getElementById('satLon').value = lon;
+      satLatLon = { lat, lon };
+      const l = getLoteById(currentLoteId);
+      if (satMapaInst){ satMapaInst.setView([lat, lon], 15); dibujarPuntoLote(lat, lon, l ? l.hectareas : 1); }
+      btn.textContent = '📱 Usar mi ubicación actual'; btn.disabled = false;
+    },
+    err => {
+      alert('No se pudo obtener la ubicación: ' + err.message + '\n\nPodés marcar el punto en el mapa a mano.');
+      btn.textContent = '📱 Usar mi ubicación actual'; btn.disabled = false;
+    },
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+});
+
+document.getElementById('satActualizar').addEventListener('click', async () => {
+  const lote = getLoteById(currentLoteId);
+  if (!lote || !lote.lat){ alert('Primero guardá la ubicación del lote.'); return; }
+  if (!hayCredencialesCopernicus()){
+    alert('Cargá tu Client ID y Client Secret de Copernicus en el panel lateral.\n\nSon gratuitos: registrate en dataspace.copernicus.eu y creá un cliente OAuth desde tu perfil.');
+    return;
+  }
+
+  const btn = document.getElementById('satActualizar');
+  const estado = document.getElementById('satEstadoCarga');
+  const meses = parseInt(document.getElementById('satRango').value) || 12;
+
+  btn.disabled = true; btn.textContent = '⏳ Consultando…';
+  estado.style.display = 'block';
+  estado.textContent = 'Pidiendo imágenes a Copernicus. Puede demorar hasta un minuto…';
+
+  try {
+    const puntos = await consultarNDVI(parseFloat(lote.lat), parseFloat(lote.lon), lote.hectareas, meses);
+    guardarCacheNdvi(lote.id, meses, puntos);
+    pintarNDVI(lote, puntos, Date.now());
+    actualizarMedidorEspacio();
+  } catch(e){
+    estado.style.display = 'block';
+    const esRed = e instanceof TypeError;
+    estado.innerHTML = `<span style="color:#c33;">⚠️ ${esRed ? 'No se pudo contactar a Copernicus. Revisá tu conexión.' : e.message}</span>`;
+    console.warn('NDVI falló:', e);
+  } finally {
+    btn.disabled = false; btn.textContent = '🔄 Actualizar';
+  }
+});
+
+document.getElementById('satRango').addEventListener('change', () => {
+  document.getElementById('satEstadoCarga').style.display = 'block';
+  document.getElementById('satEstadoCarga').textContent = 'Rango cambiado. Tocá "Actualizar" para traer las imágenes.';
+});
+
+document.getElementById('calGuardar').addEventListener('click', () => {
+  const ndvi = parseFloat(document.getElementById('calNdvi').value);
+  const kg = parseFloat(document.getElementById('calKgMs').value);
+  if (!ndvi || !kg || ndvi <= 0 || ndvi > 1 || kg <= 0){
+    alert('Cargá un NDVI entre 0 y 1, y los kilos de materia seca por hectárea que mediste.');
+    return;
+  }
+  updateCurrentLote(l => { l.calNdvi = ndvi; l.calKgMs = kg; });
+  marcarCambio();
+  const lote = getLoteById(currentLoteId);
+  const cache = leerCacheNdvi(currentLoteId);
+  const ndviHoy = cache && cache.puntos && cache.puntos.length ? cache.puntos[cache.puntos.length - 1].ndvi : ndvi;
+  renderCalibracion(lote, ndviHoy);
+});
 
 /* ---------- Gráficos (Chart.js), a partir de datos locales ---------- */
 let chartAnimalesInst = null, chartVencInst = null, chartLotesInst = null, chartMaqInst = null;
