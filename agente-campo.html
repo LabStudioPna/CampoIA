@@ -23,6 +23,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
   body{background:var(--bg-alt);}
@@ -55,8 +56,11 @@
   .attach-chip{display:inline-flex;align-items:center;gap:6px;background:var(--bg-alt);border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:12.5px;margin-bottom:10px;}
   .attach-chip button{border:none;background:none;cursor:pointer;color:var(--text-muted);font-size:14px;}
 
-  .dropzone{border:2px dashed var(--border);border-radius:14px;padding:36px;text-align:center;cursor:pointer;background:var(--bg-alt);}
+  .dropzone{border:2px dashed var(--border);border-radius:14px;padding:36px;text-align:center;cursor:pointer;background:var(--bg-alt);transition:border-color .15s ease,background .15s ease;}
   .dropzone:hover{border-color:var(--brand-light);}
+  .dropzone.drag{border-color:var(--brand-light);background:color-mix(in srgb, var(--brand-light) 10%, var(--bg-alt));}
+  /* .range-box solo tenía la regla móvil: sin display:grid las tarjetas se apilaban en escritorio */
+  .range-box{display:grid;gap:12px;margin-bottom:14px;}
   .doc-result{margin-top:22px;}
   .doc-card{border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;background:var(--bg-alt);}
   .doc-card h4{margin:0 0 8px;font-size:14px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.03em;}
@@ -230,6 +234,7 @@
       <button class="tab-btn" data-tab="animales"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15" style="vertical-align:-3px;margin-right:4px;flex-shrink:0"><circle cx="12" cy="14" r="6"/><circle cx="7" cy="7" r="2.2"/><circle cx="17" cy="7" r="2.2"/><circle cx="9.5" cy="13" r="0.6" fill="currentColor" stroke="none"/><circle cx="14.5" cy="13" r="0.6" fill="currentColor" stroke="none"/></svg>Animales</button>
       <button class="tab-btn" data-tab="maquinaria"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15" style="vertical-align:-3px;margin-right:4px;flex-shrink:0"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Maquinaria</button>
       <button class="tab-btn" data-tab="lotes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15" style="vertical-align:-3px;margin-right:4px;flex-shrink:0"><path d="M12 22v-9"/><path d="M12 13c0-4 3-7 7-7 0 4-3 7-7 7z"/><path d="M12 13c0-3-2.5-5.5-6-5.5 0 3 2.5 5.5 6 5.5z"/></svg>Lotes</button>
+      <button class="tab-btn" data-tab="graficos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15" style="vertical-align:-3px;margin-right:4px;flex-shrink:0"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Gráficos</button>
     </div>
 
     <div class="keybox">
@@ -257,7 +262,20 @@
           <button id="btnDesconectarGoogle" style="border:none;background:none;color:var(--text-muted);font-size:11px;cursor:pointer;text-decoration:underline;">Desconectar</button>
         </div>
       </div>
+      <div id="googleSyncActions" style="display:none;gap:6px;margin-top:8px;">
+        <button id="btnSincronizarAhora" style="flex:1;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:8px;padding:8px;font-size:11.5px;font-weight:600;cursor:pointer;">⬆️ Sincronizar</button>
+        <button id="btnRestaurarSheets" style="flex:1;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:8px;padding:8px;font-size:11.5px;font-weight:600;cursor:pointer;">⬇️ Restaurar</button>
+      </div>
       <div id="googleConnectStatus" style="font-size:11px;color:var(--text-muted);margin-top:6px;"></div>
+      <div id="googleSyncStatus" style="font-size:11px;color:var(--text-muted);margin-top:4px;"></div>
+    </div>
+
+    <div class="keybox">
+      <label>💾 Espacio usado</label>
+      <div style="background:var(--bg-alt);border-radius:99px;height:6px;overflow:hidden;margin:8px 0 6px;">
+        <div id="storageBar" style="height:100%;width:0%;background:var(--brand-light);transition:width .3s ease;"></div>
+      </div>
+      <div id="storageText" style="font-size:11px;color:var(--text-muted);">—</div>
     </div>
 
     <div class="keybox">
@@ -474,6 +492,7 @@
       <div id="animalListView">
         <div class="animal-form">
           <div class="field" style="margin-bottom:0;"><label>Caravana (N°)</label><input type="text" id="aniCaravana" placeholder="Ej: 1234"></div>
+          <div class="field" style="margin-bottom:0;"><label>RFID electrónico</label><input type="text" id="aniRfid" placeholder="15 dígitos (opcional)" inputmode="numeric"></div>
           <div class="field" style="margin-bottom:0;"><label>Especie</label>
             <select id="aniEspecie"><option>Bovino</option><option>Ovino</option><option>Equino</option><option>Porcino</option><option>Aviar</option><option>Otro</option></select>
           </div>
@@ -495,16 +514,72 @@
         </div>
 
         <div class="conv-row">
-          <div class="field" style="margin-bottom:0;flex:1;min-width:200px;"><input type="text" id="aniSearch" placeholder="🔎 Buscar por caravana, especie o categoría..."></div>
+          <div class="field" style="margin-bottom:0;flex:1;min-width:200px;"><input type="text" id="aniSearch" placeholder="🔎 Buscar por caravana, RFID, especie o categoría..."></div>
+          <button class="btn btn-primary" id="aniImportBtn" style="height:42px;">📥 Importar lector RFID</button>
           <button class="btn btn-primary" id="aniScanBtn" style="height:42px;">📷 Escanear QR</button>
         </div>
+
+        <!-- IMPORTADOR RFID -->
+        <div id="rfidImportBox" style="display:none;margin-bottom:20px;border:1px solid var(--border);border-radius:12px;padding:18px;background:var(--bg-alt);">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;">
+            <div>
+              <h3 style="font-size:15px;margin:0 0 4px;">Importar lecturas del bastón RFID</h3>
+              <p class="sub" style="margin:0;font-size:12.5px;">Subí el CSV o TXT que exporta tu lector (Allflex, Tru-Test, Datamars, Gallagher). Vas a poder revisar todo antes de confirmar.</p>
+            </div>
+            <button id="rfidCloseBtn" style="border:none;background:none;color:var(--text-muted);font-size:18px;cursor:pointer;line-height:1;">✕</button>
+          </div>
+
+          <div class="dropzone" id="rfidDropzone" style="margin-bottom:14px;">
+            <div id="rfidDropzoneLabel">📄 Hacé click para elegir el archivo, o arrastralo acá</div>
+            <input type="file" id="rfidFileInput" accept=".csv,.txt,.tsv" style="display:none;">
+          </div>
+
+          <div id="rfidMapeoBox" style="display:none;">
+            <h4 style="font-size:13.5px;margin:0 0 4px;">1. Confirmá qué es cada columna</h4>
+            <p class="sub" style="font-size:12px;margin:0 0 10px;">Detectamos las columnas automáticamente. Corregí si algo quedó mal.</p>
+            <div id="rfidMapeoGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:14px;"></div>
+
+            <div class="mini-form" style="grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+              <div class="field" style="margin-bottom:0;"><label>Especie (para animales nuevos)</label>
+                <select id="rfidEspecieDefault"><option>Bovino</option><option>Ovino</option><option>Equino</option><option>Porcino</option><option>Aviar</option><option>Otro</option></select>
+              </div>
+              <div class="field" style="margin-bottom:0;"><label>Categoría (para animales nuevos)</label><input type="text" id="rfidCategoriaDefault" placeholder="Ej: Novillo (opcional)"></div>
+            </div>
+
+            <button class="btn btn-primary" id="rfidPreviewBtn" style="width:100%;">Previsualizar importación →</button>
+          </div>
+
+          <div id="rfidPreviewBox" style="display:none;">
+            <h4 style="font-size:13.5px;margin:14px 0 8px;">2. Revisá antes de confirmar</h4>
+            <div class="range-box" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px;">
+              <div class="result-box"><div class="muted" style="font-size:12px;">Animales nuevos</div><div class="big" id="rfidStatNuevos" style="font-size:22px;">0</div></div>
+              <div class="result-box"><div class="muted" style="font-size:12px;">Ya existentes</div><div class="big" id="rfidStatExistentes" style="font-size:22px;">0</div></div>
+              <div class="result-box"><div class="muted" style="font-size:12px;">Filas con problema</div><div class="big" id="rfidStatErrores" style="font-size:22px;">0</div></div>
+            </div>
+            <div id="rfidAvisos" style="margin-bottom:12px;"></div>
+            <div style="max-height:280px;overflow:auto;border:1px solid var(--border);border-radius:9px;margin-bottom:14px;">
+              <table class="mini" id="rfidPreviewTable" style="margin:0;">
+                <thead><tr><th>Estado</th><th>RFID</th><th>Caravana</th><th>Fecha</th><th>Peso</th><th>Observación</th></tr></thead>
+                <tbody id="rfidPreviewTbody"></tbody>
+              </table>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn btn-primary" id="rfidConfirmBtn" style="flex:1;min-width:180px;">✅ Confirmar importación</button>
+              <button class="btn btn-ghost" id="rfidCancelBtn" style="flex:1;min-width:140px;">Cancelar</button>
+            </div>
+          </div>
+
+          <div id="rfidResultBox" style="display:none;"></div>
+        </div>
+
+        <div id="rfidLotesBox" style="margin-bottom:18px;"></div>
         <div id="scanBox" style="display:none;margin-bottom:18px;">
           <div id="qrReader" style="max-width:320px;"></div>
           <button id="scanCloseBtn" style="margin-top:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:9px;padding:8px 14px;font-size:13px;cursor:pointer;">Cerrar cámara</button>
         </div>
 
         <table class="animales" id="aniTable">
-          <thead><tr><th>Caravana</th><th>Especie</th><th>Categoría</th><th>Sexo</th><th>Edad</th><th>Estado</th><th></th></tr></thead>
+          <thead><tr><th>Caravana</th><th>Especie</th><th>Categoría</th><th>Sexo</th><th>Edad</th><th>Peso act.</th><th>GDP</th><th>Estado</th><th></th></tr></thead>
           <tbody id="aniTbody"></tbody>
         </table>
         <div id="aniEmpty" class="empty" style="display:none;">Todavía no cargaste ningún animal.</div>
@@ -537,6 +612,7 @@
 
           <div class="subtab-row">
             <button class="subtab-btn active" data-sub="sanidad">💉 Sanidad</button>
+            <button class="subtab-btn" data-sub="pesadas">⚖️ Pesadas</button>
             <button class="subtab-btn" data-sub="reproduccion">🐣 Reproducción</button>
             <button class="subtab-btn" data-sub="qr">📱 QR</button>
             <button class="subtab-btn" data-sub="margen">💰 Margen</button>
@@ -575,6 +651,45 @@
           </div>
 
           <!-- REPRODUCCIÓN -->
+          <!-- PESADAS -->
+          <div class="subpanel" id="sub-pesadas">
+            <p class="sub" style="margin-bottom:12px;">Registrá cada pesada para ver la evolución del animal y su ganancia diaria de peso (GDP). Si importás desde el bastón con balanza, las pesadas se cargan solas.</p>
+
+            <div class="range-box" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px;">
+              <div class="result-box"><div class="muted" style="font-size:12.5px;">Peso actual</div><div class="big" id="pesActual" style="font-size:22px;">—</div></div>
+              <div class="result-box"><div class="muted" style="font-size:12.5px;">GDP último período</div><div class="big" id="pesGdpUltimo" style="font-size:22px;">—</div></div>
+              <div class="result-box"><div class="muted" style="font-size:12.5px;">GDP promedio</div><div class="big" id="pesGdpPromedio" style="font-size:22px;">—</div></div>
+              <div class="result-box"><div class="muted" style="font-size:12.5px;">Ganancia total</div><div class="big" id="pesGananciaTotal" style="font-size:22px;">—</div></div>
+            </div>
+
+            <div class="mini-form" style="grid-template-columns:1fr 1fr 1.4fr auto;">
+              <div class="field" style="margin-bottom:0;"><label>Fecha</label><input type="date" id="pesFecha"></div>
+              <div class="field" style="margin-bottom:0;"><label>Peso (kg)</label><input type="number" id="pesPeso" step="0.1" placeholder="Ej: 412.5"></div>
+              <div class="field" style="margin-bottom:0;"><label>Observación</label><input type="text" id="pesObs" placeholder="Opcional"></div>
+              <button class="btn btn-primary" id="pesAddBtn" style="height:40px;">Agregar</button>
+            </div>
+
+            <div class="result-box" id="pesChartBox" style="display:none;margin-bottom:14px;">
+              <h4 style="font-size:14px;margin-bottom:10px;">Evolución de peso</h4>
+              <canvas id="chartPesadas" height="110"></canvas>
+            </div>
+
+            <table class="mini" id="pesTable">
+              <thead><tr><th>Fecha</th><th>Peso</th><th>Δ vs. anterior</th><th>GDP</th><th>Observación</th><th>Origen</th><th></th></tr></thead>
+              <tbody id="pesTbody"></tbody>
+            </table>
+            <div id="pesEmpty" class="empty" style="display:none;padding:16px 0;">Sin pesadas registradas.</div>
+
+            <div class="result-box" style="margin-top:16px;">
+              <h4 style="font-size:14px;margin-bottom:8px;">🎯 Proyección a peso objetivo</h4>
+              <div class="mini-form" style="grid-template-columns:1fr 2fr;gap:10px;">
+                <div class="field" style="margin-bottom:0;"><label>Peso objetivo (kg)</label><input type="number" id="pesObjetivo" placeholder="Ej: 480"></div>
+                <div class="result-box" style="margin:0;"><div class="muted" style="font-size:12.5px;">Fecha estimada</div><div class="big" id="pesProyeccion" style="font-size:18px;">—</div></div>
+              </div>
+              <p class="disclaimer" style="margin-top:10px;">Proyección lineal según la GDP promedio registrada. No contempla estacionalidad de la pastura, sanidad ni cambio de dieta — usala como referencia, no como compromiso de entrega.</p>
+            </div>
+          </div>
+
           <div class="subpanel" id="sub-reproduccion">
             <div class="range-box" style="grid-template-columns:1fr 1fr 1fr;">
               <div class="result-box"><div class="muted" style="font-size:12.5px;">Partos totales</div><div class="big" id="repPartos" style="font-size:24px;">0</div></div>
@@ -898,6 +1013,33 @@
       </div>
     </section>
 
+    <!-- GRÁFICOS -->
+    <section class="panel" id="panel-graficos">
+      <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="15" height="15" style="vertical-align:-3px;margin-right:4px;flex-shrink:0"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Gráficos</h2>
+      <p class="sub">Vista general del campo a partir de los datos que fuiste cargando en Animales, Maquinaria, Lotes y Vencimientos.</p>
+      <div class="result-box" style="margin-bottom:16px;">
+        <h3 style="font-size:14.5px;margin-bottom:10px;">Animales por categoría</h3>
+        <canvas id="chartAnimales" height="90"></canvas>
+        <div class="empty" id="chartAnimalesEmpty" style="display:none;padding:10px 0;">Todavía no cargaste animales.</div>
+      </div>
+      <div class="result-box" style="margin-bottom:16px;">
+        <h3 style="font-size:14.5px;margin-bottom:10px;">Vencimientos por urgencia</h3>
+        <canvas id="chartVencimientos" height="90"></canvas>
+        <div class="empty" id="chartVencimientosEmpty" style="display:none;padding:10px 0;">Todavía no cargaste vencimientos.</div>
+      </div>
+      <div class="result-box" style="margin-bottom:16px;">
+        <h3 style="font-size:14.5px;margin-bottom:10px;">Costo de insumos + jornales por lote</h3>
+        <canvas id="chartLotes" height="90"></canvas>
+        <div class="empty" id="chartLotesEmpty" style="display:none;padding:10px 0;">Todavía no cargaste lotes.</div>
+      </div>
+      <div class="result-box">
+        <h3 style="font-size:14.5px;margin-bottom:10px;">Costo de mantenimiento + repuestos por equipo</h3>
+        <canvas id="chartMaquinaria" height="90"></canvas>
+        <div class="empty" id="chartMaquinariaEmpty" style="display:none;padding:10px 0;">Todavía no cargaste maquinaria.</div>
+      </div>
+      <p class="disclaimer" style="font-size:12px;color:var(--text-muted);margin-top:16px;">⚠️ Los gráficos se generan a partir de los registros locales de este navegador — no representan la totalidad del campo si no cargás cada dato.</p>
+    </section>
+
   </main>
 </div>
 
@@ -932,6 +1074,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    if (btn.dataset.tab === 'graficos' && typeof renderGraficosCampo === 'function') renderGraficosCampo();
   });
 });
 
@@ -1572,24 +1715,31 @@ const aniSearch = document.getElementById('aniSearch');
 function renderAnimales(){
   const filtro = (aniSearch.value || '').toLowerCase().trim();
   const list = loadAnimales().filter(a =>
-    !filtro || (a.caravana||'').toLowerCase().includes(filtro) || (a.especie||'').toLowerCase().includes(filtro) || (a.categoria||'').toLowerCase().includes(filtro)
+    !filtro || (a.caravana||'').toLowerCase().includes(filtro) || (a.rfid||'').includes(filtro) || (a.especie||'').toLowerCase().includes(filtro) || (a.categoria||'').toLowerCase().includes(filtro)
   );
   if (!list.length){ aniTbody.innerHTML = ''; aniEmpty.style.display = 'block'; return; }
   aniEmpty.style.display = 'none';
-  aniTbody.innerHTML = list.map(a => `
+  aniTbody.innerHTML = list.map(a => {
+    const m = metricasPesadas(a);
+    const gdpTxt = m.gdpUltimo !== null
+      ? `<span style="color:${m.gdpUltimo >= 0 ? 'var(--brand-light)' : '#c33'};font-weight:600;">${m.gdpUltimo >= 0 ? '+' : ''}${m.gdpUltimo.toFixed(2)}</span>`
+      : '—';
+    return `
     <tr>
-      <td><b>${a.caravana}</b></td>
+      <td><b>${a.caravana}</b>${a.rfid ? `<div style="font-size:10.5px;color:var(--text-muted);font-family:monospace;">${a.rfid}</div>` : ''}</td>
       <td>${a.especie}</td>
       <td>${a.categoria || '—'}</td>
       <td>${a.sexo}</td>
       <td>${calcEdad(a.nacimiento)}</td>
+      <td>${m.pesoActual !== null ? m.pesoActual.toFixed(1) + ' kg' : '—'}</td>
+      <td>${gdpTxt}</td>
       <td><span class="cat-chip">${a.estado}</span></td>
       <td>
         <button data-id="${a.id}" class="verAniBtn" style="border:none;background:none;color:var(--brand-light);cursor:pointer;font-weight:600;">Ver ficha</button>
         <button data-id="${a.id}" class="delAniBtn" style="border:none;background:none;color:#c33;cursor:pointer;margin-left:8px;">Eliminar</button>
       </td>
     </tr>
-  `).join('');
+  `; }).join('');
   aniTbody.querySelectorAll('.verAniBtn').forEach(b => b.addEventListener('click', () => openAnimalDetail(b.dataset.id)));
   aniTbody.querySelectorAll('.delAniBtn').forEach(b => b.addEventListener('click', () => {
     if (!confirm('¿Eliminar este animal y todo su historial?')) return;
@@ -1605,9 +1755,17 @@ document.getElementById('aniAddBtn').addEventListener('click', () => {
   if (!caravana){ alert('Ingresá el número de caravana.'); return; }
   const list = loadAnimales();
   if (list.some(a => a.caravana === caravana)){ alert('Ya existe un animal con esa caravana.'); return; }
+  const rfid = (document.getElementById('aniRfid').value || '').trim();
+  if (rfid){
+    if (!/^\d+$/.test(rfid)){ alert('El RFID debe contener solo números.'); return; }
+    if (list.some(a => a.rfid && a.rfid === rfid)){ alert('Ya existe un animal con ese RFID.'); return; }
+    if (rfid.length !== 15 && !confirm('El RFID estándar (ISO 11784/11785) tiene 15 dígitos y este tiene ' + rfid.length + '. ¿Guardarlo igual?')) return;
+  }
   const animal = {
     id: uid(),
     caravana,
+    rfid,
+    pesadas: [],
     especie: document.getElementById('aniEspecie').value,
     raza: document.getElementById('aniRaza').value.trim(),
     sexo: document.getElementById('aniSexo').value,
@@ -1622,7 +1780,7 @@ document.getElementById('aniAddBtn').addEventListener('click', () => {
   list.push(animal);
   saveAnimales(list);
   registrarFilaSheets('animales', [new Date().toLocaleDateString('es-AR'), animal.caravana, animal.especie, animal.raza, animal.sexo, animal.categoria, animal.estado, animal.madre, animal.padre, animal.metodoConcepcion]);
-  ['aniCaravana','aniRaza','aniNacimiento','aniCategoria','aniMadre','aniPadre'].forEach(id => document.getElementById(id).value = '');
+  ['aniCaravana','aniRfid','aniRaza','aniNacimiento','aniCategoria','aniMadre','aniPadre'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('aniMetodoConcepcion').value = '';
   renderAnimales();
 });
@@ -1684,6 +1842,7 @@ function openAnimalDetail(id, opts){
   }
 
   renderVacunas(animal);
+  renderPesadas(animal);
   renderEnfermedades(animal);
   renderServicios(animal);
   renderPartos(animal);
@@ -1718,8 +1877,614 @@ document.querySelectorAll('#animalDetailView .subtab-btn[data-sub]').forEach(btn
     btn.classList.add('active');
     document.getElementById('sub-' + btn.dataset.sub).classList.add('active');
     if (btn.dataset.sub === 'qr') document.getElementById('qrBox').style.display = 'none';
+    if (btn.dataset.sub === 'pesadas'){ const a = getAnimalById(currentAnimalId); if (a) renderPesadas(a); }
   });
 });
+
+
+/* ================= PESADAS Y GANANCIA DIARIA DE PESO ================= */
+
+function pesadasOrdenadas(animal){
+  return (animal.pesadas || [])
+    .filter(p => p && p.fecha && p.peso !== '' && p.peso !== null && !isNaN(parseFloat(p.peso)))
+    .map(p => ({ ...p, peso: parseFloat(p.peso) }))
+    .sort((a, b) => a.fecha.localeCompare(b.fecha));
+}
+
+function diasEntre(f1, f2){
+  const d = (new Date(f2) - new Date(f1)) / 86400000;
+  return isNaN(d) ? 0 : d;
+}
+
+// Devuelve peso actual, GDP del último período, GDP promedio y ganancia total.
+function metricasPesadas(animal){
+  const ps = pesadasOrdenadas(animal);
+  if (!ps.length) return { pesoActual: null, gdpUltimo: null, gdpPromedio: null, ganancia: null, ps: [] };
+
+  const pesoActual = ps[ps.length - 1].peso;
+  if (ps.length === 1) return { pesoActual, gdpUltimo: null, gdpPromedio: null, ganancia: null, ps };
+
+  const ult = ps[ps.length - 1], ant = ps[ps.length - 2];
+  const dUlt = diasEntre(ant.fecha, ult.fecha);
+  const gdpUltimo = dUlt > 0 ? (ult.peso - ant.peso) / dUlt : null;
+
+  const dTotal = diasEntre(ps[0].fecha, ult.fecha);
+  const ganancia = ult.peso - ps[0].peso;
+  const gdpPromedio = dTotal > 0 ? ganancia / dTotal : null;
+
+  return { pesoActual, gdpUltimo, gdpPromedio, ganancia, ps };
+}
+
+let chartPesadasInst = null;
+
+function renderPesadas(animal){
+  const m = metricasPesadas(animal);
+  const ps = m.ps;
+  const fmtKg = v => v === null || v === undefined ? '—' : v.toFixed(1) + ' kg';
+  const fmtGdp = v => {
+    if (v === null || v === undefined) return '—';
+    const color = v >= 0 ? 'var(--brand-light)' : '#c33';
+    return `<span style="color:${color}">${v >= 0 ? '+' : ''}${v.toFixed(3)} kg/día</span>`;
+  };
+
+  document.getElementById('pesActual').textContent = fmtKg(m.pesoActual);
+  document.getElementById('pesGdpUltimo').innerHTML = fmtGdp(m.gdpUltimo);
+  document.getElementById('pesGdpPromedio').innerHTML = fmtGdp(m.gdpPromedio);
+  document.getElementById('pesGananciaTotal').innerHTML = m.ganancia === null ? '—'
+    : `<span style="color:${m.ganancia >= 0 ? 'var(--brand-light)' : '#c33'}">${m.ganancia >= 0 ? '+' : ''}${m.ganancia.toFixed(1)} kg</span>`;
+
+  const tbody = document.getElementById('pesTbody');
+  const empty = document.getElementById('pesEmpty');
+  const chartBox = document.getElementById('pesChartBox');
+
+  if (!ps.length){
+    tbody.innerHTML = ''; empty.style.display = 'block'; chartBox.style.display = 'none';
+    if (chartPesadasInst){ chartPesadasInst.destroy(); chartPesadasInst = null; }
+    calcularProyeccion(animal);
+    return;
+  }
+  empty.style.display = 'none';
+
+  // Se muestran de la más reciente a la más vieja
+  tbody.innerHTML = ps.slice().reverse().map((p) => {
+    const i = ps.indexOf(p);
+    const prev = i > 0 ? ps[i - 1] : null;
+    let delta = '—', gdp = '—';
+    if (prev){
+      const d = p.peso - prev.peso;
+      const dias = diasEntre(prev.fecha, p.fecha);
+      const col = d >= 0 ? 'var(--brand-light)' : '#c33';
+      delta = `<span style="color:${col}">${d >= 0 ? '+' : ''}${d.toFixed(1)} kg</span>`;
+      gdp = dias > 0 ? `<span style="color:${col}">${d/dias >= 0 ? '+' : ''}${(d/dias).toFixed(3)}</span>` : '—';
+    }
+    const origen = p.origen === 'rfid'
+      ? '<span class="cat-chip" style="font-size:10px;">📥 Bastón</span>'
+      : '<span style="font-size:11px;color:var(--text-muted);">Manual</span>';
+    return `<tr>
+      <td>${formatearFechaCorta(p.fecha)}</td>
+      <td><b>${p.peso.toFixed(1)} kg</b></td>
+      <td>${delta}</td>
+      <td>${gdp}</td>
+      <td>${p.obs || '—'}</td>
+      <td>${origen}</td>
+      <td><button data-fecha="${p.fecha}" data-peso="${p.peso}" class="delPesBtn" style="border:none;background:none;color:#c33;cursor:pointer;">✕</button></td>
+    </tr>`;
+  }).join('');
+
+  tbody.querySelectorAll('.delPesBtn').forEach(b => b.addEventListener('click', () => {
+    if (!confirm('¿Eliminar esta pesada?')) return;
+    updateCurrentAnimal(a => {
+      a.pesadas = (a.pesadas || []).filter(p => !(p.fecha === b.dataset.fecha && String(parseFloat(p.peso)) === b.dataset.peso));
+    });
+    marcarCambio();
+    renderPesadas(getAnimalById(currentAnimalId));
+    renderAnimales();
+  }));
+
+  // Gráfico
+  if (ps.length >= 2){
+    chartBox.style.display = 'block';
+    const cc = chartColorsCampo();
+    const ctx = document.getElementById('chartPesadas');
+    if (chartPesadasInst) chartPesadasInst.destroy();
+    chartPesadasInst = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ps.map(p => formatearFechaCorta(p.fecha)),
+        datasets: [{
+          label: 'Peso (kg)',
+          data: ps.map(p => p.peso),
+          borderColor: '#5D8438',
+          backgroundColor: 'rgba(93,132,56,.13)',
+          borderWidth: 2, tension: .25, fill: true,
+          pointRadius: 4, pointBackgroundColor: '#5D8438'
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { ticks: { color: cc.text, callback: v => v + ' kg' }, grid: { color: cc.grid } },
+          x: { ticks: { color: cc.text }, grid: { display: false } }
+        }
+      }
+    });
+  } else {
+    chartBox.style.display = 'none';
+    if (chartPesadasInst){ chartPesadasInst.destroy(); chartPesadasInst = null; }
+  }
+
+  calcularProyeccion(animal);
+}
+
+function formatearFechaCorta(f){
+  if (!f) return '—';
+  const p = f.split('-');
+  return p.length === 3 ? `${p[2]}/${p[1]}/${p[0].slice(2)}` : f;
+}
+
+function calcularProyeccion(animal){
+  const out = document.getElementById('pesProyeccion');
+  const objetivo = parseFloat(document.getElementById('pesObjetivo').value);
+  const m = metricasPesadas(animal);
+
+  if (!objetivo || m.pesoActual === null){ out.textContent = '—'; out.style.color = ''; return; }
+  if (objetivo <= m.pesoActual){ out.textContent = 'Ya alcanzado'; out.style.color = 'var(--brand-light)'; return; }
+  if (!m.gdpPromedio || m.gdpPromedio <= 0){
+    out.textContent = 'Faltan pesadas';
+    out.style.color = 'var(--text-muted)';
+    out.title = 'Se necesitan al menos dos pesadas con ganancia positiva.';
+    return;
+  }
+
+  const dias = Math.ceil((objetivo - m.pesoActual) / m.gdpPromedio);
+  const fecha = new Date();
+  fecha.setDate(fecha.getDate() + dias);
+  out.textContent = `${fecha.toLocaleDateString('es-AR')} (${dias} días)`;
+  out.style.color = 'var(--brand-light)';
+}
+
+document.getElementById('pesObjetivo').addEventListener('input', () => {
+  const a = getAnimalById(currentAnimalId);
+  if (a) calcularProyeccion(a);
+});
+
+document.getElementById('pesAddBtn').addEventListener('click', () => {
+  const fecha = document.getElementById('pesFecha').value;
+  const peso = parseFloat(document.getElementById('pesPeso').value);
+  const obs = document.getElementById('pesObs').value.trim();
+
+  if (!fecha){ alert('Ingresá la fecha de la pesada.'); return; }
+  if (!peso || peso <= 0){ alert('Ingresá un peso válido en kilos.'); return; }
+  if (peso > 2000 && !confirm(`${peso} kg es un valor inusualmente alto. ¿Es correcto?`)) return;
+
+  updateCurrentAnimal(a => {
+    a.pesadas = a.pesadas || [];
+    if (a.pesadas.some(p => p.fecha === fecha)){
+      if (!confirm('Ya hay una pesada en esa fecha. ¿Agregar otra igual?')) return;
+    }
+    a.pesadas.push({ fecha, peso, obs, origen: 'manual' });
+  });
+
+  marcarCambio();
+  document.getElementById('pesPeso').value = '';
+  document.getElementById('pesObs').value = '';
+  renderPesadas(getAnimalById(currentAnimalId));
+  renderAnimales();
+});
+
+/* ================= IMPORTADOR DE LECTOR RFID ================= */
+/* Acepta los CSV/TXT que exportan los bastones más usados (Allflex, Tru-Test,
+   Datamars, Gallagher). Cada marca nombra las columnas distinto, así que
+   detectamos por patrón y dejamos que el usuario corrija el mapeo. */
+
+const RFID_CAMPOS = {
+  rfid:      { label: 'RFID electrónico', alias: ['eid','rfid','electronic id','electronicid','tagid','tag id','visual eid','isonumber','iso','numero electronico','número electrónico','caravana electronica','caravana electrónica','transponder'] },
+  caravana:  { label: 'Caravana visual',  alias: ['vid','visual','visual id','visualid','management tag','tag','caravana','numero','número','animal id','animalid','nombre'] },
+  fecha:     { label: 'Fecha de lectura', alias: ['date','fecha','datetime','date time','fecha lectura','session date','fecha de lectura','dia','día'] },
+  peso:      { label: 'Peso (kg)',        alias: ['weight','peso','wt','kg','live weight','peso vivo','weight kg'] },
+  obs:       { label: 'Observación',      alias: ['comment','comments','note','notes','observacion','observación','obs','remark','condition'] }
+};
+
+let rfidEstado = { filas: [], columnas: [], mapeo: {}, plan: null, nombreArchivo: '' };
+
+/* ---------- Parseo ---------- */
+function detectarSeparador(texto){
+  const linea = texto.split(/\r?\n/).find(l => l.trim()) || '';
+  const cand = [',', ';', '\t', '|'];
+  let mejor = ',', max = 0;
+  cand.forEach(c => { const n = linea.split(c).length; if (n > max){ max = n; mejor = c; } });
+  return mejor;
+}
+
+function parsearCSV(texto, sep){
+  const filas = [];
+  let campo = '', fila = [], enComillas = false;
+  for (let i = 0; i < texto.length; i++){
+    const c = texto[i];
+    if (enComillas){
+      if (c === '"' && texto[i+1] === '"'){ campo += '"'; i++; }
+      else if (c === '"') enComillas = false;
+      else campo += c;
+    } else {
+      if (c === '"') enComillas = true;
+      else if (c === sep){ fila.push(campo); campo = ''; }
+      else if (c === '\n'){ fila.push(campo); filas.push(fila); fila = []; campo = ''; }
+      else if (c !== '\r') campo += c;
+    }
+  }
+  if (campo !== '' || fila.length){ fila.push(campo); filas.push(fila); }
+  return filas.filter(f => f.some(v => (v||'').trim() !== ''));
+}
+
+function normalizar(s){
+  return (s||'').toString().toLowerCase().trim()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+// Adivina qué columna es cada cosa: primero por nombre, después por contenido.
+function autodetectarMapeo(columnas, muestras){
+  const mapeo = {};
+  const usadas = new Set();
+
+  Object.entries(RFID_CAMPOS).forEach(([clave, def]) => {
+    const idx = columnas.findIndex((c, i) => !usadas.has(i) && def.alias.includes(normalizar(c)));
+    if (idx >= 0){ mapeo[clave] = idx; usadas.add(idx); }
+  });
+  Object.entries(RFID_CAMPOS).forEach(([clave, def]) => {
+    if (mapeo[clave] !== undefined) return;
+    const idx = columnas.findIndex((c, i) => !usadas.has(i) && def.alias.some(a => normalizar(c).includes(a)));
+    if (idx >= 0){ mapeo[clave] = idx; usadas.add(idx); }
+  });
+
+  // Por contenido: 15 dígitos = RFID; fechas reconocibles; números entre 5 y 1500 = peso
+  if (mapeo.rfid === undefined){
+    const idx = columnas.findIndex((c, i) => !usadas.has(i) && muestras.filter(f => /^\d{14,16}$/.test((f[i]||'').trim())).length >= Math.max(1, muestras.length * 0.6));
+    if (idx >= 0){ mapeo.rfid = idx; usadas.add(idx); }
+  }
+  if (mapeo.fecha === undefined){
+    const idx = columnas.findIndex((c, i) => !usadas.has(i) && muestras.filter(f => parsearFecha((f[i]||'').trim())).length >= Math.max(1, muestras.length * 0.6));
+    if (idx >= 0){ mapeo.fecha = idx; usadas.add(idx); }
+  }
+  if (mapeo.peso === undefined){
+    const idx = columnas.findIndex((c, i) => !usadas.has(i) && muestras.filter(f => {
+      const v = parseFloat((f[i]||'').replace(',', '.'));
+      return !isNaN(v) && v > 5 && v < 1500;
+    }).length >= Math.max(1, muestras.length * 0.6));
+    if (idx >= 0){ mapeo.peso = idx; usadas.add(idx); }
+  }
+  return mapeo;
+}
+
+// Acepta AAAA-MM-DD, DD/MM/AAAA y DD-MM-AAAA. Ante ambigüedad prioriza DD/MM (uso argentino).
+function parsearFecha(v){
+  if (!v) return null;
+  v = v.toString().trim().split(/[ T]/)[0];
+  let m;
+  if ((m = v.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/))){
+    const [, a, mes, d] = m;
+    if (+mes >= 1 && +mes <= 12 && +d >= 1 && +d <= 31) return `${a}-${mes.padStart(2,'0')}-${d.padStart(2,'0')}`;
+  }
+  if ((m = v.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{2,4})$/))){
+    let [, d, mes, a] = m;
+    if (a.length === 2) a = (+a > 70 ? '19' : '20') + a;
+    if (+mes > 12 && +d <= 12){ const t = d; d = mes; mes = t; }  // venía en MM/DD
+    if (+mes >= 1 && +mes <= 12 && +d >= 1 && +d <= 31) return `${a}-${mes.padStart(2,'0')}-${d.padStart(2,'0')}`;
+  }
+  return null;
+}
+
+/* ---------- UI ---------- */
+const rfidBox = document.getElementById('rfidImportBox');
+
+document.getElementById('aniImportBtn').addEventListener('click', () => {
+  rfidBox.style.display = rfidBox.style.display === 'none' ? 'block' : 'none';
+  if (rfidBox.style.display === 'block') rfidBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+document.getElementById('rfidCloseBtn').addEventListener('click', resetImportador);
+document.getElementById('rfidCancelBtn').addEventListener('click', resetImportador);
+
+function resetImportador(){
+  rfidBox.style.display = 'none';
+  rfidEstado = { filas: [], columnas: [], mapeo: {}, plan: null, nombreArchivo: '' };
+  document.getElementById('rfidMapeoBox').style.display = 'none';
+  document.getElementById('rfidPreviewBox').style.display = 'none';
+  document.getElementById('rfidResultBox').style.display = 'none';
+  document.getElementById('rfidFileInput').value = '';
+  document.getElementById('rfidDropzoneLabel').innerHTML = '📄 Hacé click para elegir el archivo, o arrastralo acá';
+}
+
+const rfidDrop = document.getElementById('rfidDropzone');
+const rfidInput = document.getElementById('rfidFileInput');
+rfidDrop.addEventListener('click', () => rfidInput.click());
+rfidDrop.addEventListener('dragover', e => { e.preventDefault(); rfidDrop.classList.add('drag'); });
+rfidDrop.addEventListener('dragleave', () => rfidDrop.classList.remove('drag'));
+rfidDrop.addEventListener('drop', e => {
+  e.preventDefault(); rfidDrop.classList.remove('drag');
+  if (e.dataTransfer.files[0]) leerArchivoRfid(e.dataTransfer.files[0]);
+});
+rfidInput.addEventListener('change', e => { if (e.target.files[0]) leerArchivoRfid(e.target.files[0]); });
+
+function leerArchivoRfid(file){
+  if (/\.xlsx?$/i.test(file.name)){
+    alert('Los archivos de Excel todavía no se leen directamente.\n\nAbrilo en Excel o Google Sheets y guardalo como CSV — funciona igual.');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const texto = e.target.result;
+      const sep = detectarSeparador(texto);
+      const filas = parsearCSV(texto, sep);
+      if (filas.length < 2){ alert('El archivo no tiene filas de datos suficientes.'); return; }
+
+      rfidEstado.nombreArchivo = file.name;
+      rfidEstado.columnas = filas[0].map(c => (c||'').trim());
+      rfidEstado.filas = filas.slice(1);
+      rfidEstado.mapeo = autodetectarMapeo(rfidEstado.columnas, rfidEstado.filas.slice(0, 20));
+
+      document.getElementById('rfidDropzoneLabel').innerHTML =
+        `✅ <b>${file.name}</b> — ${rfidEstado.filas.length} filas, ${rfidEstado.columnas.length} columnas`;
+      renderMapeo();
+    } catch(err){
+      alert('No se pudo leer el archivo: ' + err.message);
+    }
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function renderMapeo(){
+  const grid = document.getElementById('rfidMapeoGrid');
+  grid.innerHTML = Object.entries(RFID_CAMPOS).map(([clave, def]) => `
+    <div class="field" style="margin-bottom:0;">
+      <label>${def.label}${clave === 'rfid' ? '' : ''}</label>
+      <select data-campo="${clave}" class="rfidMapSel">
+        <option value="">— sin usar —</option>
+        ${rfidEstado.columnas.map((c, i) => `<option value="${i}" ${rfidEstado.mapeo[clave] === i ? 'selected' : ''}>${c || '(columna ' + (i+1) + ')'}</option>`).join('')}
+      </select>
+    </div>
+  `).join('');
+  grid.querySelectorAll('.rfidMapSel').forEach(sel => sel.addEventListener('change', () => {
+    const v = sel.value;
+    if (v === '') delete rfidEstado.mapeo[sel.dataset.campo];
+    else rfidEstado.mapeo[sel.dataset.campo] = parseInt(v);
+  }));
+  document.getElementById('rfidMapeoBox').style.display = 'block';
+  document.getElementById('rfidPreviewBox').style.display = 'none';
+}
+
+/* ---------- Previsualización ---------- */
+document.getElementById('rfidPreviewBtn').addEventListener('click', () => {
+  const m = rfidEstado.mapeo;
+  if (m.rfid === undefined && m.caravana === undefined){
+    alert('Necesitamos al menos una columna de RFID o de caravana para identificar a cada animal.');
+    return;
+  }
+
+  const animales = loadAnimales();
+  const porRfid = {}, porCaravana = {};
+  animales.forEach(a => { if (a.rfid) porRfid[a.rfid] = a; if (a.caravana) porCaravana[a.caravana] = a; });
+
+  const get = (fila, campo) => m[campo] !== undefined ? (fila[m[campo]] || '').toString().trim() : '';
+  const hoy = new Date().toISOString().split('T')[0];
+  const plan = [];
+  const nuevosEnEsteArchivo = {};
+  let prefijosRaros = 0;
+
+  rfidEstado.filas.forEach((fila, i) => {
+    const rfid = get(fila, 'rfid').replace(/\s/g, '');
+    const caravana = get(fila, 'caravana');
+    const fechaCruda = get(fila, 'fecha');
+    const pesoCrudo = get(fila, 'peso').replace(',', '.');
+    const obs = get(fila, 'obs');
+
+    const item = { linea: i + 2, rfid, caravana, obs, errores: [], avisos: [] };
+
+    if (!rfid && !caravana){ item.errores.push('Sin identificador'); plan.push(item); return; }
+    if (rfid && !/^\d+$/.test(rfid)) item.errores.push('RFID no numérico');
+    else if (rfid && rfid.length !== 15) item.avisos.push(`RFID de ${rfid.length} dígitos`);
+    if (rfid && /^\d{15}$/.test(rfid) && !rfid.startsWith('032')) prefijosRaros++;
+
+    item.fecha = fechaCruda ? parsearFecha(fechaCruda) : hoy;
+    if (fechaCruda && !item.fecha){ item.errores.push('Fecha ilegible'); }
+    else if (!fechaCruda) item.avisos.push('Sin fecha, se usa hoy');
+
+    if (pesoCrudo !== ''){
+      const p = parseFloat(pesoCrudo);
+      if (isNaN(p) || p <= 0) item.errores.push('Peso inválido');
+      else if (p > 2000) item.errores.push('Peso fuera de rango');
+      else item.peso = p;
+    }
+
+    const clave = rfid || caravana;
+    const existente = (rfid && porRfid[rfid]) || (caravana && porCaravana[caravana]) || null;
+    if (existente){
+      item.accion = 'existente';
+      item.animalId = existente.id;
+      item.caravanaFinal = existente.caravana;
+      if (rfid && !existente.rfid) item.avisos.push('Se le asigna el RFID');
+    } else if (nuevosEnEsteArchivo[clave]){
+      item.accion = 'existente';
+      item.animalId = nuevosEnEsteArchivo[clave];
+      item.caravanaFinal = caravana || rfid.slice(-5);
+    } else {
+      item.accion = 'nuevo';
+      item.caravanaFinal = caravana || (rfid ? rfid.slice(-5) : '');
+      nuevosEnEsteArchivo[clave] = 'PENDIENTE';
+    }
+    plan.push(item);
+  });
+
+  rfidEstado.plan = plan;
+  const nuevos = plan.filter(p => p.accion === 'nuevo' && !p.errores.length).length;
+  const existentes = plan.filter(p => p.accion === 'existente' && !p.errores.length).length;
+  const errores = plan.filter(p => p.errores.length).length;
+
+  document.getElementById('rfidStatNuevos').textContent = nuevos;
+  document.getElementById('rfidStatExistentes').textContent = existentes;
+  document.getElementById('rfidStatErrores').textContent = errores;
+  document.getElementById('rfidStatErrores').style.color = errores ? '#c33' : '';
+
+  const avisos = [];
+  if (rfidEstado.mapeo.peso === undefined)
+    avisos.push('⚠️ No mapeaste ninguna columna de peso. Se van a crear o identificar animales, pero no se registran pesadas — que es lo más valioso del bastón con balanza.');
+  if (prefijosRaros)
+    avisos.push(`ℹ️ ${prefijosRaros} RFID no empiezan con 032 (código de Argentina). Puede ser normal si son animales importados.`);
+  if (errores)
+    avisos.push(`⚠️ ${errores} filas tienen problemas y se van a saltear. El resto se importa igual.`);
+  document.getElementById('rfidAvisos').innerHTML = avisos.map(a =>
+    `<p class="disclaimer" style="margin:0 0 6px;">${a}</p>`).join('');
+
+  const tbody = document.getElementById('rfidPreviewTbody');
+  tbody.innerHTML = plan.slice(0, 200).map(p => {
+    let chip;
+    if (p.errores.length) chip = `<span class="cat-chip" style="background:rgba(204,51,51,.15);color:#c33;">✕ ${p.errores[0]}</span>`;
+    else if (p.accion === 'nuevo') chip = '<span class="cat-chip" style="background:rgba(93,132,56,.18);color:var(--brand-light);">+ Nuevo</span>';
+    else chip = '<span class="cat-chip">↻ Existente</span>';
+    return `<tr style="${p.errores.length ? 'opacity:.55;' : ''}">
+      <td>${chip}</td>
+      <td style="font-family:monospace;font-size:11.5px;">${p.rfid || '—'}</td>
+      <td>${p.caravanaFinal || p.caravana || '—'}</td>
+      <td>${p.fecha ? formatearFechaCorta(p.fecha) : '—'}</td>
+      <td>${p.peso !== undefined ? p.peso.toFixed(1) + ' kg' : '—'}</td>
+      <td style="font-size:11.5px;color:var(--text-muted);">${p.avisos.join(' · ') || p.obs || '—'}</td>
+    </tr>`;
+  }).join('');
+  if (plan.length > 200){
+    tbody.innerHTML += `<tr><td colspan="6" style="text-align:center;color:var(--text-muted);font-size:12px;">…y ${plan.length - 200} filas más</td></tr>`;
+  }
+
+  document.getElementById('rfidPreviewBox').style.display = 'block';
+  document.getElementById('rfidPreviewBox').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
+/* ---------- Confirmación ---------- */
+document.getElementById('rfidConfirmBtn').addEventListener('click', () => {
+  const plan = (rfidEstado.plan || []).filter(p => !p.errores.length);
+  if (!plan.length){ alert('No hay filas válidas para importar.'); return; }
+
+  const loteId = 'imp_' + Date.now().toString(36);
+  const animales = loadAnimales();
+  const porRfid = {}, porCaravana = {};
+  animales.forEach(a => { if (a.rfid) porRfid[a.rfid] = a; if (a.caravana) porCaravana[a.caravana] = a; });
+
+  const especieDef = document.getElementById('rfidEspecieDefault').value;
+  const categoriaDef = document.getElementById('rfidCategoriaDefault').value.trim();
+
+  let creados = 0, pesadasAgregadas = 0, rfidAsignados = 0, duplicadas = 0;
+
+  plan.forEach(p => {
+    let animal = (p.rfid && porRfid[p.rfid]) || (p.caravana && porCaravana[p.caravana]) || null;
+
+    if (!animal){
+      let caravana = p.caravanaFinal || p.rfid;
+      // Evitar chocar con una caravana ya usada
+      if (porCaravana[caravana]) caravana = caravana + '-' + (p.rfid ? p.rfid.slice(-4) : Date.now().toString(36).slice(-3));
+      animal = {
+        id: uid(), caravana, rfid: p.rfid || '',
+        especie: especieDef, raza: '', sexo: 'Hembra', nacimiento: '',
+        categoria: categoriaDef, estado: 'Activo', madre: '', padre: '', metodoConcepcion: '',
+        importadoEn: loteId,
+        pesadas: [], vacunas: [], enfermedades: [], servicios: [], partos: []
+      };
+      animales.push(animal);
+      if (animal.rfid) porRfid[animal.rfid] = animal;
+      porCaravana[animal.caravana] = animal;
+      creados++;
+    } else if (p.rfid && !animal.rfid){
+      animal.rfid = p.rfid;
+      porRfid[p.rfid] = animal;
+      rfidAsignados++;
+    }
+
+    if (p.peso !== undefined){
+      animal.pesadas = animal.pesadas || [];
+      if (animal.pesadas.some(x => x.fecha === p.fecha && parseFloat(x.peso) === p.peso)){
+        duplicadas++;
+      } else {
+        animal.pesadas.push({ fecha: p.fecha, peso: p.peso, obs: p.obs || '', origen: 'rfid', lote: loteId });
+        pesadasAgregadas++;
+      }
+    }
+  });
+
+  saveAnimales(animales);
+
+  const lotes = JSON.parse(localStorage.getItem('campoia_importaciones') || '[]');
+  lotes.unshift({
+    id: loteId, fecha: new Date().toISOString(), archivo: rfidEstado.nombreArchivo,
+    creados, pesadasAgregadas, rfidAsignados
+  });
+  localStorage.setItem('campoia_importaciones', JSON.stringify(lotes.slice(0, 20)));
+
+  marcarCambio();
+  renderAnimales();
+  renderLotesImportacion();
+  actualizarMedidorEspacio();
+
+  const res = document.getElementById('rfidResultBox');
+  res.style.display = 'block';
+  res.innerHTML = `
+    <div class="result-box" style="border-color:var(--brand-light);">
+      <h4 style="font-size:14.5px;margin-bottom:8px;">✅ Importación completa</h4>
+      <div class="row-mini"><span>Animales nuevos creados</span><span><b>${creados}</b></span></div>
+      <div class="row-mini"><span>Pesadas registradas</span><span><b>${pesadasAgregadas}</b></span></div>
+      <div class="row-mini"><span>RFID asignados a animales existentes</span><span><b>${rfidAsignados}</b></span></div>
+      ${duplicadas ? `<div class="row-mini"><span>Pesadas repetidas (ignoradas)</span><span>${duplicadas}</span></div>` : ''}
+      <p class="disclaimer" style="margin-top:10px;">Los animales nuevos quedaron con especie <b>${especieDef}</b> y sexo Hembra por defecto — revisalos y completá lo que falte desde cada ficha.</p>
+      <button class="btn btn-ghost" id="rfidDoneBtn" style="width:100%;margin-top:10px;">Cerrar</button>
+    </div>`;
+  document.getElementById('rfidDoneBtn').addEventListener('click', resetImportador);
+  document.getElementById('rfidMapeoBox').style.display = 'none';
+  document.getElementById('rfidPreviewBox').style.display = 'none';
+});
+
+/* ---------- Historial de importaciones, con opción de deshacer ---------- */
+function renderLotesImportacion(){
+  const box = document.getElementById('rfidLotesBox');
+  const lotes = JSON.parse(localStorage.getItem('campoia_importaciones') || '[]');
+  if (!lotes.length){ box.innerHTML = ''; return; }
+
+  box.innerHTML = `
+    <details style="border:1px solid var(--border);border-radius:10px;padding:12px 14px;background:var(--bg-alt);">
+      <summary style="cursor:pointer;font-size:13px;font-weight:600;">📥 Importaciones recientes (${lotes.length})</summary>
+      <table class="mini" style="margin-top:10px;">
+        <thead><tr><th>Fecha</th><th>Archivo</th><th>Nuevos</th><th>Pesadas</th><th></th></tr></thead>
+        <tbody>${lotes.map(l => `
+          <tr>
+            <td>${new Date(l.fecha).toLocaleDateString('es-AR')}</td>
+            <td style="font-size:12px;">${l.archivo || '—'}</td>
+            <td>${l.creados}</td>
+            <td>${l.pesadasAgregadas}</td>
+            <td><button data-lote="${l.id}" class="undoImpBtn" style="border:none;background:none;color:#c33;cursor:pointer;font-size:12px;">Deshacer</button></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      <p class="disclaimer" style="margin-top:8px;">Deshacer elimina los animales creados por esa importación y sus pesadas. Los datos que hayas cargado a mano después sobre esos animales también se pierden.</p>
+    </details>`;
+
+  box.querySelectorAll('.undoImpBtn').forEach(b => b.addEventListener('click', () => {
+    const loteId = b.dataset.lote;
+    if (!confirm('¿Deshacer esta importación?\n\nSe eliminan los animales que creó y las pesadas que registró.')) return;
+
+    let animales = loadAnimales();
+    const aBorrar = animales.filter(a => a.importadoEn === loteId).length;
+    animales = animales.filter(a => a.importadoEn !== loteId);
+    animales.forEach(a => { a.pesadas = (a.pesadas || []).filter(p => p.lote !== loteId); });
+    saveAnimales(animales);
+
+    const lotes2 = JSON.parse(localStorage.getItem('campoia_importaciones') || '[]').filter(l => l.id !== loteId);
+    localStorage.setItem('campoia_importaciones', JSON.stringify(lotes2));
+
+    marcarCambio();
+    renderAnimales();
+    renderLotesImportacion();
+    actualizarMedidorEspacio();
+    alert(`Listo. Se eliminaron ${aBorrar} animales y sus pesadas.`);
+  }));
+}
+renderLotesImportacion();
 
 /* --- Calendario sanitario recomendado por especie (referencial — confirmar con veterinario) --- */
 const CALENDARIO_SANITARIO = {
@@ -2778,20 +3543,32 @@ async function asegurarTokenValido(){
 }
 
 const HOJAS_CAMPOIA = {
-  animales: { nombre: 'Animales', headers: ['Fecha alta','Caravana','Especie','Raza','Sexo','Categoría','Estado','Madre','Padre/Genética','Método concepción'] },
-  vacunas: { nombre: 'Sanidad_Vacunas', headers: ['Fecha','Caravana','Vacuna','Aplicada','Refuerzo (meses)','Costo'] },
-  enfermedades: { nombre: 'Sanidad_Enfermedades', headers: ['Fecha','Caravana','Descripción','Tratamiento','Costo'] },
-  servicios: { nombre: 'Reproduccion_Servicios', headers: ['Fecha','Caravana','Tipo','Toro/Padrillo'] },
-  partos: { nombre: 'Reproduccion_Partos', headers: ['Fecha','Caravana','Vivos','Muertos','Observaciones'] },
-  maquinaria: { nombre: 'Maquinaria', headers: ['Fecha alta','Nombre','Tipo','Marca/Modelo','Horas','Estado'] },
-  mantenimientos: { nombre: 'Mantenimientos', headers: ['Fecha','Equipo','Servicio','Horas','Costo'] },
-  repuestos: { nombre: 'Repuestos', headers: ['Fecha','Equipo','Repuesto','Motivo','Importe ($)','Intervalo (hs)','Últ. cambio (hs)'] },
-  vuelos: { nombre: 'Vuelos', headers: ['Fecha','Equipo','Hectáreas','Producto','Costo'] },
-  lotes: { nombre: 'Lotes', headers: ['Fecha alta','Lote','Hectáreas','Cultivo','Estado'] },
-  insumos: { nombre: 'Insumos', headers: ['Fecha','Lote','Producto','Dosis','Carencia (días)','Costo'] },
-  jornales: { nombre: 'Jornales', headers: ['Fecha','Lote','Tarea','Trabajador','Costo'] }
+  animales:       { nombre:'Animales',                headers:['id','RFID','Caravana','Especie','Raza','Sexo','Nacimiento','Categoría','Estado','Madre','Padre/Genética','Método concepción','Precio venta'] },
+  pesadas:        { nombre:'Pesadas',                 headers:['animal_id','Caravana','RFID','Fecha','Peso (kg)','Observación','Origen'] },
+  vacunas:        { nombre:'Sanidad_Vacunas',         headers:['animal_id','Caravana','Vacuna','Fecha aplicada','Refuerzo (meses)','Costo'] },
+  enfermedades:   { nombre:'Sanidad_Enfermedades',    headers:['animal_id','Caravana','Fecha','Descripción','Tratamiento','Costo'] },
+  servicios:      { nombre:'Reproduccion_Servicios',  headers:['animal_id','Caravana','Fecha','Tipo','Toro/Padrillo'] },
+  partos:         { nombre:'Reproduccion_Partos',     headers:['animal_id','Caravana','Fecha','Vivos','Muertos','Observaciones'] },
+  maquinaria:     { nombre:'Maquinaria',              headers:['id','Nombre','Tipo','Marca/Modelo','Horas','Estado'] },
+  mantenimientos: { nombre:'Mantenimientos',          headers:['equipo_id','Equipo','Fecha','Servicio','Horas','Costo'] },
+  repuestos:      { nombre:'Repuestos',               headers:['equipo_id','Equipo','Repuesto','Fecha','Motivo','Importe ($)','Intervalo (hs)','Últ. cambio (hs)'] },
+  vuelos:         { nombre:'Vuelos',                  headers:['equipo_id','Equipo','Fecha','Hectáreas','Producto','Costo'] },
+  lotes:          { nombre:'Lotes',                   headers:['id','Lote','Hectáreas','Cultivo','Estado','Rinde (qq/ha)','Precio qq'] },
+  insumos:        { nombre:'Insumos',                 headers:['lote_id','Lote','Fecha','Producto','Dosis','Carencia (días)','Costo'] },
+  jornales:       { nombre:'Jornales',                headers:['lote_id','Lote','Fecha','Tarea','Trabajador','Costo'] },
+  vencimientos:   { nombre:'Vencimientos',            headers:['Documento/Lote','Fecha inicio','Vigencia (meses)'] }
 };
 
+function colLetra(n){ // 1 -> A, 27 -> AA
+  let s = '';
+  while (n > 0){ const r = (n - 1) % 26; s = String.fromCharCode(65 + r) + s; n = Math.floor((n - 1) / 26); }
+  return s;
+}
+function rangoHoja(h, desdeFila){
+  return `${h.nombre}!A${desdeFila}:${colLetra(h.headers.length)}`;
+}
+
+/* ---------- Creación y UI de conexión ---------- */
 async function crearHojaCampoIA(){
   const msg = document.getElementById('googleConnectStatus');
   msg.textContent = 'Creando tu hoja de cálculo...';
@@ -2809,15 +3586,10 @@ async function crearHojaCampoIA(){
     campoiaSheetId = data.spreadsheetId;
     localStorage.setItem('campoia_sheet_id', campoiaSheetId);
 
-    for (const h of Object.values(HOJAS_CAMPOIA)){
-      await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${campoiaSheetId}/values/${encodeURIComponent(h.nombre)}!A1:${String.fromCharCode(65 + h.headers.length - 1)}1?valueInputOption=RAW`, {
-        method: 'PUT',
-        headers: { 'Authorization': 'Bearer ' + googleAccessToken, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ values: [h.headers] })
-      });
-    }
+    await escribirEncabezados();
     msg.textContent = '✅ ¡Listo! Tu hoja fue creada y conectada.';
     actualizarUIGoogleConectado();
+    await sincronizarTodoSheets(true);
   } catch(e){
     msg.textContent = '⚠️ Error creando la hoja: ' + e.message;
   }
@@ -2825,8 +3597,10 @@ async function crearHojaCampoIA(){
 
 function actualizarUIGoogleConectado(){
   document.getElementById('googleConnectedBadge').style.display = 'flex';
+  document.getElementById('googleSyncActions').style.display = 'flex';
   document.getElementById('btnConectarGoogle').style.display = 'none';
   document.getElementById('linkAbrirHoja').href = `https://docs.google.com/spreadsheets/d/${campoiaSheetId}/edit`;
+  refrescarEstadoSync();
 }
 
 document.getElementById('btnDesconectarGoogle').addEventListener('click', () => {
@@ -2836,25 +3610,363 @@ document.getElementById('btnDesconectarGoogle').addEventListener('click', () => 
   localStorage.removeItem('campoia_google_token_expira');
   localStorage.removeItem('campoia_sheet_id');
   document.getElementById('googleConnectedBadge').style.display = 'none';
+  document.getElementById('googleSyncActions').style.display = 'none';
   document.getElementById('btnConectarGoogle').style.display = 'flex';
   document.getElementById('googleConnectStatus').textContent = '';
+  document.getElementById('googleSyncStatus').textContent = '';
 });
 
-// Agrega una fila a la hoja correspondiente. No bloqueante — si falla, no interrumpe al usuario.
-async function registrarFilaSheets(claveHoja, fila){
+/* ---------- Snapshot: del localStorage a filas ---------- */
+function construirSnapshot(){
+  const snap = {};
+  Object.keys(HOJAS_CAMPOIA).forEach(k => snap[k] = []);
+
+  loadAnimales().forEach(a => {
+    snap.animales.push([a.id, a.rfid ? "'" + a.rfid : '', a.caravana||'', a.especie||'', a.raza||'', a.sexo||'', a.nacimiento||'', a.categoria||'', a.estado||'', a.madre||'', a.padre||'', a.metodoConcepcion||'', a.precioVenta||'']);
+    (a.pesadas||[]).forEach(p => snap.pesadas.push([a.id, a.caravana||'', a.rfid ? "'" + a.rfid : '', p.fecha||'', p.peso??'', p.obs||'', p.origen||'manual']));
+    (a.vacunas||[]).forEach(v => snap.vacunas.push([a.id, a.caravana||'', v.nombre||'', v.fecha||'', v.refuerzo??'', v.costo??'']));
+    (a.enfermedades||[]).forEach(e => snap.enfermedades.push([a.id, a.caravana||'', e.fecha||'', e.descripcion||'', e.tratamiento||'', e.costo??'']));
+    (a.servicios||[]).forEach(s => snap.servicios.push([a.id, a.caravana||'', s.fecha||'', s.tipo||'', s.padre||'']));
+    (a.partos||[]).forEach(p => snap.partos.push([a.id, a.caravana||'', p.fecha||'', p.vivos??'', p.muertos??'', p.obs||'']));
+  });
+
+  loadMaquinas().forEach(m => {
+    snap.maquinaria.push([m.id, m.nombre||'', m.tipo||'', m.marca||'', m.horas??'', m.estado||'']);
+    (m.mantenimientos||[]).forEach(x => snap.mantenimientos.push([m.id, m.nombre||'', x.fecha||'', x.tipo||'', x.horas??'', x.costo??'']));
+    (m.repuestos||[]).forEach(x => snap.repuestos.push([m.id, m.nombre||'', x.nombre||'', x.fecha||'', x.motivo||'', x.costo??'', x.intervalo??'', x.ultimoCambio??'']));
+    (m.vuelos||[]).forEach(x => snap.vuelos.push([m.id, m.nombre||'', x.fecha||'', x.hectareas??'', x.producto||'', x.costo??'']));
+  });
+
+  loadLotes().forEach(l => {
+    snap.lotes.push([l.id, l.nombre||'', l.hectareas??'', l.cultivo||'', l.estado||'', l.rinde??'', l.precioQq??'']);
+    (l.insumos||[]).forEach(x => snap.insumos.push([l.id, l.nombre||'', x.fecha||'', x.producto||'', x.dosis||'', x.carencia??'', x.costo??'']));
+    (l.jornales||[]).forEach(x => snap.jornales.push([l.id, l.nombre||'', x.fecha||'', x.tarea||'', x.trabajador||'', x.costo??'']));
+  });
+
+  loadVenc().forEach(v => snap.vencimientos.push([v.cliente||'', v.inicio||'', v.plazo??'']));
+
+  return snap;
+}
+
+/* ---------- Reconstrucción: de filas al localStorage ---------- */
+function reconstruirDesdeFilas(datos){
+  const val = (fila, i) => (fila && fila[i] !== undefined && fila[i] !== null) ? String(fila[i]).trim() : '';
+  const num = (fila, i) => { const v = val(fila, i); return v === '' ? '' : (parseFloat(v.replace(',', '.')) || 0); };
+
+  const animales = (datos.animales||[]).filter(f => f && f[0]).map(f => ({
+    id: val(f,0), rfid: val(f,1).replace(/^'/, ''), caravana: val(f,2), especie: val(f,3), raza: val(f,4),
+    sexo: val(f,5), nacimiento: val(f,6), categoria: val(f,7), estado: val(f,8) || 'Activo',
+    madre: val(f,9), padre: val(f,10), metodoConcepcion: val(f,11), precioVenta: val(f,12),
+    pesadas: [], vacunas: [], enfermedades: [], servicios: [], partos: []
+  }));
+  const idxA = {}; animales.forEach(a => idxA[a.id] = a);
+
+  (datos.pesadas||[]).forEach(f => { const a = idxA[val(f,0)]; if (a) a.pesadas.push({ fecha: val(f,3), peso: num(f,4), obs: val(f,5), origen: val(f,6) || 'manual' }); });
+  (datos.vacunas||[]).forEach(f => { const a = idxA[val(f,0)]; if (a) a.vacunas.push({ nombre: val(f,2), fecha: val(f,3), refuerzo: num(f,4), costo: val(f,5) }); });
+  (datos.enfermedades||[]).forEach(f => { const a = idxA[val(f,0)]; if (a) a.enfermedades.push({ fecha: val(f,2), descripcion: val(f,3), tratamiento: val(f,4), costo: val(f,5) }); });
+  (datos.servicios||[]).forEach(f => { const a = idxA[val(f,0)]; if (a) a.servicios.push({ fecha: val(f,2), tipo: val(f,3), padre: val(f,4) }); });
+  (datos.partos||[]).forEach(f => { const a = idxA[val(f,0)]; if (a) a.partos.push({ fecha: val(f,2), vivos: num(f,3), muertos: num(f,4), obs: val(f,5) }); });
+
+  const maquinas = (datos.maquinaria||[]).filter(f => f && f[0]).map(f => ({
+    id: val(f,0), nombre: val(f,1), tipo: val(f,2), marca: val(f,3), horas: num(f,4) || 0, estado: val(f,5),
+    mantenimientos: [], repuestos: [], vuelos: []
+  }));
+  const idxM = {}; maquinas.forEach(m => idxM[m.id] = m);
+  (datos.mantenimientos||[]).forEach(f => { const m = idxM[val(f,0)]; if (m) m.mantenimientos.push({ fecha: val(f,2), tipo: val(f,3), horas: num(f,4), costo: val(f,5) }); });
+  (datos.repuestos||[]).forEach(f => { const m = idxM[val(f,0)]; if (m) m.repuestos.push({ nombre: val(f,2), fecha: val(f,3), motivo: val(f,4), costo: val(f,5), intervalo: num(f,6), ultimoCambio: num(f,7) }); });
+  (datos.vuelos||[]).forEach(f => { const m = idxM[val(f,0)]; if (m) m.vuelos.push({ fecha: val(f,2), hectareas: num(f,3), producto: val(f,4), costo: val(f,5) }); });
+
+  const lotes = (datos.lotes||[]).filter(f => f && f[0]).map(f => ({
+    id: val(f,0), nombre: val(f,1), hectareas: num(f,2) || 0, cultivo: val(f,3), estado: val(f,4),
+    rinde: val(f,5), precioQq: val(f,6), insumos: [], jornales: []
+  }));
+  const idxL = {}; lotes.forEach(l => idxL[l.id] = l);
+  (datos.insumos||[]).forEach(f => { const l = idxL[val(f,0)]; if (l) l.insumos.push({ fecha: val(f,2), producto: val(f,3), dosis: val(f,4), carencia: num(f,5), costo: val(f,6) }); });
+  (datos.jornales||[]).forEach(f => { const l = idxL[val(f,0)]; if (l) l.jornales.push({ fecha: val(f,2), tarea: val(f,3), trabajador: val(f,4), costo: val(f,5) }); });
+
+  const vencimientos = (datos.vencimientos||[]).filter(f => f && f[0]).map(f => ({ cliente: val(f,0), inicio: val(f,1), plazo: val(f,2) }));
+
+  return { animales, maquinas, lotes, vencimientos };
+}
+
+/* ---------- Sincronización (snapshot completo, con debounce) ---------- */
+let syncTimer = null;
+let syncEnCurso = false;
+let syncPendiente = false;
+
+function estadoSync(texto, color){
+  const el = document.getElementById('googleSyncStatus');
+  if (el){ el.textContent = texto; el.style.color = color || 'var(--text-muted)'; }
+}
+
+// Reemplaza al viejo log append-only. Cualquier cambio marca el estado como sucio.
+function marcarCambio(){
   if (!campoiaSheetId) return;
-  const h = HOJAS_CAMPOIA[claveHoja];
-  if (!h) return;
-  const ok = await asegurarTokenValido();
-  if (!ok) return;
+  syncPendiente = true;
+  estadoSync('Cambios sin sincronizar…');
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => sincronizarTodoSheets(), 3000);
+}
+
+// Compatibilidad: las llamadas existentes siguen funcionando y ahora disparan el snapshot.
+function registrarFilaSheets(){ marcarCambio(); }
+
+async function asegurarHojasExisten(){
+  const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${campoiaSheetId}?fields=sheets.properties.title`, {
+    headers: { 'Authorization': 'Bearer ' + googleAccessToken }
+  });
+  if (!res.ok) throw new Error('No se pudo leer la estructura de la hoja');
+  const data = await res.json();
+  const existentes = (data.sheets||[]).map(s => s.properties.title);
+  const faltantes = Object.values(HOJAS_CAMPOIA).filter(h => !existentes.includes(h.nombre));
+  if (!faltantes.length) return;
+
+  await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${campoiaSheetId}:batchUpdate`, {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + googleAccessToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ requests: faltantes.map(h => ({ addSheet: { properties: { title: h.nombre } } })) })
+  });
+}
+
+async function escribirEncabezados(){
+  const data = Object.values(HOJAS_CAMPOIA).map(h => ({
+    range: `${h.nombre}!A1:${colLetra(h.headers.length)}1`,
+    values: [h.headers]
+  }));
+  await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${campoiaSheetId}/values:batchUpdate`, {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + googleAccessToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ valueInputOption: 'RAW', data })
+  });
+}
+
+async function sincronizarTodoSheets(manual){
+  if (!campoiaSheetId) return false;
+  if (syncEnCurso){ syncPendiente = true; return false; }
+  syncEnCurso = true;
+  estadoSync('Sincronizando…');
   try {
-    await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${campoiaSheetId}/values/${encodeURIComponent(h.nombre)}!A:Z:append?valueInputOption=RAW`, {
+    const ok = await asegurarTokenValido();
+    if (!ok){ estadoSync('⚠️ Sesión de Google vencida. Reconectá.', '#c33'); syncEnCurso = false; return false; }
+
+    await asegurarHojasExisten();
+    await escribirEncabezados();
+
+    const snap = construirSnapshot();
+
+    // 1. Limpiar el cuerpo de todas las hojas (los encabezados quedan intactos)
+    await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${campoiaSheetId}/values:batchClear`, {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + googleAccessToken, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ values: [fila] })
+      body: JSON.stringify({ ranges: Object.values(HOJAS_CAMPOIA).map(h => rangoHoja(h, 2)) })
     });
+
+    // 2. Escribir el estado actual completo, en una sola llamada
+    const data = Object.entries(HOJAS_CAMPOIA)
+      .filter(([k]) => (snap[k] || []).length)
+      .map(([k, h]) => ({ range: `${h.nombre}!A2`, values: snap[k] }));
+
+    if (data.length){
+      const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${campoiaSheetId}/values:batchUpdate`, {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + googleAccessToken, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ valueInputOption: 'RAW', data })
+      });
+      if (!res.ok){ const e = await res.json().catch(()=>({})); throw new Error(e.error?.message || 'Error escribiendo'); }
+    }
+
+    syncPendiente = false;
+    localStorage.setItem('campoia_ultimo_sync', String(Date.now()));
+    estadoSync('✅ Sincronizado recién', 'var(--brand-light)');
+    setTimeout(refrescarEstadoSync, 60000);
+    return true;
   } catch(e){
-    console.warn('Registro a Google Sheets falló silenciosamente:', e);
+    console.warn('Sync falló:', e);
+    estadoSync('⚠️ No se pudo sincronizar. Tus datos siguen guardados en este dispositivo.', '#c33');
+    return false;
+  } finally {
+    syncEnCurso = false;
+    if (syncPendiente){ clearTimeout(syncTimer); syncTimer = setTimeout(() => sincronizarTodoSheets(), 4000); }
+  }
+}
+
+function refrescarEstadoSync(){
+  if (!campoiaSheetId || syncPendiente || syncEnCurso) return;
+  const t = parseInt(localStorage.getItem('campoia_ultimo_sync') || '0');
+  if (!t) return;
+  const min = Math.floor((Date.now() - t) / 60000);
+  if (min < 1) estadoSync('✅ Sincronizado recién', 'var(--brand-light)');
+  else if (min < 60) estadoSync(`✅ Sincronizado hace ${min} min`, 'var(--brand-light)');
+  else {
+    const hs = Math.floor(min / 60);
+    estadoSync(hs < 24 ? `✅ Sincronizado hace ${hs} h` : `✅ Sincronizado el ${new Date(t).toLocaleDateString('es-AR')}`, 'var(--brand-light)');
+  }
+}
+setInterval(refrescarEstadoSync, 60000);
+
+/* ---------- Restauración ---------- */
+async function restaurarDesdeSheets(){
+  if (!campoiaSheetId){ alert('Primero conectá tu Google Sheets.'); return; }
+
+  const localHay = loadAnimales().length + loadMaquinas().length + loadLotes().length + loadVenc().length;
+  const aviso = localHay
+    ? `Vas a REEMPLAZAR los datos de este dispositivo (${localHay} registros principales) por lo que hay en tu Google Sheets.\n\nLo que tengas cargado acá y no esté en la hoja se pierde.\n\n¿Continuar?`
+    : 'Vamos a traer todos los datos desde tu Google Sheets a este dispositivo. ¿Continuar?';
+  if (!confirm(aviso)) return;
+
+  estadoSync('Restaurando desde Sheets…');
+  try {
+    const ok = await asegurarTokenValido();
+    if (!ok){ estadoSync('⚠️ Sesión de Google vencida. Reconectá.', '#c33'); return; }
+
+    await asegurarHojasExisten();
+
+    const params = Object.values(HOJAS_CAMPOIA).map(h => `ranges=${encodeURIComponent(rangoHoja(h, 2))}`).join('&');
+    const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${campoiaSheetId}/values:batchGet?${params}&majorDimension=ROWS&valueRenderOption=UNFORMATTED_VALUE`, {
+      headers: { 'Authorization': 'Bearer ' + googleAccessToken }
+    });
+    if (!res.ok) throw new Error('No se pudieron leer los datos');
+    const data = await res.json();
+
+    const claves = Object.keys(HOJAS_CAMPOIA);
+    const datos = {};
+    (data.valueRanges || []).forEach((vr, i) => { datos[claves[i]] = vr.values || []; });
+
+    const r = reconstruirDesdeFilas(datos);
+    const total = r.animales.length + r.maquinas.length + r.lotes.length + r.vencimientos.length;
+    if (!total && !confirm('La hoja parece vacía. ¿Restaurar igual? Esto va a borrar los datos locales.')) { refrescarEstadoSync(); return; }
+
+    saveAnimales(r.animales);
+    saveMaquinas(r.maquinas);
+    saveLotes(r.lotes);
+    saveVenc(r.vencimientos);
+
+    estadoSync(`✅ Restaurado: ${r.animales.length} animales, ${r.lotes.length} lotes, ${r.maquinas.length} equipos`, 'var(--brand-light)');
+    alert(`Restauración completa.\n\n• ${r.animales.length} animales\n• ${r.lotes.length} lotes\n• ${r.maquinas.length} equipos\n• ${r.vencimientos.length} vencimientos\n\nLa página se va a recargar para mostrar todo.`);
+    location.reload();
+  } catch(e){
+    console.warn('Restauración falló:', e);
+    estadoSync('⚠️ No se pudo restaurar: ' + e.message, '#c33');
+  }
+}
+
+document.getElementById('btnSincronizarAhora').addEventListener('click', async () => {
+  const btn = document.getElementById('btnSincronizarAhora');
+  btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Enviando…';
+  await sincronizarTodoSheets(true);
+  btn.disabled = false; btn.textContent = orig;
+});
+document.getElementById('btnRestaurarSheets').addEventListener('click', restaurarDesdeSheets);
+
+// Último intento de sincronizar antes de cerrar la pestaña
+window.addEventListener('beforeunload', (e) => {
+  if (syncPendiente && campoiaSheetId){
+    e.preventDefault();
+    e.returnValue = 'Tenés cambios sin sincronizar con Google Sheets.';
+    return e.returnValue;
+  }
+});
+
+/* ---------- Medidor de espacio en localStorage ---------- */
+function actualizarMedidorEspacio(){
+  let bytes = 0;
+  for (const k in localStorage){
+    if (k.startsWith('campoia_')) bytes += (localStorage[k] || '').length * 2;
+  }
+  const mb = bytes / 1048576;
+  const pct = Math.min(100, (mb / 5) * 100);
+  const bar = document.getElementById('storageBar');
+  const txt = document.getElementById('storageText');
+  if (!bar || !txt) return;
+  bar.style.width = pct.toFixed(1) + '%';
+  bar.style.background = pct > 85 ? '#c33' : (pct > 65 ? 'var(--accent)' : 'var(--brand-light)');
+  txt.textContent = `${mb.toFixed(2)} MB de ~5 MB (${pct.toFixed(0)}%)`;
+  if (pct > 85){
+    txt.textContent += ' — conectá Google Sheets para no perder datos';
+    txt.style.color = '#c33';
+  }
+}
+actualizarMedidorEspacio();
+setInterval(actualizarMedidorEspacio, 20000);
+
+/* ---------- Gráficos (Chart.js), a partir de datos locales ---------- */
+let chartAnimalesInst = null, chartVencInst = null, chartLotesInst = null, chartMaqInst = null;
+function chartColorsCampo(){
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark' || document.body.classList.contains('dark');
+  return { text: dark ? '#9FB3AF' : '#5B6F6B', grid: dark ? '#26403C' : '#DCE8E5' };
+}
+function renderGraficosCampo(){
+  const cc = chartColorsCampo();
+  Chart.defaults.color = cc.text;
+  Chart.defaults.borderColor = cc.grid;
+
+  // Animales por categoría
+  const animales = loadAnimales();
+  const porCategoria = {};
+  animales.forEach(a => { const k = a.categoria || 'Sin categoría'; porCategoria[k] = (porCategoria[k]||0) + 1; });
+  const catLabels = Object.keys(porCategoria);
+  document.getElementById('chartAnimalesEmpty').style.display = catLabels.length ? 'none' : 'block';
+  document.getElementById('chartAnimales').style.display = catLabels.length ? 'block' : 'none';
+  if (chartAnimalesInst) chartAnimalesInst.destroy();
+  if (catLabels.length){
+    chartAnimalesInst = new Chart(document.getElementById('chartAnimales'), {
+      type: 'bar',
+      data: { labels: catLabels, datasets: [{ label: 'Cabezas', data: catLabels.map(k=>porCategoria[k]), backgroundColor: '#2E7458' }] },
+      options: { responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, ticks:{ precision:0 } } } }
+    });
+  }
+
+  // Vencimientos por urgencia (mismo criterio que renderVenc: rojo <=7, naranja <=30, verde resto)
+  const venc = loadVenc().map(v => {
+    const venceDate = new Date(v.inicio); venceDate.setMonth(venceDate.getMonth() + parseInt(v.plazo));
+    return Math.ceil((venceDate - new Date()) / (1000*60*60*24));
+  });
+  const rojos = venc.filter(d=>d<=7).length;
+  const naranjas = venc.filter(d=>d>7 && d<=30).length;
+  const verdes = venc.filter(d=>d>30).length;
+  document.getElementById('chartVencimientosEmpty').style.display = venc.length ? 'none' : 'block';
+  document.getElementById('chartVencimientos').style.display = venc.length ? 'block' : 'none';
+  if (chartVencInst) chartVencInst.destroy();
+  if (venc.length){
+    chartVencInst = new Chart(document.getElementById('chartVencimientos'), {
+      type: 'doughnut',
+      data: { labels: ['Urgente (≤7d)','Próximo (≤30d)','En fecha'], datasets: [{ data: [rojos,naranjas,verdes], backgroundColor: ['#C0392B','#B0872E','#2E7458'] }] },
+      options: { responsive:true, plugins:{ legend:{ position:'bottom' } } }
+    });
+  }
+
+  // Costo insumos + jornales por lote
+  const lotes = loadLotes();
+  const lotesConCosto = lotes.map(l => ({
+    nombre: l.nombre,
+    costo: (l.insumos||[]).reduce((s,x)=>s+(parseFloat(x.costo)||0),0) + (l.jornales||[]).reduce((s,x)=>s+(parseFloat(x.costo)||0),0)
+  })).filter(l => l.costo > 0);
+  document.getElementById('chartLotesEmpty').style.display = lotesConCosto.length ? 'none' : 'block';
+  document.getElementById('chartLotes').style.display = lotesConCosto.length ? 'block' : 'none';
+  if (chartLotesInst) chartLotesInst.destroy();
+  if (lotesConCosto.length){
+    chartLotesInst = new Chart(document.getElementById('chartLotes'), {
+      type: 'bar',
+      data: { labels: lotesConCosto.map(l=>l.nombre), datasets: [{ label: 'Costo ($)', data: lotesConCosto.map(l=>l.costo), backgroundColor: '#4A9B7F' }] },
+      options: { indexAxis:'y', responsive:true, plugins:{ legend:{ display:false } }, scales:{ x:{ beginAtZero:true } } }
+    });
+  }
+
+  // Costo mantenimiento + repuestos por equipo
+  const maquinas = loadMaquinas();
+  const maqConCosto = maquinas.map(m => ({
+    nombre: m.nombre,
+    costo: (m.mantenimientos||[]).reduce((s,x)=>s+(parseFloat(x.costo)||0),0) + (m.repuestos||[]).reduce((s,x)=>s+(parseFloat(x.costo)||0),0)
+  })).filter(m => m.costo > 0);
+  document.getElementById('chartMaquinariaEmpty').style.display = maqConCosto.length ? 'none' : 'block';
+  document.getElementById('chartMaquinaria').style.display = maqConCosto.length ? 'block' : 'none';
+  if (chartMaqInst) chartMaqInst.destroy();
+  if (maqConCosto.length){
+    chartMaqInst = new Chart(document.getElementById('chartMaquinaria'), {
+      type: 'bar',
+      data: { labels: maqConCosto.map(m=>m.nombre), datasets: [{ label: 'Costo ($)', data: maqConCosto.map(m=>m.costo), backgroundColor: '#F4A340' }] },
+      options: { indexAxis:'y', responsive:true, plugins:{ legend:{ display:false } }, scales:{ x:{ beginAtZero:true } } }
+    });
   }
 }
 </script>
