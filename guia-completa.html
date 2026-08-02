@@ -68,6 +68,7 @@
   [data-theme="dark"] .caso-card{background:var(--bg-alt);}
   [data-theme="dark"] .caso-section p{color:var(--text);}
 </style>
+  <script src="tracker.js" defer></script>
 </head>
 <body>
 
@@ -100,11 +101,15 @@
     <a href="#animales">Animales por caravana</a>
     <a href="#maquinaria">Maquinaria, repuestos y drones</a>
     <a href="#lotes">Lotes: margen, insumos y jornales</a>
+    <a href="#pesadas">Pesadas y lector RFID</a>
+    <a href="#satelital">Monitoreo satelital y carga animal</a>
     <a href="#sheets">Conectar tu Google Sheets (backup y sync)</a>
-    <a href="#paneles">Características por panel</a>
+    <a href="#paneles">Características por panel (incluye Gráficos)</a>
     <a href="#faq">Preguntas frecuentes</a>
     <a href="#casos-uso">Casos de uso reales en LATAM</a>
     <a href="#glosario">Glosario de términos</a>
+    <a href="#problemas">Si algo no funciona</a>
+    <a href="#roadmap">Qué viene</a>
     <a href="#tips">Tips profesionales</a>
   </div>
 
@@ -115,6 +120,8 @@
     <div class="card"><span class="icon">🌾</span><h3>Liquidación de granos</h3><p>Bruto, retención, gastos y neto, cultivo por cultivo.</p></div>
     <div class="card"><span class="icon">🐄</span><h3>Animales por caravana</h3><p>Sanidad, reproducción y genealogía, con QR de ficha.</p></div>
     <div class="card"><span class="icon">🚜</span><h3>Maquinaria</h3><p>Horas de uso, mantenimiento y alerta de repuestos.</p></div>
+    <div class="card"><span class="icon">⚖️</span><h3>Pesadas y RFID</h3><p>Importá el bastón y seguí la ganancia diaria de peso.</p></div>
+    <div class="card"><span class="icon">🛰️</span><h3>Satelital</h3><p>NDVI de cada lote y días de pastoreo disponibles.</p></div>
     <div class="card"><span class="icon">🔄</span><h3>Google Sheets</h3><p>Backup y sincronización en tu propia hoja de cálculo.</p></div>
   </div>
 
@@ -215,6 +222,96 @@
   <h3>📄 Reporte general en PDF</h3>
   <p>Desde el panel izquierdo, tocá "Descargar reporte (PDF)" para bajar un resumen con animales por especie, gastos totales de maquinaria, lotes cargados con su costo de insumos y jornales, y los vencimientos que caen dentro de los próximos 60 días. Es un buen punto de partida para llevarle algo armado a tu contador o simplemente tener una foto del estado general.</p>
 
+  <h2 id="pesadas">⚖️ Pesadas y lector RFID</h2>
+  <p>Dentro de la ficha de cada animal hay una pestaña <b>Pesadas</b>. Cada vez que cargás un peso con su fecha, CampoIA calcula solo la <b>ganancia diaria de peso (GDP)</b>, que es el número que realmente dice si el animal está engordando bien.</p>
+  <ul>
+    <li><b>GDP último período:</b> cuánto ganó por día entre las dos últimas pesadas.</li>
+    <li><b>GDP promedio:</b> el promedio de todo el historial cargado.</li>
+    <li><b>Proyección:</b> poné el peso al que querés venderlo y te dice en qué fecha llegaría al ritmo actual.</li>
+  </ul>
+  <div class="callout">💡 Con dos pesadas ya tenés GDP. Con tres o más, el gráfico muestra la curva y se nota enseguida si el animal se frenó.</div>
+
+  <h3>Importar desde el bastón lector</h3>
+  <p>Si usás un bastón RFID (Allflex, Tru-Test, Datamars, Gallagher), no hace falta cargar nada a mano. En la pestaña Animales, tocá <b>📥 Importar lector RFID</b> y subí el archivo CSV que exporta el lector.</p>
+  <ol>
+    <li>CampoIA detecta solo qué columna es el RFID, cuál la caravana, cuál la fecha y cuál el peso. Si se equivoca en alguna, la corregís con un desplegable.</li>
+    <li>Te muestra una <b>previsualización</b>: cuántos animales son nuevos, cuántos ya tenías y cuántas filas tienen algún problema.</li>
+    <li>Recién cuando confirmás se guarda nada.</li>
+  </ol>
+  <p>Los animales que no existían se crean solos; a los que ya tenías cargados a mano se les asigna el RFID y se les suma la pesada. Si algo salió mal, en <b>Importaciones recientes</b> podés deshacer todo el lote con un botón.</p>
+  <div class="callout">📌 Si tu lector exporta Excel en vez de CSV, abrilo y guardalo como CSV — funciona igual.</div>
+
+  <h2 id="satelital">🛰️ Monitoreo satelital y carga animal</h2>
+  <p>CampoIA puede mostrarte el <b>índice de vegetación (NDVI)</b> de cada lote usando imágenes del satélite Sentinel-2 de la Unión Europea. Sirve para ver si la pastura o el cultivo viene mejorando o cayendo, muchas veces antes de que se note a ojo.</p>
+
+  <h3>¿Qué son Copernicus y los Sentinel?</h3>
+  <p><b>Copernicus</b> es el programa de observación de la Tierra de la Unión Europea. Dentro del programa hay una familia de satélites llamados <b>Sentinel</b>; CampoIA usa los <b>Sentinel-2</b>, dos satélites gemelos que fotografían todo el planeta y pasan por tu campo aproximadamente <b>cada 5 días</b>. Cada píxel cubre 10 x 10 metros, así que sobre un lote de 45 hectáreas hay unas 4.500 mediciones distintas.</p>
+  <p>Las imágenes son <b>públicas y gratuitas</b> por decisión de la Unión Europea — las paga el contribuyente europeo y se liberan para cualquier uso, incluido el comercial. LABStudio tampoco te cobra por esta función.</p>
+
+  <h3>¿Cuánto me alcanza la cuota gratuita?</h3>
+  <p>El único límite es de uso mensual, para que nadie sature el servicio: 10.000 unidades de procesamiento, que se renuevan el primer día de cada mes. Cada consulta de un lote gasta unas 30.</p>
+  <table class="tbl">
+    <tr><th>Si tenés…</th><th>y actualizás…</th><th>gastás por mes</th><th>del límite</th></tr>
+    <tr><td>5 lotes</td><td>1 vez por semana</td><td>~600</td><td>6%</td></tr>
+    <tr><td>20 lotes</td><td>1 vez por semana</td><td>~2.400</td><td>24%</td></tr>
+    <tr><td>50 lotes</td><td>2 veces por semana</td><td>~12.000</td><td>Se pasa</td></tr>
+  </table>
+  <p>Si te pasás no te cobran ni te cortan el acceso: el servicio se vuelve más lento hasta el mes siguiente. CampoIA además guarda en caché lo que ya consultaste, así que abrir un lote no gasta cuota — solo la gasta el botón <b>Actualizar</b>.</p>
+
+  <h3>¿Qué datos míos salen del navegador?</h3>
+  <p>Solo <b>las coordenadas del lote y un rango de fechas</b>. Copernicus no sabe de quién es el campo ni qué hay adentro. Tu inventario de hacienda, las pesadas, los costos, los contratos y los rindes <b>nunca</b> se envían a ningún lado.</p>
+  <p>Hay dos modos de funcionamiento:</p>
+  <table class="tbl">
+    <tr><th></th><th>Modo directo (predeterminado)</th><th>Servidor puente (opcional)</th></tr>
+    <tr><td><b>A quién se envía</b></td><td>Directo de tu navegador a Copernicus</td><td>Pasa por un servidor de LABStudio y de ahí a Copernicus</td></tr>
+    <tr><td><b>¿LABStudio lo ve?</b></td><td>No. Nunca toca nuestra infraestructura</td><td>Los datos la atraviesan, pero el servidor no guarda registro de estas consultas</td></tr>
+    <tr><td><b>Cuándo se usa</b></td><td>Siempre, salvo que el navegador lo bloquee</td><td>Solo si lo activás vos a mano</td></tr>
+  </table>
+  <div class="callout" style="border-left-color:#B8860B;">⚠️ El modo puente existe porque algunos navegadores bloquean la conexión directa por seguridad. Implica que tus credenciales pasen por infraestructura nuestra, así que está apagado por defecto. Si preferís que no ocurra, dejalo apagado — perdés la función satelital en ese navegador y nada más. Está detallado en los <a href="terminos.html" style="color:var(--brand-light)">términos, sección 5</a>.</div>
+
+  <h3>Configurarlo (una sola vez, unos 5 minutos)</h3>
+  <ol>
+    <li>Entrá a <b>dataspace.copernicus.eu</b> y tocá <b>Register</b>. Te pide correo y contraseña, no tarjeta de crédito.</li>
+    <li>Confirmá el correo que te llega.</li>
+    <li>Volvé a entrar y buscá el <b>Sentinel Hub Dashboard</b> (está en el menú de tu perfil o en la sección de APIs).</li>
+    <li>Dentro del dashboard, entrá a <b>User settings</b> y buscá <b>OAuth clients</b>.</li>
+    <li>Tocá <b>Create new</b>, ponele un nombre cualquiera —por ejemplo "CampoIA"— y confirmá.</li>
+    <li>Copiá el <b>Client ID</b> y el <b>Client Secret</b> y pegalos en el panel izquierdo de CampoIA, en "🛰️ Copernicus".</li>
+  </ol>
+  <div class="callout" style="border-left-color:#B8860B;">⚠️ <b>Ojo con el secret:</b> Copernicus lo muestra <b>una sola vez</b>. Si cerrás la ventana sin copiarlo no se puede recuperar — hay que borrar ese cliente y crear uno nuevo. No es grave, pero evitate la vuelta.</div>
+  <div class="callout">🔐 Por defecto el secret se borra al cerrar la pestaña. Si tildás "recordar en este dispositivo", queda guardado en ese navegador hasta que lo borres. Elegí según si la compu es tuya o compartida.</div>
+  <div class="callout">💡 Dentro de la app, el botón <b>"¿Qué es esto? ¿Me conviene conectarlo?"</b> del panel izquierdo abre esta misma explicación, por si la necesitás mientras lo estás configurando.</div>
+
+  <h3>¿Y si me arrepiento?</h3>
+  <p>Borrás el Client ID y el Secret del panel y CampoIA deja de consultar. Si además querés cortar por completo, eliminá el cliente OAuth desde el dashboard de Copernicus. Todo lo demás de CampoIA sigue funcionando igual: el satelital es opcional, no una condición para usar la app.</p>
+
+  <h3>Ubicar el lote</h3>
+  <p>Entrá al lote, pestaña <b>🛰️ Satelital</b>, y hacé click en el centro del lote sobre el mapa. Con las hectáreas que ya cargaste, CampoIA dibuja un círculo de esa superficie — no hace falta marcar el contorno exacto. Si estás parado en el campo, el botón <b>📱 Usar mi ubicación actual</b> lo hace por vos.</p>
+
+  <h3>Leer el resultado</h3>
+  <table class="tbl">
+    <tr><th>Dato</th><th>Qué significa</th></tr>
+    <tr><td>NDVI actual</td><td>Va de 0 a 1. Suelo desnudo ronda 0,1–0,2; pastura en buen estado, 0,6–0,8.</td></tr>
+    <tr><td>Variación 30 días</td><td>Si bajó más de 25%, aparece alerta roja. Puede ser sequía, plaga, sobrepastoreo o simplemente que el cultivo maduró.</td></tr>
+    <tr><td>Oferta relativa</td><td>Dónde está hoy respecto del mejor momento que registró <i>ese</i> lote. Es más útil que el NDVI crudo porque compara contra tu propio campo.</td></tr>
+    <tr><td>Línea punteada (p10)</td><td>La zona más pobre del lote. Si se separa mucho de la línea llena, hay manchones que el promedio esconde.</td></tr>
+  </table>
+
+  <h3>Qué NO hace el satelital</h3>
+  <ul>
+    <li><b>No mide rendimiento.</b> Mide vigor de vegetación. Un lote muy verde puede rendir mal por otras razones.</li>
+    <li><b>No distingue maleza de cultivo.</b> Un lote enmalezado puede dar NDVI alto.</li>
+    <li><b>Se satura.</b> Arriba de 0,8 deja de diferenciar bien: un cultivo denso y otro densísimo dan casi lo mismo.</li>
+    <li><b>Las nubes tapan.</b> El satélite pasa cada 5 días, pero si está nublado no sirve. En época lluviosa puede haber dos o tres semanas sin imagen usable — CampoIA descarta esas fechas en vez de mostrarte un número falso.</li>
+    <li><b>No reemplaza la recorrida.</b> Te dice dónde mirar y cuándo, no qué está pasando exactamente.</li>
+  </ul>
+
+  <h3>🐄 Carga animal: el cruce que importa</h3>
+  <p>En la pestaña <b>Carga animal</b> del lote asignás qué hacienda está adentro. CampoIA convierte cada animal a <b>equivalente vaca (EV)</b> —usando su peso real si tiene pesadas cargadas, o su categoría si no— y calcula la carga en EV/ha.</p>
+  <p>Si además calibraste la biomasa, te dice <b>cuántos días de pastoreo aguanta el lote</b> con esa carga. Ese número no lo saca ni una planilla sola ni una imagen satelital sola: sale de cruzar las dos.</p>
+  <div class="callout">🌾 <b>Cómo calibrar:</b> cortá y pesá una muestra de pastura de un metro cuadrado, secala y llevá el resultado a kilos de materia seca por hectárea. Cargá ese valor junto con el NDVI de ese día. Con un solo punto ya alcanza para tener una estimación razonable de ese lote.</div>
+  <div class="callout" style="border-left-color:#B8860B;">⚠️ Sin calibración, la biomasa se muestra como índice comparativo, no en kilos. Es a propósito: un modelo genérico daría números que no coinciden con lo que ves en el campo.</div>
+
   <h2 id="sheets">🔄 Conectar tu Google Sheets (backup y sincronización)</h2>
   <p>Por defecto, todo lo que cargás en CampoIA vive solo en el navegador donde lo cargaste (<code>localStorage</code>). Si cambiás de celular o se te borra el caché, se pierde. Conectando tu propio Google Sheets, cada alta se guarda también en una hoja de cálculo de <b>tu</b> Google Drive — CampoIA nunca la ve ni la guarda en un servidor propio.</p>
 
@@ -302,10 +399,21 @@
   <h3>Después de conectar</h3>
   <ul>
     <li>Vas a ver un cartel verde <b>"✅ Conectado"</b> en el panel izquierdo, con un link <b>"Abrir hoja ↗"</b> para ir directo a la planilla.</li>
-    <li>De ahí en más, cada animal, vacuna, parto, equipo, mantenimiento, repuesto o vuelo que cargues se agrega solo como una fila nueva — no hace falta hacer nada más.</li>
-    <li>Si algo falla (por ejemplo, sin conexión a internet), el dato igual queda guardado en el navegador — el registro en la hoja simplemente se reintenta la próxima vez, sin interrumpirte ni mostrar error.</li>
+    <li>De ahí en más, todo lo que cargues o modifiques se sincroniza solo, unos segundos después del cambio. Debajo del cartel vas a ver el estado: <b>"Sincronizado hace 3 min"</b>.</li>
+    <li>Si algo falla (por ejemplo, sin conexión a internet), el dato igual queda guardado en el navegador y se reintenta después, sin interrumpirte.</li>
+    <li>El botón <b>⬆️ Sincronizar</b> fuerza el envío en el momento, por si querés asegurarte antes de cerrar.</li>
     <li>Para desconectar, tocá <b>"Desconectar"</b> junto al cartel verde — la hoja no se borra, solo dejás de sincronizar.</li>
   </ul>
+  <h3>⬇️ Recuperar tus datos en otro dispositivo</h3>
+  <p>Esta es la razón principal para conectar la hoja. Si cambiaste de celular, formateaste la compu o limpiaste el navegador por error, tus datos siguen estando en tu planilla.</p>
+  <ol>
+    <li>Abrí CampoIA en el dispositivo nuevo.</li>
+    <li>Conectá la misma cuenta de Google — reconoce tu hoja existente, no crea una nueva.</li>
+    <li>Tocá <b>⬇️ Restaurar</b>. Te va a pedir confirmación, porque reemplaza lo que haya en ese dispositivo.</li>
+  </ol>
+  <div class="callout" style="border-left-color:#B8860B;">⚠️ Restaurar <b>reemplaza</b> los datos del dispositivo por los de la hoja. Si cargaste algo en ese dispositivo que todavía no se sincronizó, se pierde. Ante la duda, tocá primero <b>⬆️ Sincronizar</b> y después restaurá.</div>
+  <div class="callout">📝 La planilla es un espejo de la app: si editás una celda a mano, el próximo cambio en CampoIA la vuelve a pisar. Para anotaciones propias, creá una pestaña nueva — esas no se tocan nunca.</div>
+
   <div class="callout">💡 Si la primera vez se te complicó: asegurate de no tener el bloqueo de ventanas emergentes (popups) activado para labstudiopna.github.io, y de completar el permiso en la ventana de Google (Paso 2) sin cerrarla antes de tiempo. Si el botón queda girando mucho tiempo, recargá la página e intentá de nuevo — no rompe nada, podés reintentar las veces que quieras.</div>
 
   <h2 id="paneles">📋 Características por Panel</h2>
@@ -315,16 +423,19 @@
     <tr><td>🌾 Liquidación</td><td>Bruto, retención, gastos y neto por venta de granos. Descuento por humedad y merma técnica. Cotización del dólar y de granos, valuación fiscal rural y links a mercados.</td></tr>
     <tr><td>📄 Contratos</td><td>Analiza contratos de arrendamiento rural: plazo, forma de pago, superficie, mejoras y alertas.</td></tr>
     <tr><td>📅 Vencimientos</td><td>Guías SENASA, DTe y trazabilidad con semáforo por documento/lote.</td></tr>
-    <tr><td>🐄 Animales</td><td>Ficha por caravana: sanidad, reproducción, genealogía, margen y QR.</td></tr>
+    <tr><td>🐄 Animales</td><td>Ficha por caravana: sanidad, reproducción, genealogía, pesadas con ganancia diaria, margen y QR. Importación masiva desde lector RFID.</td></tr>
     <tr><td>🚜 Maquinaria</td><td>Inventario con horas de uso, mantenimiento, libro de gastos de repuestos (motivo + importe) y vuelos de dron.</td></tr>
-    <tr><td>🌱 Lotes</td><td>Margen bruto agrícola, libro de insumos con alerta de carencia, jornales por lote y alertas climáticas (helada/lluvia) por departamento.</td></tr>
+    <tr><td>🌱 Lotes</td><td>Margen bruto agrícola, libro de insumos con alerta de carencia, jornales, alertas climáticas por departamento, NDVI satelital con historial y alertas, y cálculo de carga animal con días de pastoreo disponibles.</td></tr>
+    <tr><td>📊 Gráficos</td><td>Animales por categoría, vencimientos por urgencia, costo de insumos+jornales por lote y costo de mantenimiento+repuestos por equipo — armados solos con lo que ya cargaste en las otras pestañas.</td></tr>
   </table>
 
   <h2 id="faq">❓ Preguntas Frecuentes</h2>
-  <details class="faq2"><summary>¿Cuánto cuesta usar CampoIA?</summary><p>El uso propio es gratis — solo pagás tu API key de Anthropic (~USD 0.01–0.02 por consulta). El plan Campo (granos + ganado en un solo plan) cuesta USD 80/mes, para establecimientos con varios usuarios.</p></details>
-  <details class="faq2"><summary>¿Se guardan mis datos? ¿Son privados?</summary><p>Sí, son privados. Por defecto viven solo en tu navegador (localStorage). Si conectás tu Google Sheets, se guardan también en tu propio Drive — CampoIA no tiene backend propio ni ve esos datos.</p></details>
+  <details class="faq2"><summary>¿Cuánto cuesta usar CampoIA?</summary><p>El uso propio es gratis — solo pagás tu API key de Anthropic (~USD 0.01–0.02 por consulta). El plan Campo (granos + ganado en un solo plan) cuesta USD 80/mes, por establecimiento y hasta 5 usuarios.</p></details>
+  <details class="faq2"><summary>¿Se guardan mis datos? ¿Son privados?</summary><p>Sí, son privados. Por defecto viven solo en tu navegador (localStorage). Si conectás tu Google Sheets, se guardan también en tu propio Drive — LABStudio no tiene acceso a esa planilla. Lo único que sí registramos es una analítica básica de visitas (IP y ubicación aproximada), detallada en los <a href="terminos.html" style="color:var(--brand-light)">términos y privacidad</a>.</p></details>
   <details class="faq2"><summary>¿Qué pasa si no conecto Google Sheets?</summary><p>La app funciona igual — la diferencia es que los datos quedan solo en ese navegador/dispositivo. Si otra persona carga datos desde otro celular, no se van a ver entre sí sin la sincronización.</p></details>
-  <details class="faq2"><summary>¿CampoIA procesa imágenes de dron (NDVI, conteo de hacienda)?</summary><p>No. Eso lo hacen plataformas especializadas como Auravant, Vistaguay o AvanSys. CampoIA lee el reporte que esas plataformas ya te exportan y lo consolida con el resto de tu operación (costos, mantenimiento).</p></details>
+  <details class="faq2"><summary>¿CampoIA procesa NDVI?</summary><p>Sí, desde imágenes <b>satelitales</b> (Sentinel-2, gratuitas). Tenés el índice de vegetación de cada lote con historial, alertas por caída y estimación de días de pastoreo. Lo que <b>no</b> hace es procesar imágenes de dron: para eso están plataformas como Auravant, Vistaguay o AvanSys, que dan mucha más resolución. El satélite te sirve para el seguimiento continuo; el dron, para el detalle puntual.</p></details>
+  <details class="faq2"><summary>¿Puedo importar los datos de mi bastón RFID?</summary><p>Sí. Subí el CSV que exporta tu lector y CampoIA detecta las columnas solo, te muestra una previsualización y recién ahí confirmás. Funciona con los formatos de Allflex, Tru-Test, Datamars y Gallagher, y con planillas propias.</p></details>
+  <details class="faq2"><summary>¿Qué pasa si cambio de celular o borro el navegador?</summary><p>Si tenías conectado Google Sheets, entrás desde el dispositivo nuevo con la misma cuenta y tocás <b>⬇️ Restaurar</b>. Si no lo tenías conectado, los datos se pierden — por eso conviene conectarlo desde el primer día.</p></details>
   <details class="faq2"><summary>¿CampoIA reemplaza al corredor, veterinario o contador?</summary><p>No. Es una herramienta de apoyo. Acelera cálculos y detecta alertas, pero la validación final siempre es de un profesional matriculado.</p></details>
   <details class="faq2"><summary>¿Cómo reporto un bug o sugerencia?</summary><p>WhatsApp: LABStudio.pna +54 9 3435-344597 · GitHub Issues: github.com/LabStudioPna/CampoIA</p></details>
 
@@ -462,8 +573,40 @@
     <tr><td><b>Merma / descuento por humedad</b></td><td>Diferencia de peso que se descuenta cuando el grano entra con más humedad que la base admitida, más la merma técnica adicional por manipuleo y secado.</td></tr>
     <tr><td><b>Valuación fiscal</b></td><td>Valor que le asigna Catastro a un inmueble rural, base sobre la que se calcula el impuesto inmobiliario.</td></tr>
     <tr><td><b>Salto de toro</b></td><td>Servicio natural — el toro cubre a la vaca directamente, a diferencia de la inseminación artificial (IA).</td></tr>
-    <tr><td><b>NDVI</b></td><td>Índice de vegetación (por imagen satelital o de dron) usado para medir el vigor de un cultivo.</td></tr>
+    <tr><td><b>NDVI</b></td><td>Índice de vegetación normalizado. Compara la luz roja que la planta absorbe con la infrarroja que refleja. Va de 0 a 1: suelo desnudo ronda 0,1–0,2 y una pastura en buen estado, 0,6–0,8. Mide vigor, no rendimiento.</td></tr>
+    <tr><td><b>RFID</b></td><td>Identificación por radiofrecuencia. La caravana electrónica lleva un chip que el bastón lee a distancia, sin tocar al animal. El número estándar tiene 15 dígitos y en Argentina empieza con 032.</td></tr>
+    <tr><td><b>GDP</b></td><td>Ganancia diaria de peso, en kilos por día. Es el indicador que dice si el animal está engordando al ritmo esperado. Se calcula entre dos pesadas: la diferencia de kilos dividida por los días transcurridos.</td></tr>
+    <tr><td><b>EV (equivalente vaca)</b></td><td>Unidad para comparar animales distintos. Una vaca de 400 kg con cría al pie es 1 EV. Un ternero come menos y una vaca grande más, pero no en proporción directa al peso — por eso se usa una escala metabólica.</td></tr>
+    <tr><td><b>Carga animal</b></td><td>Cuántos equivalentes vaca hay por hectárea. Es el número que define si el campo está sobrecargado o desaprovechado.</td></tr>
+    <tr><td><b>Materia seca (MS)</b></td><td>Lo que queda de la pastura al sacarle toda el agua. Se mide en kg MS/ha y es la forma correcta de comparar oferta forrajera, porque el peso verde varía muchísimo según la humedad del día.</td></tr>
+    <tr><td><b>Período de carencia</b></td><td>Días que tienen que pasar entre aplicar un producto fitosanitario y poder cosechar o dar a pastorear, para que no queden residuos por encima del límite permitido.</td></tr>
+    <tr><td><b>Sentinel-2</b></td><td>Par de satélites de la Unión Europea que fotografían toda la Tierra cada 5 días con resolución de 10 metros. Las imágenes son públicas y gratuitas.</td></tr>
   </table>
+
+  <h2 id="problemas">🔧 Si algo no funciona</h2>
+  <table class="tbl">
+    <tr><th>Qué te pasa</th><th>Qué hacer</th></tr>
+    <tr><td>El satelital dice "el navegador bloqueó la conexión"</td><td>Activá <b>"Usar servidor puente"</b> en el panel izquierdo, abajo de las credenciales de Copernicus, y probá de nuevo. Tené en cuenta que en ese modo tus credenciales pasan por el servidor de LABStudio — está explicado en los <a href="terminos.html" style="color:var(--brand-light)">términos</a>.</td></tr>
+    <tr><td>"Client ID o Secret incorrectos"</td><td>Revisá que hayas copiado el <b>secret completo</b>: Copernicus lo muestra una sola vez al crear el cliente. Si lo perdiste, generá uno nuevo desde tu perfil.</td></tr>
+    <tr><td>"No hay imágenes sin nubes en el período"</td><td>Ampliá el rango a 12 o 24 meses. En zonas con mucha nubosidad puede haber varias semanas sin una imagen usable — es normal, no es un error.</td></tr>
+    <tr><td>El mapa aparece en gris o cortado</td><td>Cambiá de pestaña y volvé a Satelital. Si sigue, recargá la página: el mapa necesita que la pestaña esté visible para medirse bien.</td></tr>
+    <tr><td>Importé el bastón y no aparecieron las pesadas</td><td>Volvé a importar y fijate en el paso de mapeo que la columna de <b>peso</b> esté asignada. Si el archivo no trae peso (algunos bastones sin balanza no lo exportan), solo se cargan las caravanas.</td></tr>
+    <tr><td>Se crearon animales duplicados</td><td>Usá <b>Deshacer</b> en "Importaciones recientes" y volvé a importar mapeando bien la columna de RFID. El duplicado suele pasar cuando el archivo trae la caravana visual en una columna que se tomó como identificador.</td></tr>
+    <tr><td>La barra de espacio está en rojo</td><td>Estás cerca del límite del navegador (~5 MB). Conectá Google Sheets si todavía no lo hiciste y sincronizá: así, si algo se pierde, lo recuperás.</td></tr>
+    <tr><td>Dice "Cambios sin sincronizar" hace rato</td><td>Tocá <b>⬆️ Sincronizar</b>. Si falla, puede que la sesión de Google haya vencido: desconectá y volvé a conectar.</td></tr>
+    <tr><td>Restauré y perdí datos del día</td><td>Restaurar reemplaza lo local por lo de la hoja. Si habías cargado algo sin sincronizar, se pierde. De ahí en más: sincronizá antes de restaurar.</td></tr>
+    <tr><td>Los días de pastoreo dicen "—"</td><td>Falta la calibración de biomasa (pestaña Satelital) o falta actualizar el NDVI. Sin esos dos datos no se puede estimar.</td></tr>
+  </table>
+
+  <h2 id="roadmap">🗺️ Qué viene</h2>
+  <p>Publicamos esto para que sepas qué existe hoy y qué todavía no. Si algo figura acá abajo como planeado, <b>no está disponible</b> — preferimos decirlo antes que dejarlo ambiguo.</p>
+  <table class="tbl">
+    <tr><th>Estado</th><th>Función</th></tr>
+    <tr><td><b>✅ Disponible</b></td><td>Liquidación, humedad, merma, flete, contratos, vencimientos SENASA, hacienda con sanidad y reproducción, pesadas con GDP, importación RFID, maquinaria y repuestos, lotes con margen e insumos, NDVI satelital, carga animal, respaldo y restauración en Sheets.</td></tr>
+    <tr><td><b>🔨 En curso</b></td><td>Contorno real del lote (polígono en vez de círculo) e historial de rotación de potreros con descanso acumulado.</td></tr>
+    <tr><td><b>📋 Planeado</b></td><td>Modo sin señal para cargar en el campo, lectura del bastón por Bluetooth, multiusuario por establecimiento, alertas por WhatsApp y exportación contable.</td></tr>
+  </table>
+  <div class="callout">💬 Si necesitás algo puntual para tu establecimiento, escribinos por WhatsApp. Priorizamos según lo que nos piden, no según lo que suponemos.</div>
 
   <h2 id="tips">💡 Tips Profesionales</h2>
   <ul>

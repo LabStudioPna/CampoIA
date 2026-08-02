@@ -69,6 +69,7 @@ footer a{color:var(--brand-light);text-decoration:none}
   .nav-links a:not(.nav-cta){display:none}
 }
 </style>
+  <script src="tracker.js" defer></script>
 </head>
 <body>
 
@@ -85,7 +86,7 @@ footer a{color:var(--brand-light);text-decoration:none}
 
 <div class="container">
   <h1>Términos de Uso y Política de Privacidad</h1>
-  <p class="subtitulo">Última actualización: 16 de julio de 2026</p>
+  <p class="subtitulo">Última actualización: 2 de agosto de 2026</p>
 
   <div class="toc">
     <h3>Contenido</h3>
@@ -94,17 +95,18 @@ footer a{color:var(--brand-light);text-decoration:none}
       <li><a href="#como-funciona">2. Cómo funciona técnicamente (importante)</a></li>
       <li><a href="#privacidad">3. Privacidad y tratamiento de datos</a></li>
       <li><a href="#api-key">4. Tu API Key de Anthropic</a></li>
-      <li><a href="#responsabilidad">5. Responsabilidad profesional</a></li>
-      <li><a href="#planes">6. Planes y pagos</a></li>
-      <li><a href="#uso-aceptable">7. Uso aceptable</a></li>
-      <li><a href="#cambios">8. Cambios a este documento</a></li>
-      <li><a href="#contacto">9. Contacto</a></li>
+      <li><a href="#satelital">5. Imágenes satelitales (Copernicus)</a></li>
+      <li><a href="#responsabilidad">6. Responsabilidad profesional</a></li>
+      <li><a href="#planes">7. Planes y pagos</a></li>
+      <li><a href="#uso-aceptable">8. Uso aceptable</a></li>
+      <li><a href="#cambios">9. Cambios a este documento</a></li>
+      <li><a href="#contacto">10. Contacto</a></li>
     </ul>
   </div>
 
   <section id="que-es">
     <h2>1. Qué es CampoIA</h2>
-    <p>CampoIA es una herramienta desarrollada por <strong>LABStudio.pna</strong> (Paraná, Entre Ríos, Argentina) que utiliza inteligencia artificial para asistir a productores agropecuarios y corredores de granos en Argentina: liquidación de granos, cálculo de retenciones y gastos de comercialización, análisis de contratos de arrendamiento rural, y seguimiento de vencimientos sanitarios (SENASA).</p>
+    <p>CampoIA es una herramienta desarrollada por <strong>LABStudio.pna</strong> (Paraná, Entre Ríos, Argentina) que utiliza inteligencia artificial para asistir a productores agropecuarios y corredores de granos en Argentina. Incluye: liquidación de granos, retenciones y gastos de comercialización, análisis de contratos de arrendamiento rural, vencimientos sanitarios (SENASA), gestión de hacienda por caravana con importación desde lectores RFID y seguimiento de peso, inventario de maquinaria, margen bruto por lote con libro de insumos, y monitoreo satelital de vegetación con estimación de carga animal.</p>
     <p>CampoIA es una <strong>herramienta de asistencia</strong>, no un servicio de asesoría legal, contable o agronómica profesional. Su uso no reemplaza la intervención de un contador, ingeniero agrónomo, escribano o corredor matriculado.</p>
   </section>
 
@@ -112,17 +114,27 @@ footer a{color:var(--brand-light);text-decoration:none}
     <h2>2. Cómo funciona técnicamente</h2>
     <p>Es importante que entiendas la arquitectura de CampoIA antes de usarlo, porque determina qué datos tuyos (y de tu operación) pasan por dónde:</p>
 
-    <h3>2.1 Sin cuenta, sin login</h3>
-    <p>CampoIA no requiere crear una cuenta ni iniciar sesión. Se accede directamente desde el navegador — <strong>LABStudio no recolecta ni almacena ningún dato de identificación tuyo</strong> por el solo hecho de usar la herramienta.</p>
+    <h3>2.1 Acceso</h3>
+    <p>CampoIA se accede desde el navegador. Algunas versiones permiten identificarse con tu cuenta de Google para gestionar el plan contratado; en ese caso guardamos únicamente tu correo, tu nombre y las fechas de alta y último ingreso, para saber qué plan te corresponde.</p>
 
-    <h3>2.2 Análisis de documentos e IA</h3>
+    <h3>2.2 Analítica de visitas</h3>
+    <p>Todas las páginas de CampoIA incluyen un contador de visitas propio. Cuando abrís una página se envía a un servidor de LABStudio la dirección de la página y tu <strong>dirección IP</strong>, que se convierte en una ubicación aproximada (país, provincia, ciudad) y se guarda en una planilla nuestra junto con la fecha.</p>
+    <p>Lo usamos solamente para saber cuánta gente entra y desde dónde. No se cruza con ningún otro dato tuyo, no se usa para publicidad ni se comparte con terceros, y no permite identificarte personalmente. Si querés que borremos los registros asociados a tu IP, escribinos a los datos de contacto de la última sección.</p>
+
+    <h3>2.3 Análisis de documentos e IA</h3>
     <p>Cuando subís un contrato de arrendamiento, una imagen o consultás al chat, esa información se envía <strong>directamente desde tu navegador a la API de Anthropic</strong> (la empresa que provee el modelo de inteligencia artificial), usando tu propia API Key personal. <strong>LABStudio no aloja ni tiene acceso a esos datos en ningún momento</strong> — no existe un servidor de LABStudio en el medio de ese flujo.</p>
 
-    <h3>2.3 Almacenamiento de tus datos</h3>
-    <p>El historial de contratos analizados y el calendario de vencimientos se guardan únicamente en el <code>localStorage</code> de tu propio navegador, en tu dispositivo. Ese historial no se sincroniza ni se envía a ningún servidor de LABStudio, y se pierde si limpiás los datos del navegador o cambiás de dispositivo.</p>
+    <h3>2.4 Almacenamiento de tus datos</h3>
+    <p>Todo lo que cargás en CampoIA —contratos analizados, vencimientos, animales, pesadas, maquinaria, lotes e insumos— se guarda en el <code>localStorage</code> de tu propio navegador, en tu dispositivo. No se envía a ningún servidor de LABStudio y se pierde si limpiás los datos del navegador o cambiás de dispositivo.</p>
+
+    <h3>2.5 Respaldo en tu Google Sheets (opcional)</h3>
+    <p>Podés conectar tu propia cuenta de Google para tener un respaldo. Si lo hacés, CampoIA crea una planilla <strong>en tu Google Drive</strong> y copia ahí tus datos automáticamente, para que puedas recuperarlos si cambiás de dispositivo o borrás el navegador.</p>
+    <div class="highlight">
+      <p>Esa planilla es tuya y está en tu cuenta. <strong>LABStudio no tiene acceso a ella</strong>: el permiso que otorgás es entre tu navegador y Google, y usamos el alcance <code>drive.file</code>, que solo habilita a la aplicación a ver los archivos que ella misma creó. Podés desconectarla cuando quieras desde el panel lateral, y revocar el permiso desde la configuración de tu cuenta de Google.</p>
+    </div>
 
     <div class="highlight">
-      <p><strong>En resumen:</strong> tus contratos y datos de tu operación nunca pasan por servidores de LABStudio. Hoy, CampoIA no recolecta ningún dato personal tuyo salvo que completes voluntariamente el formulario de lista de espera.</p>
+      <p><strong>En resumen:</strong> los datos de tu operación —contratos, hacienda, lotes, costos— no pasan por servidores de LABStudio: viven en tu navegador y, si lo activás, en tu propia planilla de Google. Lo único que sí registramos nosotros es la analítica de visitas descripta en 2.2, los datos de tu cuenta si iniciás sesión, y lo que completes voluntariamente en el formulario de contacto.</p>
     </div>
   </section>
 
@@ -133,6 +145,8 @@ footer a{color:var(--brand-light);text-decoration:none}
     <table>
       <tr><th>Dato</th><th>Para qué</th><th>Dónde se guarda</th></tr>
       <tr><td>Nombre, establecimiento, email y WhatsApp (solo si completás el formulario de lista de espera)</td><td>Contactarte para coordinar el acceso al plan pago o piloto</td><td>Formspree (formulario de contacto)</td></tr>
+      <tr><td>Dirección IP y ubicación aproximada derivada de ella, página visitada y fecha</td><td>Analítica de visitas: saber cuánta gente usa CampoIA y desde qué zonas</td><td>Planilla de Google de LABStudio</td></tr>
+      <tr><td>Email, nombre y fechas de alta e ingreso (solo si iniciás sesión con Google)</td><td>Identificar tu plan contratado</td><td>Base de datos de LABStudio</td></tr>
     </table>
 
     <h3>3.2 Qué datos NO recolecta LABStudio</h3>
@@ -142,16 +156,24 @@ footer a{color:var(--brand-light);text-decoration:none}
       <li>Tu API Key de Anthropic (queda solo en el <code>sessionStorage</code> de tu navegador, se borra al cerrar la pestaña)</li>
       <li>El contenido de tus conversaciones con el chat de IA</li>
       <li>Tu historial de vencimientos o contratos analizados (vive solo en tu navegador)</li>
+      <li>Tu inventario de hacienda, pesadas, lotes, maquinaria y costos (vive en tu navegador y, si lo activás, en tu propia planilla de Google)</li>
+      <li>Las coordenadas de tus lotes ni las imágenes satelitales que consultes</li>
+      <li>Tus credenciales de Copernicus (ver sección 5)</li>
     </ul>
 
     <h3>3.3 Terceros que sí procesan datos (fuera de LABStudio)</h3>
     <ul>
       <li><strong>Anthropic (Claude API):</strong> procesa el contenido que le enviás para el análisis. Se rige por su propia política de privacidad, disponible en anthropic.com/privacy.</li>
       <li><strong>Formspree:</strong> si completás el formulario de lista de espera, esos datos los procesa Formspree para hacérnoslos llegar por email, sujeto a su propia política de privacidad.</li>
+      <li><strong>Google:</strong> si iniciás sesión o conectás el respaldo, Google procesa tu identificación y aloja tu planilla, según su propia política de privacidad.</li>
+      <li><strong>Copernicus Data Space Ecosystem (Unión Europea):</strong> si usás las funciones satelitales, recibe las coordenadas del lote consultado. Ver sección 5.</li>
+      <li><strong>OpenStreetMap:</strong> provee los mapas donde ubicás tus lotes. Al mostrarse el mapa, sus servidores reciben tu dirección IP y la zona que estás mirando.</li>
     </ul>
 
     <h3>3.4 Tus derechos</h3>
-    <p>Si completaste el formulario de lista de espera, podés pedirnos en cualquier momento que eliminemos esos datos escribiéndonos a los datos de contacto de la sección 9. Como CampoIA no tiene cuentas de usuario, no hay ningún otro dato personal tuyo almacenado por LABStudio para eliminar.</p>
+    <p>Podés pedirnos en cualquier momento que eliminemos los datos que tengamos sobre vos —formulario de contacto, cuenta de usuario, registros de visita— escribiéndonos a los datos de contacto de la sección 10. También podés pedir una copia de esos datos.</p>
+    <p>Los datos de tu operación no requieren pedido: los borrás vos mismo limpiando el navegador, y la planilla de respaldo la eliminás desde tu propio Google Drive.</p>
+    <p>Esta política se rige por la Ley 25.326 de Protección de los Datos Personales de la República Argentina. La Agencia de Acceso a la Información Pública, órgano de control de la ley, tiene la atribución de atender las denuncias por incumplimiento de las normas de protección de datos personales.</p>
   </section>
 
   <section id="api-key">
@@ -164,22 +186,54 @@ footer a{color:var(--brand-light);text-decoration:none}
     </ul>
   </section>
 
+  <section id="satelital">
+    <h2>5. Imágenes satelitales (Copernicus)</h2>
+    <p>CampoIA puede mostrar el índice de vegetación (NDVI) de tus lotes a partir de imágenes del programa Sentinel-2 de la Unión Europea. Los datos satelitales son públicos y gratuitos, pero el servicio que los procesa requiere autenticarse.</p>
+
+    <h3>5.1 Tus credenciales de Copernicus</h3>
+    <ul>
+      <li>Necesitás registrarte gratis en <a href="https://dataspace.copernicus.eu/" target="_blank" rel="noopener" style="color:var(--brand-light)">dataspace.copernicus.eu</a> y generar un cliente OAuth propio</li>
+      <li>El consumo se descuenta de <strong>tu cuota mensual gratuita</strong>, no de una de LABStudio</li>
+      <li>Por defecto, el secret se guarda en el <code>sessionStorage</code> del navegador y se borra al cerrar la pestaña. Si tildás "recordar en este dispositivo", queda guardado en tu navegador hasta que lo borres</li>
+      <li>Sos responsable de la seguridad y el uso de tus propias credenciales</li>
+    </ul>
+
+    <h3>5.2 Modo directo (predeterminado)</h3>
+    <p>Normalmente la consulta va <strong>directo desde tu navegador a Copernicus</strong>: las coordenadas de tu lote y tus credenciales no pasan por ningún servidor de LABStudio.</p>
+
+    <h3>5.3 Modo servidor puente (opcional)</h3>
+    <p>Algunos navegadores bloquean la conexión directa por razones de seguridad. Para esos casos existe una opción, <strong>desactivada por defecto</strong>, que releva la consulta a través de un servidor de LABStudio.</p>
+    <div class="warning">
+      <p><strong>Qué implica activarla:</strong> tus credenciales de Copernicus y las coordenadas del lote pasan por nuestro servidor para llegar a Copernicus. Ese servidor está configurado para <strong>no guardar registros de estas peticiones</strong> — ni las credenciales, ni las coordenadas, ni las respuestas — y actúa únicamente como intermediario en tiempo real. Aun así, técnicamente los datos atraviesan infraestructura nuestra, y por eso la opción es explícita y opcional. Si preferís que no ocurra, dejala desactivada: simplemente no vas a poder usar la función satelital en ese navegador.</p>
+    </div>
+
+    <h3>5.4 Limitaciones de la información satelital</h3>
+    <ul>
+      <li>El NDVI mide vigor de vegetación, no rendimiento, y se satura en cultivos muy densos</li>
+      <li>No distingue maleza de cultivo</li>
+      <li>Los satélites pasan cada pocos días, pero con nubes puede haber huecos de varias semanas</li>
+      <li>La estimación de biomasa depende de una calibración que cargás vos: sin ella, los valores son comparativos, no absolutos</li>
+      <li>El cálculo de carga animal y días de pastoreo es una referencia de planificación, no un reemplazo del criterio del productor ni del asesoramiento de un ingeniero agrónomo</li>
+    </ul>
+  </section>
+
   <section id="responsabilidad">
-    <h2>5. Responsabilidad profesional</h2>
+    <h2>6. Responsabilidad profesional</h2>
     <div class="warning">
       <p><strong>Importante:</strong> los cálculos, análisis y alertas generados por CampoIA son producidos por un modelo de inteligencia artificial y pueden contener errores. Las retenciones y alícuotas están sujetas a cambios normativos frecuentes. CampoIA no reemplaza el criterio ni la responsabilidad de un contador, ingeniero agrónomo o corredor matriculado. Toda liquidación, contrato o cálculo debe ser revisado por un profesional antes de firmarse o presentarse formalmente.</p>
     </div>
+    <p>Lo mismo vale para las funciones ganaderas y satelitales: las proyecciones de peso, la carga animal, los días de pastoreo y las alertas por caída del índice de vegetación son estimaciones basadas en modelos simplificados y en los datos que vos cargues. No reemplazan la recorrida a campo ni el criterio de un asesor.</p>
     <p>LABStudio no se responsabiliza por decisiones tomadas exclusivamente en base a los resultados generados por la herramienta, ni por errores, pérdidas económicas o conflictos derivados de su uso sin la debida revisión profesional.</p>
   </section>
 
   <section id="planes">
-    <h2>6. Planes y pagos</h2>
-    <p>CampoIA ofrece un plan de Uso propio gratuito (con acceso completo a las funciones, pagando solo tu propio consumo de API a Anthropic) y un Plan Campo pago, que incluye acompañamiento, soporte prioritario y actualización de retenciones por parte de LABStudio. También existe un plan White Label para cooperativas y sociedades rurales, a consultar directamente.</p>
+    <h2>7. Planes y pagos</h2>
+    <p>CampoIA ofrece un plan de Uso propio gratuito (con acceso completo a las funciones, pagando solo tu propio consumo de API a Anthropic) y un Plan Campo pago, que incluye acompañamiento, soporte prioritario y actualización de retenciones por parte de LABStudio. Para cooperativas y sociedades rurales existen condiciones particulares, a consultar directamente.</p>
     <p>Los pagos de planes se gestionan de forma directa con LABStudio. Los términos específicos de facturación se comunican al momento de la contratación.</p>
   </section>
 
   <section id="uso-aceptable">
-    <h2>7. Uso aceptable</h2>
+    <h2>8. Uso aceptable</h2>
     <p>Al usar CampoIA, te comprometés a:</p>
     <ul>
       <li>No usar la herramienta para fines ilegales o fraudulentos</li>
@@ -190,12 +244,12 @@ footer a{color:var(--brand-light);text-decoration:none}
   </section>
 
   <section id="cambios">
-    <h2>8. Cambios a este documento</h2>
+    <h2>9. Cambios a este documento</h2>
     <p>Podemos actualizar estos términos ocasionalmente. Los cambios importantes se comunicarán a través del sitio. El uso continuado de CampoIA después de un cambio implica la aceptación de los nuevos términos.</p>
   </section>
 
   <section id="contacto">
-    <h2>9. Contacto</h2>
+    <h2>10. Contacto</h2>
     <p>Para consultas sobre estos términos, privacidad, o para ejercer tus derechos sobre tus datos:</p>
     <ul>
       <li>Email: <a href="mailto:labstudio.pna@gmail.com" style="color:var(--brand-light)">labstudio.pna@gmail.com</a></li>

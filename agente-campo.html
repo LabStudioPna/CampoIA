@@ -156,6 +156,29 @@
 <body>
 
 <style>
+.cop-modal{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:900;display:none;align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto;}
+.cop-modal.open{display:flex;}
+.cop-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;max-width:720px;width:100%;padding:0;box-shadow:0 20px 60px rgba(0,0,0,.3);margin:auto;}
+.cop-head{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--border);padding:18px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-radius:16px 16px 0 0;z-index:2;}
+.cop-head h3{margin:0;font-size:17px;}
+.cop-close{border:none;background:none;color:var(--text-muted);font-size:22px;cursor:pointer;line-height:1;padding:0 4px;}
+.cop-body{padding:22px 24px 26px;}
+.cop-body h4{font-size:14.5px;margin:22px 0 8px;color:var(--text);}
+.cop-body h4:first-child{margin-top:0;}
+.cop-body p,.cop-body li{font-size:13.5px;color:var(--text-muted);line-height:1.65;}
+.cop-body p{margin:0 0 10px;}
+.cop-body ul,.cop-body ol{margin:0 0 12px;padding-left:20px;}
+.cop-body li{margin-bottom:5px;}
+.cop-body b{color:var(--text);}
+.cop-tabla{width:100%;border-collapse:collapse;margin:10px 0 14px;font-size:12.5px;}
+.cop-tabla th{background:var(--bg-alt);color:var(--text);text-align:left;padding:8px 10px;border:1px solid var(--border);font-weight:600;}
+.cop-tabla td{padding:8px 10px;border:1px solid var(--border);color:var(--text-muted);vertical-align:top;}
+.cop-nota{background:var(--bg-alt);border-left:3px solid var(--brand-light);border-radius:0 8px 8px 0;padding:12px 14px;margin:12px 0;}
+.cop-nota.warn{border-left-color:var(--accent);}
+.cop-nota p{margin:0;font-size:13px;color:var(--text);}
+.cop-link{color:var(--brand-light);text-decoration:underline;}
+.cop-ayuda{background:none;border:none;color:var(--brand-light);font-size:11.5px;cursor:pointer;text-decoration:underline;padding:0;margin-top:8px;}
+@media(max-width:600px){.cop-body{padding:18px 16px 22px;}.cop-head{padding:14px 16px;}.cop-tabla{font-size:11.5px;}}
 .lab-login-overlay{position:fixed;inset:0;background:var(--bg,#fff);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px}
 .lab-login-card{background:var(--card,#fff);border:1px solid var(--border,#ddd);border-radius:20px;box-shadow:var(--shadow,0 10px 30px rgba(0,0,0,.08));padding:44px 36px;max-width:420px;width:100%;text-align:center}
 .lab-login-card img{width:56px;height:56px;border-radius:14px;margin-bottom:16px}
@@ -176,6 +199,93 @@
 .lab-enter-btn{width:100%;margin-top:18px;background:var(--brand);color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .2s}
 .lab-enter-btn:disabled{opacity:.45;cursor:not-allowed}
 </style>
+<!-- EXPLICADOR COPERNICUS -->
+<div class="cop-modal" id="copModal">
+  <div class="cop-card">
+    <div class="cop-head">
+      <h3>🛰️ Monitoreo satelital: todo lo que conviene saber antes de conectarlo</h3>
+      <button class="cop-close" id="copModalClose" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="cop-body">
+
+      <h4>¿Qué es Copernicus y qué son los Sentinel?</h4>
+      <p>Copernicus es el programa de observación de la Tierra de la <b>Unión Europea</b>. Dentro del programa hay una familia de satélites llamados <b>Sentinel</b>. CampoIA usa los <b>Sentinel-2</b>: dos satélites gemelos que fotografían toda la superficie del planeta, Argentina incluida, y pasan por el mismo lugar aproximadamente <b>cada 5 días</b>.</p>
+      <p>Cada píxel de esas fotos cubre <b>10 x 10 metros</b>. Sobre un lote de 45 hectáreas eso son unas 4.500 mediciones distintas, no un solo dato promedio.</p>
+
+      <h4>¿Cuánto cuesta?</h4>
+      <p><b>Nada.</b> Las imágenes son públicas y gratuitas por decisión de la Unión Europea — las paga el contribuyente europeo y se liberan para cualquier uso, incluido el comercial. Tampoco te cobra LABStudio por esta función.</p>
+      <p>Lo único que hay es un <b>límite de uso mensual</b> para que nadie sature el servicio: 10.000 unidades de procesamiento por mes. Cada consulta de un lote gasta unas 30. En números concretos:</p>
+      <table class="cop-tabla">
+        <tr><th>Si tenés…</th><th>y actualizás…</th><th>gastás por mes</th><th>del límite</th></tr>
+        <tr><td>5 lotes</td><td>1 vez por semana</td><td>~600</td><td>6%</td></tr>
+        <tr><td>20 lotes</td><td>1 vez por semana</td><td>~2.400</td><td>24%</td></tr>
+        <tr><td>50 lotes</td><td>2 veces por semana</td><td>~12.000</td><td>Se pasa</td></tr>
+      </table>
+      <p>Si te pasás, no te cobran ni te cortan: el servicio se vuelve más lento hasta el mes siguiente, cuando el límite se renueva.</p>
+
+      <h4>¿Por qué hay que registrarse si es gratis?</h4>
+      <p>Porque el servicio necesita saber a quién asignarle ese límite mensual. El registro es en el sitio oficial de la Unión Europea, pide un correo electrónico y no requiere tarjeta de crédito.</p>
+
+      <h4>¿Qué datos míos salen del navegador?</h4>
+      <p>Esta es probablemente la pregunta que más importa, así que la respondemos completa. Hay <b>dos modos</b> de funcionamiento:</p>
+      <table class="cop-tabla">
+        <tr><th></th><th>Modo directo <span style="font-weight:400">(el predeterminado)</span></th><th>Servidor puente <span style="font-weight:400">(opcional)</span></th></tr>
+        <tr><td><b>Qué se envía</b></td><td>Las coordenadas del lote y tus credenciales</td><td>Lo mismo</td></tr>
+        <tr><td><b>A quién</b></td><td>Directo a Copernicus (Unión Europea)</td><td>Pasa por un servidor de LABStudio y de ahí a Copernicus</td></tr>
+        <tr><td><b>¿LABStudio lo ve?</b></td><td>No. Nunca toca nuestra infraestructura</td><td>Los datos la atraviesan, pero el servidor está configurado para no guardar registro de estas consultas</td></tr>
+        <tr><td><b>Cuándo se usa</b></td><td>Siempre, salvo que tu navegador lo bloquee</td><td>Solo si lo activás vos a mano</td></tr>
+      </table>
+      <div class="cop-nota">
+        <p><b>Lo que nunca sale de tu navegador:</b> tu inventario de hacienda, las pesadas, los costos, los contratos, los rindes y los nombres de tus lotes. Copernicus recibe únicamente un punto en el mapa y un rango de fechas — no sabe de quién es el campo ni qué hay adentro.</p>
+      </div>
+      <div class="cop-nota warn">
+        <p><b>Un dato honesto sobre el modo puente:</b> lo pusimos porque algunos navegadores bloquean la conexión directa por seguridad, y sin esa alternativa la función no andaría en esos casos. Pero implica que tus credenciales pasen por infraestructura nuestra. Por eso está apagado por defecto y hay que activarlo a conciencia. Si preferís que no ocurra, dejalo apagado: perdés la función satelital en ese navegador, nada más.</p>
+      </div>
+
+      <h4>Cómo obtener tus credenciales (una sola vez, unos 5 minutos)</h4>
+      <ol>
+        <li>Entrá a <a href="https://dataspace.copernicus.eu/" target="_blank" rel="noopener" class="cop-link">dataspace.copernicus.eu</a> y tocá <b>Register</b>. Te pide correo y contraseña.</li>
+        <li>Confirmá el correo que te llega.</li>
+        <li>Volvé a entrar y buscá el <b>Sentinel Hub Dashboard</b> (está en el menú de tu perfil o en la sección de APIs).</li>
+        <li>Dentro del dashboard, entrá a <b>User settings</b> y buscá <b>OAuth clients</b>.</li>
+        <li>Tocá <b>Create new</b>, ponele un nombre cualquiera (por ejemplo "CampoIA") y confirmá.</li>
+        <li>Te va a mostrar un <b>Client ID</b> y un <b>Client Secret</b>. Copiá los dos y pegalos en el panel izquierdo de CampoIA.</li>
+      </ol>
+      <div class="cop-nota warn">
+        <p><b>Ojo con el secret:</b> Copernicus lo muestra <b>una sola vez</b>. Si cerrás la ventana sin copiarlo, no se puede recuperar — hay que borrar ese cliente y crear uno nuevo. No es grave, pero evitate la vuelta.</p>
+      </div>
+
+      <h4>¿Qué vas a ver una vez conectado?</h4>
+      <ul>
+        <li><b>NDVI del lote</b> — un número de 0 a 1 que mide el vigor de la vegetación. Suelo pelado ronda 0,1–0,2; una pastura en buen estado, 0,6–0,8.</li>
+        <li><b>Historial</b> de hasta 2 años, con las fechas nubladas descartadas automáticamente.</li>
+        <li><b>Variación a 30 días</b> con alerta si cae fuerte.</li>
+        <li><b>Oferta relativa</b> — dónde está hoy respecto del mejor momento que registró ese mismo lote.</li>
+        <li><b>Zona más pobre del lote</b> — si se separa mucho del promedio, hay manchones que el promedio esconde.</li>
+        <li><b>Días de pastoreo</b> disponibles, cruzando el satélite con la hacienda que tengas asignada al lote.</li>
+      </ul>
+
+      <h4>Qué NO hace (para que no te lleves una decepción)</h4>
+      <ul>
+        <li><b>No mide rendimiento.</b> Mide vigor de vegetación. Un lote muy verde puede rendir mal por otras razones.</li>
+        <li><b>No distingue maleza de cultivo.</b> Un lote enmalezado puede dar NDVI alto.</li>
+        <li><b>Se satura.</b> Arriba de 0,8 deja de diferenciar bien: un cultivo muy denso y otro densísimo dan casi lo mismo.</li>
+        <li><b>Las nubes tapan.</b> El satélite pasa cada 5 días, pero si está nublado no sirve. En épocas lluviosas puede haber dos o tres semanas sin una imagen usable.</li>
+        <li><b>No reemplaza la recorrida.</b> Te dice dónde mirar y cuándo, no qué está pasando exactamente.</li>
+        <li><b>La biomasa en kilos necesita calibración tuya.</b> Sin un corte de muestra pesado a campo, mostramos un índice comparativo y no kilos absolutos — a propósito, porque un modelo genérico daría números que no coinciden con lo que ves.</li>
+      </ul>
+
+      <h4>¿Y si me arrepiento?</h4>
+      <p>Borrás el Client ID y el Secret del panel izquierdo y listo: CampoIA deja de consultar. Si además querés cortar por completo, entrá al dashboard de Copernicus y eliminá el cliente OAuth que creaste. Todo lo demás de CampoIA sigue funcionando igual — el satelital es una función opcional, no una condición para usar la app.</p>
+
+      <div class="cop-nota">
+        <p><b>En una línea:</b> es gratis, no compromete los datos de tu operación, y si no te sirve lo desconectás en cinco segundos. Lo peor que puede pasar es que decidas que no lo necesitás.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <div class="lab-login-overlay" id="labLoginOverlay">
   <div class="lab-login-card" id="labLoginCard">
     <img src="favicon-192.png" alt="">
@@ -282,7 +392,8 @@
 
     <div class="keybox">
       <label>🛰️ Copernicus (satelital)</label>
-      <p style="font-size:11px;color:var(--text-muted);margin:4px 0 8px;">Gratis. Se registra una vez en dataspace.copernicus.eu y se crea un cliente OAuth.</p>
+      <p style="font-size:11px;color:var(--text-muted);margin:4px 0 4px;">Imágenes satelitales gratuitas de la Unión Europea para ver cómo viene cada lote.</p>
+      <button class="cop-ayuda" data-cop-abrir style="margin:0 0 8px;">¿Qué es esto? ¿Me conviene conectarlo? →</button>
       <input type="text" id="copernicusId" placeholder="Client ID" autocomplete="off" style="margin-bottom:6px;">
       <input type="password" id="copernicusSecret" placeholder="Client Secret" autocomplete="off">
       <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted);margin:8px 0 0;font-weight:400;cursor:pointer;">
@@ -290,6 +401,10 @@
       </label>
       <div class="key-status" style="margin-top:6px;"><span class="dot-status" id="copDot"></span><span id="copStatusText">Sin configurar</span></div>
       <p style="font-size:10.5px;color:var(--text-muted);margin-top:6px;">Sin tildar, el secret se borra al cerrar la pestaña. Tildado, queda guardado en este navegador.</p>
+      <label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted);margin:10px 0 0;font-weight:400;cursor:pointer;">
+        <input type="checkbox" id="copernicusProxy" style="width:auto;margin:0;"> Usar servidor puente
+      </label>
+      <p style="font-size:10.5px;color:var(--text-muted);margin-top:5px;">Activalo solo si al actualizar te da error de conexión. En ese modo tus credenciales pasan por el servidor de LABStudio (sin guardarse) en vez de ir directo a Copernicus.</p>
     </div>
 
     <div class="keybox">
@@ -959,6 +1074,7 @@
           <div class="subtab-row">
             <button class="subtab-btn active" data-lsub="margen">📊 Margen</button>
             <button class="subtab-btn" data-lsub="satelital">🛰️ Satelital</button>
+            <button class="subtab-btn" data-lsub="carga">🐄 Carga animal</button>
             <button class="subtab-btn" data-lsub="insumos">🧪 Insumos</button>
             <button class="subtab-btn" data-lsub="jornales">👷 Jornales</button>
           </div>
@@ -988,8 +1104,11 @@
 
             <div id="satSinCredenciales" class="result-box" style="display:none;margin-bottom:14px;border-color:var(--accent);">
               <h4 style="font-size:14px;margin-bottom:6px;">🔑 Falta conectar Copernicus</h4>
-              <p class="sub" style="margin:0 0 8px;font-size:12.5px;">Las imágenes satelitales son gratuitas, pero hay que registrarse una vez en Copernicus Data Space (el programa satelital de la Unión Europea) y cargar tus credenciales en el panel lateral, abajo de la API Key.</p>
-              <a href="https://dataspace.copernicus.eu/" target="_blank" rel="noopener" class="btn btn-ghost" style="font-size:12.5px;padding:8px 14px;">Crear cuenta gratis ↗</a>
+              <p class="sub" style="margin:0 0 10px;font-size:12.5px;">Las imágenes satelitales son gratuitas, pero hay que registrarse una vez en Copernicus Data Space (el programa satelital de la Unión Europea) y cargar tus credenciales en el panel lateral.</p>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="btn btn-primary" data-cop-abrir style="font-size:12.5px;padding:8px 14px;">Leer antes de decidir</button>
+                <a href="https://dataspace.copernicus.eu/" target="_blank" rel="noopener" class="btn btn-ghost" style="font-size:12.5px;padding:8px 14px;">Crear cuenta gratis ↗</a>
+              </div>
             </div>
 
             <div id="satSinUbicacion" class="result-box" style="margin-bottom:14px;">
@@ -1045,6 +1164,55 @@
               </div>
 
               <p class="disclaimer">El NDVI mide vigor de vegetación, no rendimiento. Se satura en cultivos muy densos y no distingue maleza de cultivo. Sin calibración a campo, la estimación de biomasa es un índice comparativo entre fechas y lotes tuyos, no un valor absoluto confiable. Las imágenes Sentinel-2 pasan cada 5 días, pero con nubes puede haber huecos de dos o tres semanas.</p>
+            </div>
+          </div>
+
+          <!-- CARGA ANIMAL -->
+          <div class="subpanel" id="lsub-carga">
+            <p class="sub" style="margin-bottom:12px;">Cuántas cabezas hay en este lote, cuánto pastoreo aguanta según lo que muestra el satélite, y si estás sobrecargado. Este cruce es el que no te da ni una planilla sola ni una imagen sola.</p>
+
+            <div class="range-box" style="grid-template-columns:repeat(4,1fr);">
+              <div class="result-box"><div class="muted" style="font-size:12.5px;">Cabezas</div><div class="big" id="cgCabezas" style="font-size:22px;">0</div></div>
+              <div class="result-box"><div class="muted" style="font-size:12.5px;">Equivalente vaca</div><div class="big" id="cgEv" style="font-size:22px;">0</div></div>
+              <div class="result-box"><div class="muted" style="font-size:12.5px;">Carga</div><div class="big" id="cgCarga" style="font-size:22px;">—</div></div>
+              <div class="result-box"><div class="muted" style="font-size:12.5px;">Días de pastoreo</div><div class="big" id="cgDias" style="font-size:22px;">—</div></div>
+            </div>
+
+            <div id="cgAlerta" style="margin-bottom:14px;"></div>
+
+            <div class="result-box" style="margin-bottom:14px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+                <h4 style="font-size:14px;margin:0;">Hacienda en este lote</h4>
+                <button class="btn btn-primary" id="cgAsignarBtn" style="font-size:12.5px;padding:8px 14px;">+ Asignar animales</button>
+              </div>
+              <table class="mini" id="cgTable">
+                <thead><tr><th>Caravana</th><th>Categoría</th><th>Peso</th><th>EV</th><th></th></tr></thead>
+                <tbody id="cgTbody"></tbody>
+              </table>
+              <div id="cgEmpty" class="empty" style="display:none;padding:16px 0;">Ningún animal asignado a este lote.</div>
+            </div>
+
+            <div id="cgSelector" style="display:none;" class="result-box">
+              <h4 style="font-size:14px;margin-bottom:8px;">Elegí qué animales están en el lote</h4>
+              <input type="text" id="cgBuscar" placeholder="🔎 Filtrar por caravana o categoría..." style="width:100%;padding:9px 12px;border-radius:9px;border:1px solid var(--border);font-size:16px;background:var(--bg);color:var(--text);margin-bottom:10px;">
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                <button id="cgTodos" style="border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;">Marcar todos los visibles</button>
+                <button id="cgNinguno" style="border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;">Desmarcar todos</button>
+              </div>
+              <div id="cgLista" style="max-height:300px;overflow:auto;border:1px solid var(--border);border-radius:9px;padding:6px;"></div>
+              <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+                <button class="btn btn-primary" id="cgGuardar" style="flex:1;min-width:160px;">Guardar asignación</button>
+                <button class="btn btn-ghost" id="cgCancelar" style="flex:1;min-width:120px;">Cancelar</button>
+              </div>
+            </div>
+
+            <div class="result-box" style="margin-top:14px;">
+              <h4 style="font-size:14px;margin-bottom:8px;">⚙️ Supuestos del cálculo</h4>
+              <div class="mini-form" style="grid-template-columns:1fr 1fr;gap:10px;">
+                <div class="field" style="margin-bottom:0;"><label>Consumo diario (% del peso vivo)</label><input type="number" id="cgConsumo" step="0.1" value="2.5"></div>
+                <div class="field" style="margin-bottom:0;"><label>Aprovechamiento de la pastura (%)</label><input type="number" id="cgAprovecha" step="1" value="55"></div>
+              </div>
+              <p class="disclaimer" style="margin-top:10px;">Un equivalente vaca es una vaca de 400 kg con cría al pie. Para animales con pesada cargada se calcula por escala metabólica (peso/400)<sup>0,75</sup>; sin pesada se usa una tabla por categoría. Los días de pastoreo salen de la biomasa calibrada en la pestaña Satelital — sin esa calibración no se pueden estimar. No se contempla rebrote durante el pastoreo, así que en primavera el número real suele ser mayor.</p>
             </div>
           </div>
 
@@ -3315,6 +3483,7 @@ function openLoteDetail(id){
   renderInsumos(l);
   renderJornales(l);
   renderSatelital(l);
+  renderCargaAnimal(l);
   actualizarCostoTotalLote(getLoteById(currentLoteId));
   calcMargenLote();
 
@@ -3332,6 +3501,9 @@ document.getElementById('loteBackBtn').addEventListener('click', () => {
 document.getElementById('loteDeleteBtn').addEventListener('click', () => {
   if (!confirm('¿Eliminar este lote y todo su historial?')) return;
   localStorage.removeItem(cacheNdviKey(currentLoteId));
+  const _animales = loadAnimales();
+  _animales.forEach(a => { if (a.loteId === currentLoteId) delete a.loteId; });
+  saveAnimales(_animales);
   saveLotes(loadLotes().filter(l => l.id !== currentLoteId));
   marcarCambio();
   document.getElementById('loteBackBtn').click();
@@ -3343,6 +3515,7 @@ document.querySelectorAll('.subtab-btn[data-lsub]').forEach(btn => {
     document.querySelectorAll('#loteDetailView .subpanel').forEach(p => p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('lsub-' + btn.dataset.lsub).classList.add('active');
+    if (btn.dataset.lsub === 'carga'){ const l = getLoteById(currentLoteId); if (l) renderCargaAnimal(l); }
     if (btn.dataset.lsub === 'satelital'){
       if (satMapaInst) setTimeout(() => satMapaInst.invalidateSize(), 60);
       const l = getLoteById(currentLoteId);
@@ -3632,7 +3805,7 @@ async function asegurarTokenValido(){
 }
 
 const HOJAS_CAMPOIA = {
-  animales:       { nombre:'Animales',                headers:['id','RFID','Caravana','Especie','Raza','Sexo','Nacimiento','Categoría','Estado','Madre','Padre/Genética','Método concepción','Precio venta'] },
+  animales:       { nombre:'Animales',                headers:['id','RFID','Caravana','Especie','Raza','Sexo','Nacimiento','Categoría','Estado','Madre','Padre/Genética','Método concepción','Precio venta','lote_id'] },
   pesadas:        { nombre:'Pesadas',                 headers:['animal_id','Caravana','RFID','Fecha','Peso (kg)','Observación','Origen'] },
   vacunas:        { nombre:'Sanidad_Vacunas',         headers:['animal_id','Caravana','Vacuna','Fecha aplicada','Refuerzo (meses)','Costo'] },
   enfermedades:   { nombre:'Sanidad_Enfermedades',    headers:['animal_id','Caravana','Fecha','Descripción','Tratamiento','Costo'] },
@@ -3711,7 +3884,7 @@ function construirSnapshot(){
   Object.keys(HOJAS_CAMPOIA).forEach(k => snap[k] = []);
 
   loadAnimales().forEach(a => {
-    snap.animales.push([a.id, a.rfid ? "'" + a.rfid : '', a.caravana||'', a.especie||'', a.raza||'', a.sexo||'', a.nacimiento||'', a.categoria||'', a.estado||'', a.madre||'', a.padre||'', a.metodoConcepcion||'', a.precioVenta||'']);
+    snap.animales.push([a.id, a.rfid ? "'" + a.rfid : '', a.caravana||'', a.especie||'', a.raza||'', a.sexo||'', a.nacimiento||'', a.categoria||'', a.estado||'', a.madre||'', a.padre||'', a.metodoConcepcion||'', a.precioVenta||'', a.loteId||'']);
     (a.pesadas||[]).forEach(p => snap.pesadas.push([a.id, a.caravana||'', a.rfid ? "'" + a.rfid : '', p.fecha||'', p.peso??'', p.obs||'', p.origen||'manual']));
     (a.vacunas||[]).forEach(v => snap.vacunas.push([a.id, a.caravana||'', v.nombre||'', v.fecha||'', v.refuerzo??'', v.costo??'']));
     (a.enfermedades||[]).forEach(e => snap.enfermedades.push([a.id, a.caravana||'', e.fecha||'', e.descripcion||'', e.tratamiento||'', e.costo??'']));
@@ -3746,8 +3919,9 @@ function reconstruirDesdeFilas(datos){
     id: val(f,0), rfid: val(f,1).replace(/^'/, ''), caravana: val(f,2), especie: val(f,3), raza: val(f,4),
     sexo: val(f,5), nacimiento: val(f,6), categoria: val(f,7), estado: val(f,8) || 'Activo',
     madre: val(f,9), padre: val(f,10), metodoConcepcion: val(f,11), precioVenta: val(f,12),
+    loteId: val(f,13),
     pesadas: [], vacunas: [], enfermedades: [], servicios: [], partos: []
-  }));
+  })).map(a => { if (!a.loteId) delete a.loteId; return a; });
   const idxA = {}; animales.forEach(a => idxA[a.id] = a);
 
   (datos.pesadas||[]).forEach(f => { const a = idxA[val(f,0)]; if (a) a.pesadas.push({ fecha: val(f,3), peso: num(f,4), obs: val(f,5), origen: val(f,6) || 'manual' }); });
@@ -3988,6 +4162,9 @@ setInterval(actualizarMedidorEspacio, 20000);
 
 const CDSE_TOKEN_URL = 'https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token';
 const CDSE_STATS_URL = 'https://sh.dataspace.copernicus.eu/api/v1/statistics';
+const CDSE_PROXY_URL = 'https://vps-6064485-x.dattaweb.com/webhook/campoia-satelital';
+
+function usaProxyCopernicus(){ return localStorage.getItem('campoia_cop_proxy') === '1'; }
 
 /* ---------- Credenciales ---------- */
 function getCopernicusCreds(){
@@ -4004,7 +4181,7 @@ function actualizarEstadoCopernicus(){
   const dot = document.getElementById('copDot');
   const txt = document.getElementById('copStatusText');
   if (!dot || !txt) return;
-  if (c.id && c.secret){ dot.style.background = 'var(--brand-light)'; txt.textContent = 'Configurado'; }
+  if (c.id && c.secret){ dot.style.background = 'var(--brand-light)'; txt.textContent = usaProxyCopernicus() ? 'Configurado (vía puente)' : 'Configurado (directo)'; }
   else if (c.id || c.secret){ dot.style.background = 'var(--accent)'; txt.textContent = 'Falta un dato'; }
   else { dot.style.background = 'var(--border)'; txt.textContent = 'Sin configurar'; }
 }
@@ -4036,7 +4213,27 @@ function actualizarEstadoCopernicus(){
   inpId.addEventListener('input', persistir);
   inpSecret.addEventListener('input', persistir);
   chk.addEventListener('change', persistir);
+
+  const chkProxy = document.getElementById('copernicusProxy');
+  chkProxy.checked = usaProxyCopernicus();
+  chkProxy.addEventListener('change', () => {
+    localStorage.setItem('campoia_cop_proxy', chkProxy.checked ? '1' : '0');
+    cdseToken = null;
+    actualizarEstadoCopernicus();
+  });
   actualizarEstadoCopernicus();
+})();
+
+/* ---------- Explicador: qué es Copernicus y si conviene conectarlo ---------- */
+(function initModalCopernicus(){
+  const modal = document.getElementById('copModal');
+  const abrir = () => { modal.classList.add('open'); document.body.style.overflow = 'hidden'; modal.scrollTop = 0; };
+  const cerrar = () => { modal.classList.remove('open'); document.body.style.overflow = ''; };
+
+  document.querySelectorAll('[data-cop-abrir]').forEach(b => b.addEventListener('click', abrir));
+  document.getElementById('copModalClose').addEventListener('click', cerrar);
+  modal.addEventListener('click', e => { if (e.target === modal) cerrar(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) cerrar(); });
 })();
 
 /* ---------- Token OAuth (se cachea hasta que vence) ---------- */
@@ -4102,7 +4299,6 @@ function evaluatePixel(s) {
 }`;
 
 async function consultarNDVI(lat, lon, hectareas, meses){
-  const token = await obtenerTokenCDSE();
   const hasta = new Date();
   const desde = new Date();
   desde.setMonth(desde.getMonth() - (meses || 12));
@@ -4124,6 +4320,16 @@ async function consultarNDVI(lat, lon, hectareas, meses){
     calculations: { ndvi: { statistics: { default: { percentiles: { k: [10, 50, 90] } } } } }
   };
 
+  const data = usaProxyCopernicus()
+    ? await pedirStatsViaProxy(cuerpo)
+    : await pedirStatsDirecto(cuerpo);
+
+  return parsearRespuestaNDVI(data);
+}
+
+// Camino normal: del navegador del productor directo a Copernicus.
+async function pedirStatsDirecto(cuerpo){
+  const token = await obtenerTokenCDSE();
   const res = await fetch(CDSE_STATS_URL, {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -4137,8 +4343,30 @@ async function consultarNDVI(lat, lon, hectareas, meses){
     try { const e = await res.json(); detalle = e.error?.message || e.message || ''; } catch(_){}
     throw new Error('Copernicus devolvió un error ' + res.status + (detalle ? ': ' + detalle : ''));
   }
+  return res.json();
+}
 
+// Camino alternativo: si el navegador bloquea la llamada directa (CORS), se
+// releva por el n8n de LABStudio, que no guarda ni la credencial ni el resultado.
+async function pedirStatsViaProxy(cuerpo){
+  const c = getCopernicusCreds();
+  let res;
+  try {
+    res = await fetch(CDSE_PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clientId: c.id, clientSecret: c.secret, peticion: cuerpo })
+    });
+  } catch(e){
+    throw new Error('No se pudo contactar al servidor puente de LABStudio.');
+  }
+  if (!res.ok) throw new Error('El servidor puente respondió con error ' + res.status + '.');
   const data = await res.json();
+  if (data && data.error) throw new Error(data.mensaje || 'Error en el servidor puente.');
+  return data;
+}
+
+function parsearRespuestaNDVI(data){
   const puntos = [];
   (data.data || []).forEach(d => {
     const st = d.outputs?.ndvi?.bands?.B0?.stats;
@@ -4419,7 +4647,12 @@ document.getElementById('satActualizar').addEventListener('click', async () => {
   } catch(e){
     estado.style.display = 'block';
     const esRed = e instanceof TypeError;
-    estado.innerHTML = `<span style="color:#c33;">⚠️ ${esRed ? 'No se pudo contactar a Copernicus. Revisá tu conexión.' : e.message}</span>`;
+    if (esRed && !usaProxyCopernicus()){
+      estado.innerHTML = `<span style="color:#c33;">⚠️ El navegador bloqueó la conexión directa con Copernicus.</span>
+        <p class="sub" style="margin:8px 0 0;font-size:12.5px;">Activá <b>"Usar servidor puente"</b> en el panel lateral, abajo de las credenciales de Copernicus, y probá de nuevo.</p>`;
+    } else {
+      estado.innerHTML = `<span style="color:#c33;">⚠️ ${esRed ? 'No se pudo contactar al servidor. Revisá tu conexión.' : e.message}</span>`;
+    }
     console.warn('NDVI falló:', e);
   } finally {
     btn.disabled = false; btn.textContent = '🔄 Actualizar';
@@ -4445,6 +4678,194 @@ document.getElementById('calGuardar').addEventListener('click', () => {
   const ndviHoy = cache && cache.puntos && cache.puntos.length ? cache.puntos[cache.puntos.length - 1].ndvi : ndvi;
   renderCalibracion(lote, ndviHoy);
 });
+
+
+/* ================= CARGA ANIMAL VS OFERTA FORRAJERA ================= */
+/* Cruza la hacienda asignada a cada lote con la biomasa que estima el satélite.
+   Es el único número que no sale ni de la planilla sola ni de la imagen sola. */
+
+// Equivalente vaca de referencia: vaca de 400 kg con cría al pie = 1 EV.
+const EV_POR_CATEGORIA = {
+  'vaca': 1.00, 'vaca de cria': 1.00, 'vaca de cría': 1.00,
+  'toro': 1.20, 'padrillo': 1.20,
+  'novillo': 1.00, 'novillito': 0.75,
+  'vaquillona': 0.75, 'vaquillona 1-2': 0.75,
+  'ternero': 0.45, 'ternera': 0.45, 'destete': 0.45,
+  'oveja': 0.15, 'carnero': 0.20, 'cordero': 0.10,
+  'yegua': 1.10, 'caballo': 1.10, 'potrillo': 0.60
+};
+
+function evDeAnimal(a){
+  const m = metricasPesadas(a);
+  // Con peso real, escala metabólica: el consumo no crece lineal con el peso.
+  if (m.pesoActual && m.pesoActual > 0) return Math.pow(m.pesoActual / 400, 0.75);
+
+  const cat = (a.categoria || '').toLowerCase().trim()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  for (const k in EV_POR_CATEGORIA){
+    const kn = k.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if (cat && (cat === kn || cat.includes(kn))) return EV_POR_CATEGORIA[k];
+  }
+  // Sin categoría reconocible: se asume según especie
+  const esp = (a.especie || '').toLowerCase();
+  if (esp === 'ovino') return 0.15;
+  if (esp === 'equino') return 1.10;
+  if (esp === 'porcino') return 0.30;
+  if (esp === 'aviar') return 0.01;
+  return 1.00;
+}
+
+function animalesDeLote(loteId){
+  return loadAnimales().filter(a => a.loteId === loteId && a.estado === 'Activo');
+}
+
+function biomasaEstimadaLote(lote){
+  const cn = parseFloat(lote.calNdvi), ck = parseFloat(lote.calKgMs);
+  if (!cn || !ck || cn <= 0) return null;
+  const cache = leerCacheNdvi(lote.id);
+  if (!cache || !cache.puntos || !cache.puntos.length) return null;
+  const ndviHoy = cache.puntos[cache.puntos.length - 1].ndvi;
+  return { kgMsHa: (ndviHoy / cn) * ck, ndvi: ndviHoy, fecha: cache.puntos[cache.puntos.length - 1].fecha };
+}
+
+function renderCargaAnimal(lote){
+  if (!lote) return;
+  const animales = animalesDeLote(lote.id);
+  const evTotal = animales.reduce((s, a) => s + evDeAnimal(a), 0);
+  const ha = parseFloat(lote.hectareas) || 0;
+
+  document.getElementById('cgCabezas').textContent = animales.length;
+  document.getElementById('cgEv').textContent = evTotal.toFixed(1);
+
+  const elCarga = document.getElementById('cgCarga');
+  const carga = ha > 0 ? evTotal / ha : null;
+  elCarga.textContent = carga !== null ? carga.toFixed(2) + ' EV/ha' : '—';
+
+  // Días de pastoreo: biomasa disponible dividida por el consumo del rodeo
+  const bio = biomasaEstimadaLote(lote);
+  const consumoPct = parseFloat(document.getElementById('cgConsumo').value) || 2.5;
+  const aprovecha = (parseFloat(document.getElementById('cgAprovecha').value) || 55) / 100;
+  const consumoDiarioEv = 400 * (consumoPct / 100); // kg MS por EV y por día
+
+  const elDias = document.getElementById('cgDias');
+  let dias = null;
+  if (bio && ha > 0 && evTotal > 0){
+    const msDisponible = bio.kgMsHa * ha * aprovecha;
+    dias = msDisponible / (evTotal * consumoDiarioEv);
+    elDias.textContent = Math.round(dias) + ' días';
+    elDias.style.color = dias < 10 ? '#c33' : (dias < 25 ? 'var(--accent)' : 'var(--brand-light)');
+  } else {
+    elDias.textContent = '—';
+    elDias.style.color = '';
+  }
+
+  // Semáforo
+  const alerta = document.getElementById('cgAlerta');
+  if (!animales.length){
+    alerta.innerHTML = '';
+  } else if (!bio){
+    alerta.innerHTML = `<div class="result-box" style="border-color:var(--border);margin:0;"><b>ℹ️ Falta calibrar la biomasa</b><p class="sub" style="margin:6px 0 0;font-size:12.5px;">Tenés ${animales.length} animales asignados (${evTotal.toFixed(1)} EV, ${carga !== null ? carga.toFixed(2) + ' EV/ha' : 's/d'}), pero sin la calibración de la pestaña Satelital no podemos decirte cuántos días aguanta el lote.</p></div>`;
+  } else if (dias !== null && dias < 10){
+    alerta.innerHTML = `<div class="result-box" style="border-color:#c33;margin:0;"><b style="color:#c33;">🔴 Sobrecarga</b><p class="sub" style="margin:6px 0 0;font-size:12.5px;">Con ${evTotal.toFixed(1)} EV sobre ${ha} ha y la oferta actual (${Math.round(bio.kgMsHa)} kg MS/ha al ${formatearFechaCorta(bio.fecha)}), el forraje alcanza para unos ${Math.round(dias)} días. Conviene mover la hacienda o suplementar antes de que el lote se degrade.</p></div>`;
+  } else if (dias !== null && dias < 25){
+    alerta.innerHTML = `<div class="result-box" style="border-color:var(--accent);margin:0;"><b style="color:var(--accent);">🟡 Planificá la salida</b><p class="sub" style="margin:6px 0 0;font-size:12.5px;">El forraje alcanza para unos ${Math.round(dias)} días con la carga actual. Andá pensando el próximo potrero.</p></div>`;
+  } else if (dias !== null){
+    alerta.innerHTML = `<div class="result-box" style="border-color:var(--brand-light);margin:0;"><b style="color:var(--brand-light);">🟢 Carga adecuada</b><p class="sub" style="margin:6px 0 0;font-size:12.5px;">La oferta alcanza para unos ${Math.round(dias)} días con ${evTotal.toFixed(1)} EV. Carga de ${carga.toFixed(2)} EV/ha.</p></div>`;
+  }
+
+  // Listado
+  const tbody = document.getElementById('cgTbody');
+  const empty = document.getElementById('cgEmpty');
+  if (!animales.length){
+    tbody.innerHTML = ''; empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    tbody.innerHTML = animales.map(a => {
+      const m = metricasPesadas(a);
+      return `<tr>
+        <td><b>${a.caravana}</b></td>
+        <td>${a.categoria || a.especie || '—'}</td>
+        <td>${m.pesoActual !== null ? m.pesoActual.toFixed(0) + ' kg' : '<span style="color:var(--text-muted);">s/pesada</span>'}</td>
+        <td>${evDeAnimal(a).toFixed(2)}</td>
+        <td><button data-id="${a.id}" class="cgQuitarBtn" style="border:none;background:none;color:#c33;cursor:pointer;font-size:12px;">Quitar</button></td>
+      </tr>`;
+    }).join('');
+    tbody.querySelectorAll('.cgQuitarBtn').forEach(b => b.addEventListener('click', () => {
+      const lista = loadAnimales();
+      const a = lista.find(x => x.id === b.dataset.id);
+      if (a) delete a.loteId;
+      saveAnimales(lista);
+      marcarCambio();
+      renderCargaAnimal(getLoteById(currentLoteId));
+    }));
+  }
+}
+
+/* ---------- Selector de animales ---------- */
+let cgSeleccion = new Set();
+
+function renderSelectorAnimales(){
+  const filtro = (document.getElementById('cgBuscar').value || '').toLowerCase().trim();
+  const cont = document.getElementById('cgLista');
+  const lotes = loadLotes();
+  const nombreLote = id => (lotes.find(l => l.id === id) || {}).nombre || 'otro lote';
+
+  const lista = loadAnimales().filter(a => a.estado === 'Activo').filter(a =>
+    !filtro || (a.caravana||'').toLowerCase().includes(filtro) ||
+    (a.categoria||'').toLowerCase().includes(filtro) || (a.rfid||'').includes(filtro)
+  );
+
+  if (!lista.length){ cont.innerHTML = '<p class="empty" style="padding:12px;">No hay animales activos que coincidan.</p>'; return; }
+
+  cont.innerHTML = lista.map(a => {
+    const enOtro = a.loteId && a.loteId !== currentLoteId;
+    return `<label style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13.5px;">
+      <input type="checkbox" class="cgChk" data-id="${a.id}" ${cgSeleccion.has(a.id) ? 'checked' : ''} style="width:auto;margin:0;">
+      <span style="flex:1;"><b>${a.caravana}</b> · ${a.categoria || a.especie}${enOtro ? ` <span style="color:var(--accent);font-size:11.5px;">(hoy en ${nombreLote(a.loteId)})</span>` : ''}</span>
+      <span style="color:var(--text-muted);font-size:12px;">${evDeAnimal(a).toFixed(2)} EV</span>
+    </label>`;
+  }).join('');
+
+  cont.querySelectorAll('.cgChk').forEach(chk => chk.addEventListener('change', () => {
+    if (chk.checked) cgSeleccion.add(chk.dataset.id); else cgSeleccion.delete(chk.dataset.id);
+  }));
+}
+
+document.getElementById('cgAsignarBtn').addEventListener('click', () => {
+  cgSeleccion = new Set(animalesDeLote(currentLoteId).map(a => a.id));
+  document.getElementById('cgBuscar').value = '';
+  document.getElementById('cgSelector').style.display = 'block';
+  renderSelectorAnimales();
+});
+document.getElementById('cgCancelar').addEventListener('click', () => {
+  document.getElementById('cgSelector').style.display = 'none';
+});
+document.getElementById('cgBuscar').addEventListener('input', renderSelectorAnimales);
+
+document.getElementById('cgTodos').addEventListener('click', () => {
+  document.querySelectorAll('#cgLista .cgChk').forEach(c => { c.checked = true; cgSeleccion.add(c.dataset.id); });
+});
+document.getElementById('cgNinguno').addEventListener('click', () => {
+  document.querySelectorAll('#cgLista .cgChk').forEach(c => { c.checked = false; cgSeleccion.delete(c.dataset.id); });
+});
+
+document.getElementById('cgGuardar').addEventListener('click', () => {
+  const lista = loadAnimales();
+  let movidos = 0;
+  lista.forEach(a => {
+    const debeEstar = cgSeleccion.has(a.id);
+    if (debeEstar && a.loteId !== currentLoteId){ a.loteId = currentLoteId; movidos++; }
+    else if (!debeEstar && a.loteId === currentLoteId){ delete a.loteId; }
+  });
+  saveAnimales(lista);
+  marcarCambio();
+  document.getElementById('cgSelector').style.display = 'none';
+  renderCargaAnimal(getLoteById(currentLoteId));
+  if (movidos) console.log(`${movidos} animales movidos a este lote.`);
+});
+
+['cgConsumo','cgAprovecha'].forEach(id =>
+  document.getElementById(id).addEventListener('input', () => renderCargaAnimal(getLoteById(currentLoteId))));
 
 /* ---------- Gráficos (Chart.js), a partir de datos locales ---------- */
 let chartAnimalesInst = null, chartVencInst = null, chartLotesInst = null, chartMaqInst = null;

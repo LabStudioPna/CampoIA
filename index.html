@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CampoIA — Tu gestor de campo experto en IA</title>
-<meta name="description" content="Liquida granos, calcula retenciones y analiza contratos de arrendamiento rural con IA. Hecho para productores y corredores de Entre Ríos. Sin instalación, sin complicaciones.">
+<title>CampoIA — Gestión de campo con IA: granos, hacienda y satélite</title>
+<meta name="description" content="Liquidá granos, seguí tu hacienda con lector RFID y monitoreá cada lote por satélite. SaaS con IA para productores y corredores de Argentina. Sin instalación.">
 
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
@@ -19,7 +19,7 @@
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="CampoIA — Tu gestor de campo experto en IA">
-<meta property="og:description" content="Liquida granos, calcula retenciones y analiza contratos de arrendamiento rural con IA. Sin instalación, sin complicaciones.">
+<meta property="og:description" content="Liquidá granos, seguí tu hacienda con lector RFID y monitoreá cada lote por satélite. SaaS con IA para el campo argentino.">
 <meta property="og:image" content="https://labstudiopna.github.io/CampoIA/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -57,6 +57,8 @@
   </a>
   <ul class="nav-links">
     <li><a href="#features">Características</a></li>
+    <li><a href="#satelital">Satelital</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#pricing">Precios</a></li>
     <li><a href="#faq">Preguntas frecuentes</a></li>
     <li><a href="#contacto">Contacto</a></li>
@@ -70,6 +72,8 @@
 
 <div class="mobile-menu" id="mobile-menu">
   <a href="#features" onclick="closeMobileMenu()">Características</a>
+  <a href="#satelital" onclick="closeMobileMenu()">Satelital</a>
+  <a href="#roadmap" onclick="closeMobileMenu()">Roadmap</a>
   <a href="#pricing" onclick="closeMobileMenu()">Precios</a>
   <a href="#faq" onclick="closeMobileMenu()">Preguntas frecuentes</a>
   <a href="#contacto" onclick="closeMobileMenu()">Contacto</a>
@@ -85,14 +89,14 @@
     <div>
       <span class="pill"><span class="dot"></span>Hecho en Paraná, para el campo de Entre Ríos</span>
       <h1>Liquidá tu cosecha <em>sin perder un peso</em></h1>
-      <p class="lead">Liquidá granos, calculá retenciones y gastos de comercialización, y analizá tus contratos de arrendamiento rural. Sin instalación, sin complicaciones — igual de simple que abrir WhatsApp.</p>
+      <p class="lead">Liquidá granos y calculá retenciones. Seguí tu hacienda importando el bastón RFID. Mirá cómo viene cada lote desde el satélite. Todo en un solo lugar, sin instalar nada — igual de simple que abrir WhatsApp.</p>
       <div class="hero-cta">
         <a href="agente-campo.html" class="btn btn-primary">Liquidar mi primera venta →</a>
         <a href="#features" class="btn btn-ghost">Ver características</a>
       </div>
       <div class="hero-stats">
         <div class="hstat"><b>30 seg</b><span>Liquidación completa</span></div>
-        <div class="hstat"><b>6</b><span>Cultivos con retenciones cargadas</span></div>
+        <div class="hstat"><b>Sentinel-2</b><span>Imágenes satelitales gratis</span></div>
         <div class="hstat"><b>24 hs</b><span>Soporte técnico</span></div>
       </div>
     </div>
@@ -116,10 +120,10 @@
         <div class="hb-lbl">por liquidación</div>
       </div>
       <div class="hb-tile hb-wide">
-        <div class="hb-tag">Vencimientos SENASA</div>
+        <div class="hb-tag">Lote Norte · satelital</div>
         <div class="hb-badges">
-          <span class="hb-badge a">1 guía próxima</span>
-          <span class="hb-badge g">trazabilidad al día</span>
+          <span class="hb-badge g">NDVI 0,71</span>
+          <span class="hb-badge a">18 días de pastoreo</span>
         </div>
       </div>
     </div>
@@ -131,7 +135,7 @@
   <div class="container trust-grid">
     <div class="tstat"><b>Hasta <em>24</em>%</b><span>Se va en retenciones — calculalo exacto, no a ojo</span></div>
     <div class="tstat"><b><em>6</em></b><span>Cultivos con retenciones cargadas (Decreto 423/2026)</span></div>
-    <div class="tstat"><b><em>0</em>%</b><span>Instalación</span></div>
+    <div class="tstat"><b><em>10</em>m</b><span>Resolución satelital por lote</span></div>
     <div class="tstat"><b><em>24</em>hs</b><span>Soporte técnico</span></div>
   </div>
 </section>
@@ -182,6 +186,36 @@
         <h3>Margen bruto por lote</h3>
         <p>Rinde, precio, insumos y jornales — para saber si un lote realmente da ganancia.</p>
       </div>
+      <div class="bento b-2x2">
+        <span class="badge-new">Nuevo</span>
+        <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="12" cy="12" r="3"/><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 6a6 6 0 0 1 6 6"/><path d="M2 12a10 10 0 0 0 10 10"/><path d="M6 12a6 6 0 0 0 6 6"/></svg></div>
+        <h3>Monitoreo satelital por lote</h3>
+        <p>Índice de vegetación desde imágenes Sentinel-2 de la Unión Europea, con las nubes filtradas automáticamente. Ves si la pastura viene cayendo antes de que se note a ojo.</p>
+        <div class="bento-hero-visual">
+          <div class="bhv-row"><span>NDVI actual</span><b>0,71</b></div>
+          <div class="bhv-row"><span>Variación 30 días</span><b>+4,2%</b></div>
+          <div class="bhv-row"><span>Oferta relativa</span><b>88%</b></div>
+        </div>
+        <a href="#satelital" style="display:inline-block;margin-top:12px;font-size:13px;color:var(--brand-light);text-decoration:underline">Cómo funciona y qué datos usa →</a>
+      </div>
+      <div class="bento b-2x1">
+        <span class="badge-new">Nuevo</span>
+        <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="7" cy="6" r="1.6"/><circle cx="14" cy="12" r="1.6"/><circle cx="10" cy="18" r="1.6"/></svg></div>
+        <h3>Importá tu bastón RFID</h3>
+        <p>Subí el CSV que exporta tu lector — Allflex, Tru-Test, Datamars o Gallagher — y CampoIA detecta las columnas solo, te muestra qué va a pasar y recién ahí confirmás.</p>
+      </div>
+      <div class="bento b-1x1">
+        <span class="badge-new">Nuevo</span>
+        <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M6 3v18M18 3v18M6 8h12M6 16h12"/></svg></div>
+        <h3>Pesadas y GDP</h3>
+        <p>Ganancia diaria de peso por animal y proyección de en qué fecha llega al peso de venta.</p>
+      </div>
+      <div class="bento b-1x1">
+        <span class="badge-new">Nuevo</span>
+        <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="12" cy="14" r="6"/><circle cx="7" cy="7" r="2.2"/><circle cx="17" cy="7" r="2.2"/></svg></div>
+        <h3>Carga animal real</h3>
+        <p>Cuántos días de pastoreo aguanta el lote con la hacienda que tenés adentro.</p>
+      </div>
     </div>
 
     <div class="included">
@@ -191,13 +225,15 @@
       </div>
       <div class="included-grid">
         <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Valuación fiscal rural</b> — impuesto inmobiliario estimado por departamento</div>
-        <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Monitoreo con dron</b> — coordiná un vuelo LABStudio, integrado al panel (Fase 2)</div>
+        <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Registro de vuelos de dron</b> — cargá hectáreas, producto aplicado y costo por vuelo</div>
         <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Cotizaciones de granos</b> — precios de pizarra orientativos, 5 cultivos</div>
         <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Costo de flete</b> — neto puesto en destino antes de cerrar la venta</div>
         <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Libro de insumos con carencia</b> — semáforo de cuándo podés cosechar o vender</div>
         <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Jornales por lote</b> — mano de obra cargada para un margen más real</div>
         <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Alertas climáticas</b> — helada, lluvia fuerte y estrés hídrico a 7-10 días</div>
         <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Reporte general en PDF</b> — animales, maquinaria, lotes y vencimientos en un clic</div>
+        <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Calibración de biomasa</b> — convertí el NDVI a kilos de materia seca con tu propio corte de muestra</div>
+        <div class="inc-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span><b>Deshacer importación</b> — si el archivo del bastón vino mal, revertís todo el lote con un botón</div>
       </div>
     </div>
   </div>
@@ -207,14 +243,14 @@
 <section style="background:var(--bg-soft);border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft)">
   <div class="container">
     <div class="section-head">
-      <span class="eyebrow">Backup automático</span>
+      <span class="eyebrow">Respaldo y recuperación</span>
       <h2>Tus datos, también en tu propio Google Sheets</h2>
-      <p>Opcional y gratis. Así ves los mismos animales, maquinaria y liquidaciones desde el celular y la compu, sin depender de un solo navegador.</p>
+      <p>Opcional y gratis. La planilla queda en tu Drive, no en un servidor nuestro. Si cambiás de celular o borrás el navegador, recuperás todo con un botón.</p>
     </div>
     <div class="bento-grid">
       <div class="bento b-1x1"><h3>1. Conectá tu cuenta</h3><p>Un botón "Conectar con Google" en el panel — no instalás nada.</p></div>
-      <div class="bento b-1x1"><h3>2. Autorizá el acceso</h3><p>Google muestra su propia ventana de permiso. Aceptás y listo.</p></div>
-      <div class="bento b-1x1"><h3>3. Se sincroniza solo</h3><p>Cada dato cargado queda guardado también en tu Sheets, sin botones extra.</p></div>
+      <div class="bento b-1x1"><h3>2. Se sincroniza solo</h3><p>Cada cambio se guarda en tu planilla unos segundos después, sin apretar nada.</p></div>
+      <div class="bento b-1x1"><h3>3. Restaurás cuando quieras</h3><p>Desde otro dispositivo, entrás con la misma cuenta y tocás "Restaurar".</p></div>
     </div>
   </div>
 </section>
@@ -265,6 +301,130 @@
   </div>
 </section>
 
+<!-- SATELITAL EXPLICADO -->
+<section id="satelital" style="background:var(--bg-soft);border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft)">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Incluido y gratis</span>
+      <h2>Cada lote, visto desde el satélite</h2>
+      <p>CampoIA usa las imágenes del programa <b>Copernicus</b> de la Unión Europea — las mismas que usan los organismos oficiales europeos. Son públicas, gratuitas y de acceso abierto. Te contamos todo antes de que decidas si lo conectás.</p>
+    </div>
+
+    <div class="bento-grid">
+      <div class="bento b-2x2">
+        <h3>Qué son los Sentinel</h3>
+        <p>Dos satélites gemelos que fotografían toda la superficie del planeta y pasan por tu campo <b>cada 5 días</b>. Cada píxel cubre 10 x 10 metros: sobre un lote de 45 hectáreas son unas 4.500 mediciones, no un promedio único.</p>
+        <div class="bento-hero-visual">
+          <div class="bhv-row"><span>Resolución</span><b>10 metros</b></div>
+          <div class="bhv-row"><span>Frecuencia de paso</span><b>5 días</b></div>
+          <div class="bhv-row"><span>Historial disponible</span><b>Hasta 2 años</b></div>
+          <div class="bhv-row"><span>Costo de las imágenes</span><b>$0</b></div>
+        </div>
+      </div>
+
+      <div class="bento b-2x1">
+        <h3>¿Por qué es gratis?</h3>
+        <p>Porque la Unión Europea decidió liberar los datos de Copernicus para cualquier uso, incluido el comercial. Los paga el contribuyente europeo. Vos solo te registrás una vez —sin tarjeta de crédito— para que el sistema sepa a quién asignarle el límite mensual de uso.</p>
+      </div>
+
+      <div class="bento b-1x1">
+        <h3>Cuánto rinde el límite</h3>
+        <p>Con 20 lotes actualizados una vez por semana usás cerca del 24% de la cuota gratuita mensual. Si te pasás, no te cobran: solo va más lento hasta el mes siguiente.</p>
+      </div>
+
+      <div class="bento b-1x1">
+        <h3>Qué datos salen</h3>
+        <p>Solo las <b>coordenadas del lote</b> y un rango de fechas, que van directo de tu navegador a Copernicus. Tu hacienda, tus costos y tus contratos <b>nunca</b> se envían a ningún lado.</p>
+      </div>
+
+      <div class="bento b-1x1">
+        <h3>La letra chica</h3>
+        <p>Algunos navegadores bloquean la conexión directa. Para esos casos hay una opción —<b>apagada por defecto</b>— donde la consulta pasa por un servidor nuestro, que no guarda registro. La activás vos o no la usás. <a href="terminos.html#satelital" style="color:var(--brand-light);text-decoration:underline">Detalle completo</a>.</p>
+      </div>
+
+      <div class="bento b-2x1">
+        <h3>Qué vas a ver</h3>
+        <p>El índice de vegetación de cada lote con su historial, alerta cuando cae más de un 25% en un mes, la zona más pobre del lote separada del promedio, y los <b>días de pastoreo</b> que quedan según la hacienda que tengas adentro.</p>
+      </div>
+
+      <div class="bento b-2x2">
+        <h3>Qué <em>no</em> hace</h3>
+        <p>Preferimos decírtelo ahora y no que lo descubras después:</p>
+        <ul style="margin:10px 0 0;padding-left:18px;font-size:13.5px;color:var(--dim);line-height:1.7">
+          <li><b>No mide rendimiento.</b> Mide vigor de vegetación. Un lote muy verde puede rendir mal por otras razones.</li>
+          <li><b>No distingue maleza de cultivo.</b> Un lote enmalezado puede dar índice alto.</li>
+          <li><b>Las nubes tapan.</b> En época lluviosa puede haber dos o tres semanas sin una imagen usable.</li>
+          <li><b>No reemplaza la recorrida.</b> Te dice dónde mirar y cuándo, no qué está pasando exactamente.</li>
+          <li><b>Los kilos de pastura necesitan una calibración tuya.</b> Sin un corte de muestra pesado a campo, mostramos un índice comparativo y no kilos absolutos — a propósito, porque un modelo genérico daría números que no coinciden con lo que ves.</li>
+        </ul>
+      </div>
+
+      <div class="bento b-2x1">
+        <h3>Conectarlo lleva 5 minutos</h3>
+        <p>Te registrás en dataspace.copernicus.eu, generás un cliente OAuth desde tu perfil y pegás las dos claves en el panel de CampoIA. Adentro de la app hay una guía paso a paso con capturas de qué botón tocar. Si después no te sirve, borrás las claves y listo.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+          <a href="agente-campo.html" class="btn btn-primary">Probar el satelital →</a>
+          <a href="guia-completa.html#satelital" target="_blank" class="btn btn-ghost">Ver la guía</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">En qué estamos</span>
+      <h2>Roadmap abierto</h2>
+      <p>Publicamos lo que está hecho y lo que viene, con fechas estimadas. Si algo figura como planeado, todavía no existe — no lo vendemos como si estuviera.</p>
+    </div>
+
+    <div class="bento-grid">
+      <div class="bento b-2x2">
+        <span class="badge-new">Disponible</span>
+        <h3>Hoy en CampoIA</h3>
+        <p>Todo esto ya funciona y está incluido en el plan gratuito.</p>
+        <div class="bento-hero-visual">
+          <div class="bhv-row"><span>Liquidación, humedad, merma y flete</span><b>✓</b></div>
+          <div class="bhv-row"><span>Contratos de arrendamiento</span><b>✓</b></div>
+          <div class="bhv-row"><span>Vencimientos SENASA</span><b>✓</b></div>
+          <div class="bhv-row"><span>Hacienda: sanidad, reproducción, genealogía</span><b>✓</b></div>
+          <div class="bhv-row"><span>Pesadas con GDP e importación RFID</span><b>✓</b></div>
+          <div class="bhv-row"><span>Maquinaria, repuestos y vuelos de dron</span><b>✓</b></div>
+          <div class="bhv-row"><span>Lotes: margen, insumos con carencia, jornales</span><b>✓</b></div>
+          <div class="bhv-row"><span>Satelital NDVI y carga animal</span><b>✓</b></div>
+          <div class="bhv-row"><span>Respaldo y restauración en Google Sheets</span><b>✓</b></div>
+        </div>
+      </div>
+
+      <div class="bento b-2x1">
+        <span class="badge-new">En curso</span>
+        <h3>Próximos meses</h3>
+        <p><b>Contorno real del lote</b> — dibujar el polígono exacto en vez del círculo equivalente, para lotes irregulares.<br>
+        <b>Historial de rotación</b> — registrar entradas y salidas de hacienda por potrero y ver el descanso acumulado.</p>
+      </div>
+
+      <div class="bento b-1x1">
+        <h3>Modo sin señal</h3>
+        <p>Cargar datos en el campo sin conexión y que se sincronicen al volver. Es la petición que más nos repiten.</p>
+      </div>
+
+      <div class="bento b-1x1">
+        <h3>Bastón por Bluetooth</h3>
+        <p>Leer la caravana directo desde el lector al celular, sin pasar por el archivo CSV.</p>
+      </div>
+
+      <div class="bento b-2x1">
+        <h3>Más adelante</h3>
+        <p><b>Multiusuario por establecimiento</b> con permisos por rol, <b>alertas automáticas</b> por WhatsApp cuando un lote cae o vence una guía, y <b>exportación contable</b> para pasarle los números a tu estudio sin recargarlos a mano.</p>
+      </div>
+    </div>
+
+    <p style="text-align:center;color:var(--dim);font-size:13.5px;margin-top:24px">Las fechas son estimadas y pueden moverse. Si necesitás algo puntual para tu establecimiento, escribinos — priorizamos según lo que nos piden.</p>
+  </div>
+</section>
+
 <!-- PRICING -->
 <section id="pricing">
   <div class="container">
@@ -282,7 +442,10 @@
           <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Chat de campo IA</li>
           <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Liquidación de granos</li>
           <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Analizador de contratos de arrendamiento</li>
-          <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Animales por caravana (sanidad y reproducción)</li>
+          <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Animales por caravana (sanidad, reproducción y pesadas)</li>
+          <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Importación desde lector RFID</li>
+          <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Monitoreo satelital (con tu cuenta gratuita de Copernicus)</li>
+          <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Respaldo y restauración en tu Google Sheets</li>
         </ul>
         <a href="agente-campo.html" class="btn btn-ghost" style="justify-content:center">Empezar gratis</a>
       </div>
@@ -297,6 +460,7 @@
           <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Soporte por WhatsApp (24 hs)</li>
           <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Vencimientos SENASA con alertas</li>
           <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Maquinaria y repuestos con alerta de mantenimiento</li>
+          <li><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></span>Te configuramos el satelital y la primera importación RFID</li>
         </ul>
         <a href="agente-campo.html" class="btn btn-primary" style="justify-content:center">Contratar plan →</a>
       </div>
@@ -318,7 +482,19 @@
       </div>
       <div class="faqitem">
         <div class="faqq" onclick="toggleFaq(this)">¿Mis datos de campo son privados?<span class="faqico">+</span></div>
-        <div class="faqa">Sí. CampoIA no tiene backend propio. Tu API key y los archivos van directo de tu navegador a Anthropic. Al cerrar la pestaña, todo se borra salvo lo que decidas guardar en tu Sheets.</div>
+        <div class="faqa">Los datos de tu operación —hacienda, lotes, costos, contratos— viven en tu navegador y, si lo activás, en una planilla de tu propio Google Drive a la que no tenemos acceso. Tu API key va directo de tu navegador a Anthropic. Lo único que sí registramos nosotros es una analítica básica de visitas (dirección IP y ubicación aproximada), que está detallada en los <a href="terminos.html" style="color:var(--brand-light)">términos y privacidad</a>.</div>
+      </div>
+      <div class="faqitem">
+        <div class="faqq" onclick="toggleFaq(this)">¿Las imágenes satelitales tienen costo?<span class="faqico">+</span></div>
+        <div class="faqa">No. Vienen del programa Copernicus de la Unión Europea, que es abierto y gratuito. Tenés que registrarte una vez en dataspace.copernicus.eu y generar tus credenciales: la cuota gratuita alcanza para llevar varios lotes actualizados todas las semanas.</div>
+      </div>
+      <div class="faqitem">
+        <div class="faqq" onclick="toggleFaq(this)">¿Anda con mi bastón lector?<span class="faqico">+</span></div>
+        <div class="faqa">Si exporta CSV, sí. Reconocemos los formatos de Allflex, Tru-Test, Datamars y Gallagher, y también planillas armadas a mano — CampoIA detecta qué columna es cada cosa y te deja corregirlo si se equivoca. Si tu lector exporta Excel, guardalo como CSV y funciona igual.</div>
+      </div>
+      <div class="faqitem">
+        <div class="faqq" onclick="toggleFaq(this)">¿Puede reemplazar a mi asesor agronómico?<span class="faqico">+</span></div>
+        <div class="faqa">No, y no está pensado para eso. El NDVI mide vigor de vegetación, no rendimiento, y la estimación de biomasa depende de una calibración que cargás vos. Los números sirven para decidir cuándo recorrer un lote o cuándo mover la hacienda, pero la recorrida y el criterio del profesional no los reemplaza nada.</div>
       </div>
       <div class="faqitem">
         <div class="faqq" onclick="toggleFaq(this)">¿Reemplaza al corredor de granos?<span class="faqico">+</span></div>
@@ -354,7 +530,7 @@
       <h2>Escribinos</h2>
       <p>¿Tenés una pregunta o una propuesta para tu empresa? Contanos y te respondemos a la brevedad.</p>
     </div>
-    <form class="cform" id="contactForm" action="https://formspree.io/f/mwvgvgkj" method="POST">
+    <form class="cform" id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
       <div class="cfield">
         <label for="cf-name">Nombre</label>
         <input id="cf-name" type="text" name="name" required placeholder="Tu nombre">
